@@ -160,7 +160,7 @@ Ext.define('MyFirst.controller.Order', {
         var goodsStore = Ext.getStore('Goods');
 
         goodsStore.each(function (records) {
-            if (newValue == 1)
+            if (slider == 1)
                 records.data.Remarks = '加辣';
             else
                 records.data.Remarks = '';
@@ -173,7 +173,7 @@ Ext.define('MyFirst.controller.Order', {
         var goodsStore = Ext.getStore('Goods');
 
         goodsStore.each(function (records) {
-            if (newValue == 1)
+            if (slider == 1)
                 records.data.Remarks = '微辣';
             else
                 records.data.Remarks = '';
@@ -452,7 +452,11 @@ Ext.define('MyFirst.controller.Order', {
         }
         goodsStore.clearFilter(true);
         goodsStore.filterBy(function (goods) {
-            return goods.get('GoodsTypeName') == app.GoodsTypeName;
+            if (app.GoodsTypeName == '店长推荐'){
+                return goods.get('IsHot') == true;
+            }else{
+                return goods.get('GoodsTypeName') == app.GoodsTypeName;
+            };
         });
         var frmMain = this.getRoomContainer();
         if (!this.goodslist) {
@@ -1200,6 +1204,7 @@ Ext.define('MyFirst.controller.Order', {
     setButtonVisiable: function (viewType) {
         this.hideCommandButton();
         switch (viewType) {
+            case "goodslist":
             case "goods":
                 if (app.CurRoom.RoomStateName == "开房"
                 || app.CurRoom.RoomStateName == "消费") {
@@ -1213,6 +1218,7 @@ Ext.define('MyFirst.controller.Order', {
                 // this.hidePosButton();
                 // this.hideCloseButton();
                 break;
+            case "goodstypelist":
             case "goodstypes":
                 if (app.CurRoom.RoomStateName == "开房"
                 || app.CurRoom.RoomStateName == "消费") {
@@ -1227,6 +1233,7 @@ Ext.define('MyFirst.controller.Order', {
                 var frmMain = this.getRoomContainer();
                 frmMain.down('titlebar').setTitle(app.CurRoom.RoomName + app.OrderType);
                 break;
+            case "orderedslist":
             case "ordereds": //消费查询界面
                 if (app.CurRoom.RoomStateName == "开房"
                 || app.CurRoom.RoomStateName == "消费") {
@@ -1239,6 +1246,7 @@ Ext.define('MyFirst.controller.Order', {
                 this.showCancelButton();
                 this.showExchangeButton();
                 break;
+            case "orderingslist":
             case "orderings": //落单界面
                 if (app.CurRoom.RoomStateName == "开房"
                 || app.CurRoom.RoomStateName == "消费") {

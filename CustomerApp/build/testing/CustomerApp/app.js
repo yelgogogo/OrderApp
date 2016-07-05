@@ -1,4 +1,4 @@
-function _8f43eb8a27038552de2ce9e5805e575ae74637f0(){};//@tag foundation,core
+function _09b85fd69a0e60f27e2e5538bed0489122a4dff0(){};//@tag foundation,core
 //@define Ext
 /**
  * @class Ext
@@ -64801,6 +64801,10 @@ Ext.define('CustomerApp.model.Good', {
             {
                 name: 'Remarks',
                 type: 'string'
+            },
+            {
+                name: 'IsHot',
+                type: 'boolean'
             }
         ]
     }
@@ -65217,7 +65221,7 @@ Ext.define('CustomerApp.controller.Customer', {
     onmarkToggle: function(field, slider, thumb, newValue, oldValue) {
         var goodsStore = Ext.getStore('Goods');
         goodsStore.each(function(records) {
-            if (newValue == 1)  {
+            if (slider == 1)  {
                 records.data.Remarks = '加辣';
             }
             else  {
@@ -65232,7 +65236,7 @@ Ext.define('CustomerApp.controller.Customer', {
     onmarkToggle2: function(field, slider, thumb, newValue, oldValue) {
         var goodsStore = Ext.getStore('Goods');
         goodsStore.each(function(records) {
-            if (newValue == 1)  {
+            if (slider == 1)  {
                 records.data.Remarks = '微辣';
             }
             else  {
@@ -65281,7 +65285,12 @@ Ext.define('CustomerApp.controller.Customer', {
         var goodsStore = Ext.getStore('Goods');
         goodsStore.clearFilter(true);
         goodsStore.filterBy(function(goods) {
-            return goods.get('GoodsTypeName') == app.GoodsTypeName;
+            if (app.GoodsTypeName == '店长推荐') {
+                return goods.get('IsHot') == true;
+            } else {
+                return goods.get('GoodsTypeName') == app.GoodsTypeName;
+            }
+            
         });
         if (!this.goodslist) {
             this.goodslist = Ext.widget('goodslist');
@@ -65510,9 +65519,11 @@ Ext.define('CustomerApp.controller.Customer', {
         this.hideCusOrderButton();
         this.hideCusPosButton();
         switch (viewType) {
+            case "goodslist":
             case "goods":
                 this.showOrderButton();
                 break;
+            case "goodstypelist":
             case "goodstypes":
                 this.showOrderButton();
                 this.showQueryButton();
@@ -65520,11 +65531,13 @@ Ext.define('CustomerApp.controller.Customer', {
                 var frmMain = this.getCustmainform();
                 frmMain.down('titlebar').setTitle(app.CurRoom.RoomName + ' ' + app.OrderType);
                 break;
+            case "orderedslist":
             case "ordereds":
                 this.showCusPosButton();
                 // this.hideOrderButton();
                 // this.hideQueryButton();
                 break;
+            case "orderingslist":
             case "orderings":
                 // this.hideOrderButton();
                 // this.hideQueryButton();
@@ -65851,7 +65864,7 @@ Ext.define('CustomerApp.view.ListOrderings', {
         cls: 'list',
         itemHeight: 32,
         //useSimpleItems: false,listTpl
-        itemTpl: new Ext.XTemplate('<div class="bh">', '<div class="mydiv bone" fire="onGoodsClick"><div>{GoodsName}</div><div>{Price}/{Unit}</div></div>', '<div class="bv">', '<div class="mydiv x-button" fire="onMarkClick" value="-1">', '<span class="x-button-icon x-shown chili"></span></div>', '</div>', '<div class="bv" style="width:40px;text-align:center">', '{Remarks}', '</div>', '<div class="bv">', '<div class="mydiv x-button" fire="onNumClick" value="-1">', '<span class="x-button-icon x-shown lower"></span></div>', '</div>', '<div class="bv" style="width:40px;text-align:center">', '{GoodsCount}', '</div>', '<div class="bv">', '<div class="mydiv x-button"  fire="onNumClick" value="1">', '<span class="x-button-icon x-shown add"></span></div>', '</div>', '</div>'),
+        itemTpl: new Ext.XTemplate('<div class="bh">', '<div class="mydiv bone" fire="onGoodsClick"><div>{GoodsName}</div><div>{Price}/{Unit}</div></div>', '<div class="bv">', '<div class="mydiv x-button x-button-chili" fire="onMarkClick" value="-1">', '<span class="x-button-icon x-shown chili"></span></div>', '</div>', '<div class="bv" style="width:40px;text-align:center">', '{Remarks}', '</div>', '<div class="bv">', '<div class="mydiv x-button" fire="onNumClick" value="-1">', '<span class="x-button-icon x-shown lower"></span></div>', '</div>', '<div class="bv" style="width:40px;text-align:center">', '{GoodsCount}', '</div>', '<div class="bv">', '<div class="mydiv x-button"  fire="onNumClick" value="1">', '<span class="x-button-icon x-shown add"></span></div>', '</div>', '</div>'),
         items: [
             {
                 xtype: 'button',

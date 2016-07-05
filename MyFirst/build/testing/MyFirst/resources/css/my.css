@@ -1,4 +1,4 @@
-.897100198fbf9fc79ed34647eb644479a6438878{display:block;}.x-tab .x-button-icon.add:before,
+.bb7f7beda678d7c630670a5b13bf38d0c98c00cb{display:block;}.x-tab .x-button-icon.add:before,
 .x-button .x-button-icon.add:before {
   position: absolute;
   top: 0;
@@ -8,6 +8,11 @@
   text-align: center;
   font-family: "Pictos";
   content: "&";
+}
+.x-button-chili {
+  background: url('../img/chili.png');
+  background-size:cover;
+  background-color:#ccc;
 }
 .x-button .x-button-icon.lower:before {
   position: absolute;
@@ -27,7 +32,7 @@
   left: 0;
   text-align: center;
   font-family: "Pictos";
-  content: "��";
+  content: "";
 }
 .list .img {
     width:2.5em;
@@ -51,7 +56,7 @@
     margin:0 auto;
 }
 /*#endregion*/
-/*#region ��ģ�� */
+/*#region ºÐÄ£ÐÍ */
 /*horizontal vertical*/
 .bh {
     display:-webkit-box;
@@ -80,13 +85,13 @@
 	background-color:blue;
 	text-align:left;
 }
-/*�㵥�б���ͼƬ��С*/
+/*µãµ¥ÁÐ±íÀïÍ¼Æ¬´óÐ¡*/
 .goodsimg
 {
 	width:81px;
 	height:50px;
 }
-/*�㵥�б���ͼƬ�����Ŵ�Ŀ��С*/
+/*µãµ¥ÁÐ±íÀïÍ¼Æ¬µã»÷ºó·Å´óµÄ¿ò´óÐ¡*/
 .goodsbigimg
 {
 	width:260px;

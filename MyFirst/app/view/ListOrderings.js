@@ -26,7 +26,7 @@ Ext.define('MyFirst.view.ListOrderings', {
         '<div class="bh">',
             '<div class="mydiv bone" fire="onGoodsClick"><div>{GoodsName}</div><div>{Price}/{Unit}</div></div>',
             '<div class="bv">',
-                '<div class="mydiv x-button" fire="onMarkClick" value="-1">',
+                '<div class="mydiv x-button x-button-chili" fire="onMarkClick" value="-1">',
                 '<span class="x-button-icon x-shown chili"></span></div>',
             '</div>',
             '<div class="bv" style="width:40px;text-align:center">',

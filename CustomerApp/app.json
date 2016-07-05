@@ -55,7 +55,7 @@
         {
             "path": "app.js",
             "bundle": true,  /* Indicates that all class dependencies are concatenated into this file when build */
-            "update": "delta"
+            "update": "full"
         }
     ],
 
@@ -78,11 +78,11 @@
     "css": [
         {
             "path": "resources/css/app.css",
-            "update": "delta"
+            "update": "full"
         },
         {
-            "path": "resources/css/my.css",
-            "update": "delta"
+            "path": "resources/css/myc.css",
+            "update": "full"
         }
     ],
 
@@ -112,7 +112,7 @@
      * Extra resources to be copied along when build
      */
     "resources": [
-        "resources/images",
+        "resources/img",
         "resources/icons",
         "resources/startup"
     ],
@@ -153,7 +153,7 @@
      */
     "cache": {
         "enable": true,
-        "deltas": "deltas"
+        "deltas": "full"
     },
 
     /**

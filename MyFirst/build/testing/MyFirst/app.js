@@ -1,4 +1,4 @@
-function _9d4f06ba8d23da26d90b7ddf7c5684a9914e5548(){};//@tag foundation,core
+function _bec62402f6678ba79e5e9664a25f4422a9a49067(){};//@tag foundation,core
 //@define Ext
 /**
  * @class Ext
@@ -66725,7 +66725,7 @@ Ext.define('app.util.Proxy', {
                         xtype: 'loadmask'
                     });
                     thisobj.loadRooms(function() {
-                        var mainView = Ext.create('app.view.Card');
+                        var mainView = Ext.create('MyFirst.view.Card');
                         Ext.Viewport.add(mainView);
                         // loginView.reset();
                         // loginView.hide();
@@ -67533,6 +67533,10 @@ Ext.define('MyFirst.model.Good', {
             {
                 name: 'Remarks',
                 type: 'string'
+            },
+            {
+                name: 'IsHot',
+                type: 'boolean'
             }
         ]
     }
@@ -68239,7 +68243,7 @@ Ext.define('MyFirst.controller.Order', {
     onmarkToggle: function(field, slider, thumb, newValue, oldValue) {
         var goodsStore = Ext.getStore('Goods');
         goodsStore.each(function(records) {
-            if (newValue == 1)  {
+            if (slider == 1)  {
                 records.data.Remarks = '加辣';
             }
             else  {
@@ -68254,7 +68258,7 @@ Ext.define('MyFirst.controller.Order', {
     onmarkToggle2: function(field, slider, thumb, newValue, oldValue) {
         var goodsStore = Ext.getStore('Goods');
         goodsStore.each(function(records) {
-            if (newValue == 1)  {
+            if (slider == 1)  {
                 records.data.Remarks = '微辣';
             }
             else  {
@@ -68546,7 +68550,12 @@ Ext.define('MyFirst.controller.Order', {
         // this.hidePresentButton();
         goodsStore.clearFilter(true);
         goodsStore.filterBy(function(goods) {
-            return goods.get('GoodsTypeName') == app.GoodsTypeName;
+            if (app.GoodsTypeName == '店长推荐') {
+                return goods.get('IsHot') == true;
+            } else {
+                return goods.get('GoodsTypeName') == app.GoodsTypeName;
+            }
+            
         });
         var frmMain = this.getRoomContainer();
         if (!this.goodslist) {
@@ -69307,6 +69316,7 @@ Ext.define('MyFirst.controller.Order', {
     setButtonVisiable: function(viewType) {
         this.hideCommandButton();
         switch (viewType) {
+            case "goodslist":
             case "goods":
                 if (app.CurRoom.RoomStateName == "开房" || app.CurRoom.RoomStateName == "消费") {
                     if (app.OrderType == "赠送")  {
@@ -69323,6 +69333,7 @@ Ext.define('MyFirst.controller.Order', {
                 // this.hidePosButton();
                 // this.hideCloseButton();
                 break;
+            case "goodstypelist":
             case "goodstypes":
                 if (app.CurRoom.RoomStateName == "开房" || app.CurRoom.RoomStateName == "消费") {
                     this.showOrderButton();
@@ -69336,6 +69347,7 @@ Ext.define('MyFirst.controller.Order', {
                 var frmMain = this.getRoomContainer();
                 frmMain.down('titlebar').setTitle(app.CurRoom.RoomName + app.OrderType);
                 break;
+            case "orderedslist":
             case "ordereds":
                 //消费查询界面
                 if (app.CurRoom.RoomStateName == "开房" || app.CurRoom.RoomStateName == "消费") {};
@@ -69347,6 +69359,7 @@ Ext.define('MyFirst.controller.Order', {
                 this.showCancelButton();
                 this.showExchangeButton();
                 break;
+            case "orderingslist":
             case "orderings":
                 //落单界面
                 if (app.CurRoom.RoomStateName == "开房" || app.CurRoom.RoomStateName == "消费") {};
@@ -69858,7 +69871,7 @@ Ext.define('MyFirst.view.ListOrderings', {
         cls: 'list',
         itemHeight: 32,
         //useSimpleItems: false,listTpl
-        itemTpl: new Ext.XTemplate('<div class="bh">', '<div class="mydiv bone" fire="onGoodsClick"><div>{GoodsName}</div><div>{Price}/{Unit}</div></div>', '<div class="bv">', '<div class="mydiv x-button" fire="onMarkClick" value="-1">', '<span class="x-button-icon x-shown chili"></span></div>', '</div>', '<div class="bv" style="width:40px;text-align:center">', '{Remarks}', '</div>', '<div class="bv">', '<div class="mydiv x-button" fire="onNumClick" value="-1">', '<span class="x-button-icon x-shown lower"></span></div>', '</div>', '<div class="bv" style="width:40px;text-align:center">', '{GoodsCount}', '</div>', '<div class="bv">', '<div class="mydiv x-button"  fire="onNumClick" value="1">', '<span class="x-button-icon x-shown add"></span></div>', '</div>', '</div>'),
+        itemTpl: new Ext.XTemplate('<div class="bh">', '<div class="mydiv bone" fire="onGoodsClick"><div>{GoodsName}</div><div>{Price}/{Unit}</div></div>', '<div class="bv">', '<div class="mydiv x-button x-button-chili" fire="onMarkClick" value="-1">', '<span class="x-button-icon x-shown chili"></span></div>', '</div>', '<div class="bv" style="width:40px;text-align:center">', '{Remarks}', '</div>', '<div class="bv">', '<div class="mydiv x-button" fire="onNumClick" value="-1">', '<span class="x-button-icon x-shown lower"></span></div>', '</div>', '<div class="bv" style="width:40px;text-align:center">', '{GoodsCount}', '</div>', '<div class="bv">', '<div class="mydiv x-button"  fire="onNumClick" value="1">', '<span class="x-button-icon x-shown add"></span></div>', '</div>', '</div>'),
         items: [
             {
                 xtype: 'button',

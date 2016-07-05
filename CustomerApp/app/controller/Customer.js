@@ -86,7 +86,7 @@ Ext.define('CustomerApp.controller.Customer', {
         var goodsStore = Ext.getStore('Goods');
 
         goodsStore.each(function (records) {
-            if (newValue == 1)
+            if (slider == 1)
                 records.data.Remarks = '加辣';
             else
                 records.data.Remarks = '';
@@ -99,7 +99,7 @@ Ext.define('CustomerApp.controller.Customer', {
         var goodsStore = Ext.getStore('Goods');
 
         goodsStore.each(function (records) {
-            if (newValue == 1)
+            if (slider == 1)
                 records.data.Remarks = '微辣';
             else
                 records.data.Remarks = '';
@@ -145,7 +145,11 @@ Ext.define('CustomerApp.controller.Customer', {
         var goodsStore = Ext.getStore('Goods');
         goodsStore.clearFilter(true);
         goodsStore.filterBy(function (goods) {
-            return goods.get('GoodsTypeName') == app.GoodsTypeName;
+            if (app.GoodsTypeName == '店长推荐'){
+                return goods.get('IsHot') == true;
+            }else{
+                return goods.get('GoodsTypeName') == app.GoodsTypeName;
+            };
         });
         if (!this.goodslist) {
             this.goodslist = Ext.widget('goodslist');
@@ -359,9 +363,11 @@ Ext.define('CustomerApp.controller.Customer', {
         this.hideCusOrderButton();
         this.hideCusPosButton();
         switch (viewType) {
+            case "goodslist":
             case "goods":
                 this.showOrderButton();
                 break;
+            case "goodstypelist":
             case "goodstypes":
                 this.showOrderButton();
                 this.showQueryButton();
@@ -369,12 +375,14 @@ Ext.define('CustomerApp.controller.Customer', {
                 var frmMain = this.getCustmainform();
                 frmMain.down('titlebar').setTitle(app.CurRoom.RoomName + ' ' + app.OrderType);
                 break;
+            case "orderedslist":
             case "ordereds":
                 this.showCusPosButton();
                 // this.hideOrderButton();
                 // this.hideQueryButton();
 
                 break;
+            case "orderingslist":
             case "orderings":
                 // this.hideOrderButton();
                 // this.hideQueryButton();

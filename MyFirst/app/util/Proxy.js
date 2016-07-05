@@ -253,7 +253,7 @@ Ext.define('app.util.Proxy', {
                 //Ext.Viewport.setMasked({ xtype: 'loadmask' });
                 Ext.Viewport.setMasked({ xtype: 'loadmask' });
                 thisobj.loadRooms(function () {
-                    var mainView = Ext.create('app.view.Card');
+                    var mainView = Ext.create('MyFirst.view.Card');
                     Ext.Viewport.add(mainView);
                     // loginView.reset();
                     // loginView.hide();
