@@ -19,7 +19,7 @@ Ext.define('app.util.Proxy', {
     //requires: ['Ext.data.proxy.JsonP'],
     //短网址API
     getShortUrl: function (apiurl,longurl,callback) {
-        console.log(longurl);
+        // console.log(longurl);
         var successCallback = function (result)  {
             var data = result;
             if (data.url == '') {
@@ -212,7 +212,7 @@ Ext.define('app.util.Proxy', {
                 Ext.Msg.alert('提示', data, Ext.emptyFn);
                 return;
             };
-            console.log(Json_WX.openid);
+            // console.log(Json_WX.openid);
             callback(Json_WX.openid);
         };
         var failureCallback = function (result) {

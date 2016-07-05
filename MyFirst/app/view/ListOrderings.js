@@ -141,7 +141,7 @@ Ext.define('MyFirst.view.ListOrderings', {
         pressedCls: '',
         listeners: {
             onMarkClick: function (list, record, item, index, btn) {
-                console.log("onMarkClickClick"); 
+                // console.log("onMarkClickClick"); 
                 data = record.data;
                 // if (data.Remarks != '')
                 //     data.Remarks = '';
@@ -174,7 +174,7 @@ Ext.define('MyFirst.view.ListOrderings', {
                     this.fireEvent("onPackGoodsClicked", list, record, item, index, btn);
             },
             onNumClick: function (list, record, item, index, btn) {
-                console.log("onNumClick");
+                // console.log("onNumClick");
                 var value = btn.getAttribute("value"),
                     GoodsCount = record.data.GoodsCount + Number(value),
                     data = record.data;

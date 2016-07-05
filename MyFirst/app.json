@@ -79,10 +79,6 @@
         {
             "path": "resources/css/app.css",
             "update": "delta"
-        },
-        {
-            "path": "resources/css/my.css",
-            "update": "delta"
         }
     ],
 

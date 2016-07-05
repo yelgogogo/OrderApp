@@ -45,7 +45,6 @@ Ext.define('MyFirst.view.Card', {
     },
     initialize: function () {
         this.callParent();
-        console.log(Ext.getStore('User').load().data.items[0].data);
         var userStore = Ext.getStore('User').load().data.items[0].data;
         var me = this;
         var orderadd = false;

@@ -44,12 +44,9 @@ Ext.define('MyFirst.controller.Login', {
                 user.set("userno", UserNo);
                 user.set("isremember", IsRemember);
                 user.set("rights", result.rights);
-                console.log(user);
+                // console.log(user);
                 userStore.add(user);
-
-                console.log(userStore.data.items[0].data);
                 userStore.sync();
-                console.log(Ext.getStore('User').load().data.items[0].data);
                 //Ext.Viewport.setMasked({ xtype: 'loadmask' });
                 Ext.Viewport.setMasked({ xtype: 'loadmask' });
                 app.util.Proxy.loadRooms(function () {

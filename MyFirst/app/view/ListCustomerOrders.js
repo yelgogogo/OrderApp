@@ -59,7 +59,7 @@ Ext.define('MyFirst.view.ListCustomerOrders', {
                     this.fireEvent("onPackGoodsClicked", list, record, item, index, btn);
             },
             onNumClick: function (list, record, item, index, btn) {
-                console.log("onNumClick");
+                // console.log("onNumClick");
                 var value = btn.getAttribute("value"),
                     GoodsCount = record.data.GoodsCount + Number(value),
                     data = record.data;

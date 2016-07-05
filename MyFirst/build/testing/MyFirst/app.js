@@ -1,4 +1,4 @@
-function _8982a6f0a6ef7440335e75e0bc06f9eb8f7b5433(){};//@tag foundation,core
+function _9d4f06ba8d23da26d90b7ddf7c5684a9914e5548(){};//@tag foundation,core
 //@define Ext
 /**
  * @class Ext
@@ -66491,7 +66491,7 @@ Ext.define('app.util.Proxy', {
     //requires: ['Ext.data.proxy.JsonP'],
     //短网址API
     getShortUrl: function(apiurl, longurl, callback) {
-        console.log(longurl);
+        // console.log(longurl);
         var successCallback = function(result) {
                 var data = result;
                 if (data.url == '') {
@@ -66686,7 +66686,7 @@ Ext.define('app.util.Proxy', {
                     return;
                 }
                 
-                console.log(Json_WX.openid);
+                // console.log(Json_WX.openid);
                 callback(Json_WX.openid);
             };
         var failureCallback = function(result) {
@@ -68041,11 +68041,9 @@ Ext.define('MyFirst.controller.Login', {
                     user.set("userno", UserNo);
                     user.set("isremember", IsRemember);
                     user.set("rights", result.rights);
-                    console.log(user);
+                    // console.log(user);
                     userStore.add(user);
-                    console.log(userStore.data.items[0].data);
                     userStore.sync();
-                    console.log(Ext.getStore('User').load().data.items[0].data);
                     //Ext.Viewport.setMasked({ xtype: 'loadmask' });
                     Ext.Viewport.setMasked({
                         xtype: 'loadmask'
@@ -69462,7 +69460,6 @@ Ext.define('MyFirst.view.Card', {
     },
     initialize: function() {
         this.callParent();
-        console.log(Ext.getStore('User').load().data.items[0].data);
         var userStore = Ext.getStore('User').load().data.items[0].data;
         var me = this;
         var orderadd = false;
@@ -69954,7 +69951,7 @@ Ext.define('MyFirst.view.ListOrderings', {
         pressedCls: '',
         listeners: {
             onMarkClick: function(list, record, item, index, btn) {
-                console.log("onMarkClickClick");
+                // console.log("onMarkClickClick"); 
                 data = record.data;
                 // if (data.Remarks != '')
                 //     data.Remarks = '';
@@ -69997,7 +69994,7 @@ Ext.define('MyFirst.view.ListOrderings', {
                 
             },
             onNumClick: function(list, record, item, index, btn) {
-                console.log("onNumClick");
+                // console.log("onNumClick");
                 var value = btn.getAttribute("value"),
                     GoodsCount = record.data.GoodsCount + Number(value),
                     data = record.data;
@@ -70378,7 +70375,7 @@ Ext.define('MyFirst.view.ListCustomerOrders', {
                 
             },
             onNumClick: function(list, record, item, index, btn) {
-                console.log("onNumClick");
+                // console.log("onNumClick");
                 var value = btn.getAttribute("value"),
                     GoodsCount = record.data.GoodsCount + Number(value),
                     data = record.data;
