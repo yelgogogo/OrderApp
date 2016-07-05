@@ -1,0 +1,1 @@
+﻿<%@ WebService Language="C#" CodeBehind="AutoGeneration.asmx.cs" Class="dx.webservice.Service1" %>
