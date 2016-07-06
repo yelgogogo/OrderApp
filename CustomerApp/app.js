@@ -56,6 +56,7 @@ Ext.application({
     },
 
      launch: function () {
+        Ext.Msg.defaultAllowedConfig.showAnimation = false;
         app.pgmid=window.location.href.split('/')[3] + '\/';
         if (app.pgmid.indexOf('.html') >= 0){
             app.pgmid='';

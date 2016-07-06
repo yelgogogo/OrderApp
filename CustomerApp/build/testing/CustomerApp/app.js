@@ -1,4 +1,4 @@
-function _09b85fd69a0e60f27e2e5538bed0489122a4dff0(){};//@tag foundation,core
+function _c1a3ca510d52d8acdb7a8c3a207a5a7ca79b9c59(){};//@tag foundation,core
 //@define Ext
 /**
  * @class Ext
@@ -66218,6 +66218,7 @@ Ext.application({
         '1496x2048': 'resources/startup/1496x2048.png'
     },
     launch: function() {
+        Ext.Msg.defaultAllowedConfig.showAnimation = false;
         app.pgmid = window.location.href.split('/')[3] + '/';
         if (app.pgmid.indexOf('.html') >= 0) {
             app.pgmid = '';
