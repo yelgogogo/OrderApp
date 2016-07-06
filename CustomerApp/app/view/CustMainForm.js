@@ -32,15 +32,16 @@ Ext.define('CustomerApp.view.CustMainForm', {
             id: btnID,
             text: btnText,
             align: btnAlign,
-            hidden: btnIsHidden,
-            hideAnimation: Ext.os.is.Android ? false : {
-                type: 'fadeOut',
-                duration: 200
-            },
-            showAnimation: Ext.os.is.Android ? false : {
-                type: 'fadeIn',
-                duration: 200
-            }
+            hidden: btnIsHidden
+            // ,
+            // hideAnimation: Ext.os.is.Android ? false : {
+            //     type: 'fadeOut',
+            //     duration: 200
+            // },
+            // showAnimation: Ext.os.is.Android ? false : {
+            //     type: 'fadeIn',
+            //     duration: 200
+            // }
         });
     },
     initialize: function () {

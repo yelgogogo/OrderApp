@@ -152,8 +152,8 @@
      *   }
      */
     "cache": {
-        "enable": true,
-        "deltas": "full"
+        "enable": false,
+        "deltas": "deltas"
     },
 
     /**
