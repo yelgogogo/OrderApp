@@ -71,6 +71,7 @@ Ext.define('CustomerApp.view.ListGoods', {
             },
             onNumClick: function (list, record, item, index, btn) {
                 //console.log("onNumClick");
+                btn.addCls('x-button-pressing');
                 var value = btn.getAttribute("value"),
                     GoodsCount = record.data.GoodsCount + Number(value),
                     data = record.data;

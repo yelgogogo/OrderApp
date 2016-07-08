@@ -45,6 +45,7 @@ Ext.define('CustomerApp.view.ListGoodsDetail', {
                 var value = btn.getAttribute("value"),
                     GoodsDetailCount = record.data.GoodsDetailCount + Number(value),
                     data = record.data;
+                btn.addCls('x-button-pressing');
                 if (GoodsDetailCount < 0) {
                     GoodsDetailCount = 0;
                 }
