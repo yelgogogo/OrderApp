@@ -141,6 +141,7 @@ Ext.define('MyFirst.view.ListOrderings', {
         pressedCls: '',
         listeners: {
             onMarkClick: function (list, record, item, index, btn) {
+                btn.addCls('x-button-pressing');
                 // console.log("onMarkClickClick"); 
                 data = record.data;
                 // if (data.Remarks != '')
@@ -166,7 +167,10 @@ Ext.define('MyFirst.view.ListOrderings', {
                     };
                     break; 
                 };
-                item.setData(data);
+                var task = Ext.create('Ext.util.DelayedTask', function() {
+                        item.setData(data);
+                    });
+                task.delay(100);
             },
             onGoodsClick: function (list, record, item, index, btn) {
                 data = record.data;
@@ -184,7 +188,10 @@ Ext.define('MyFirst.view.ListOrderings', {
                 }
 
                 data.GoodsCount = GoodsCount;
-                item.setData(data);
+                var task = Ext.create('Ext.util.DelayedTask', function() {
+                        item.setData(data);
+                    });
+                task.delay(100);
                 //1.不能使用item.setRecord(record);此方法无法更新视图
                 //2.不能使用record.set({taste:taste});查看源码会发现此方法会刷新整个视图，效率极其底下。
 

@@ -74,12 +74,17 @@ Ext.define('MyFirst.view.ListGoods', {
                 var value = btn.getAttribute("value"),
                     GoodsCount = record.data.GoodsCount + Number(value),
                     data = record.data;
+                btn.addCls('x-button-pressing');
                 if (GoodsCount < 0) {
                     GoodsCount = 0;
                 }
                 data.Remarks = '';
                 data.GoodsCount = GoodsCount;
-                item.setData(data);
+                var task = Ext.create('Ext.util.DelayedTask',function(){
+                    item.setData(data);
+                });
+                task.delay(100); //一秒后执行调用updateClock函数
+                // item.setData(data);
                 //1.不能使用item.setRecord(record);此方法无法更新视图
                 //2.不能使用record.set({taste:taste});查看源码会发现此方法会刷新整个视图，效率极其底下。
 

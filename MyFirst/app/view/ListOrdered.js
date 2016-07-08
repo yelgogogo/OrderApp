@@ -60,6 +60,7 @@ Ext.define('MyFirst.view.ListOrdered', {
             },
             onNumClick: function (list, record, item, index, btn) {
                 // console.log("onNumClick");
+                btn.addCls('x-button-pressing');
                 var value = btn.getAttribute("value"),
                     GoodsCount = Number(record.data.GoodsCount) + Number(value),
                     data = record.data;
@@ -83,7 +84,10 @@ Ext.define('MyFirst.view.ListOrdered', {
                 };
                 data.GoodsCount =GoodsCount
     
-                item.setData(data);
+                var task = Ext.create('Ext.util.DelayedTask', function() {
+                        item.setData(data);
+                    });
+                task.delay(100);
                 // if (GoodsCount < 1){
                 //     btn.hide();
                 // }
