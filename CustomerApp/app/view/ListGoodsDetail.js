@@ -40,12 +40,12 @@ Ext.define('CustomerApp.view.ListGoodsDetail', {
 
             },
             onNumClick: function (list, record, item, index, btn) {
+                btn.addCls('x-button-pressing');
                 if (record.data.IsFixed)
                     return;
                 var value = btn.getAttribute("value"),
                     GoodsDetailCount = record.data.GoodsDetailCount + Number(value),
                     data = record.data;
-                btn.addCls('x-button-pressing');
                 if (GoodsDetailCount < 0) {
                     GoodsDetailCount = 0;
                 }
@@ -63,7 +63,10 @@ Ext.define('CustomerApp.view.ListGoodsDetail', {
                 }
 
                 data.GoodsDetailCount = GoodsDetailCount;
-                item.setData(data);
+                var task = Ext.create('Ext.util.DelayedTask', function() {
+                        item.setData(data);
+                    });
+                task.delay(100);
                 var goods = Ext.getStore('Goods').findRecord('ID', data.PackGoodsID);
                 if (goods) {
                     goods.data.GoodsDetails[index] = data;
