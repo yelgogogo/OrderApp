@@ -1,4 +1,4 @@
-Ext.define('MyFirst.view.ListGoods', {
+Ext.define('CustomerApp.view.ListGoods', {
     extend: 'Ext.List',
     alias: 'widget.goodslist',
 

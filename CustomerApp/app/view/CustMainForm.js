@@ -50,6 +50,7 @@ Ext.define('CustomerApp.view.CustMainForm', {
         me.CreateMyButton('cusOrderButton', '订单修改', 'right', false);
         me.CreateMyButton('queryButton', '消费查询', 'right', false);
         me.CreateMyButton('orderButton', '下单', 'right', false);
+        me.CreateMyButton('salesButton', '试试手气', 'right', true);
         me.CreateMyButton('cusPosButton', '微信支付', 'right', true);
 
 //        Ext.Array.each(userStore.rights, function (rights) {

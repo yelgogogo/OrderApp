@@ -14,6 +14,7 @@ Ext.define('CustomerApp.controller.Customer', {
             queryButton: '#queryButton',
             cusOrderButton: '#cusOrderButton',
             cusPosButton: '#cusPosButton',
+            salesButton: '#salesButton',
             markToggleButton: 'orderings #markToggle',
             markToggle2Button: 'orderings #markToggle2',
             txtSubTotal: '#txtSubTotal',
@@ -54,6 +55,9 @@ Ext.define('CustomerApp.controller.Customer', {
             },
             queryButton: {
                 tap: 'onQuery'
+            },
+            salesButton: {
+                tap: 'onSales'
             },
             cusOrderButton: {
                 tap: 'onCusOrder'
@@ -107,7 +111,41 @@ Ext.define('CustomerApp.controller.Customer', {
         var goodsview = this.getOrderingslist();
         goodsview.refresh();
     },
-    //支付宝支付
+    //试试手气
+    onSales: function () {
+        // if (!app.cusPosCode) {
+          var cusPosCode = Ext.create('Ext.form.Panel', {
+                itemID: 'cusPosImg',
+                xtype: 'panel',
+                left: 0,
+                top: 0,
+                modal: true,
+                hideOnMaskTap: true,
+                hidden: true,
+                width: 300,
+                height: 400,
+                contentEl: '',
+                styleHtmlContent: true,
+                scrollable: true,
+                showAnimation: Ext.os.is.Android ? false : {
+                    type: 'pop',
+                    duration: 200
+                }
+            });
+        // }
+        var randomNumber = function(from, to) {  
+            return Math.floor(Math.random() * (to - from + 1) + from);  
+        };  
+        var rnum=randomNumber(1, 5);
+        var imgurl = "../resources/img/"+app.pgmid+"onsale"+rnum+".jpg";
+        if (rnum == '1'){ 
+            cusPosCode.setHtml('<h3 align="center">恭喜你<BR>长按二维码领取优惠券</h3><p style="text-align:center"><img align="center" src="' + imgurl + '"/></p>');
+        }else{
+            cusPosCode.setHtml('<h3 align="center">别灰心，再试试手气</h3><p style="text-align:center"><img align="center" src="' + imgurl + '"/></p>');
+        };
+        cusPosCode.showBy(this.getCusPosButton());
+    },
+    //微信支付
     onCusPos: function () {
         // if (!app.cusPosCode) {
           var cusPosCode = Ext.create('Ext.form.Panel', {
@@ -362,6 +400,7 @@ Ext.define('CustomerApp.controller.Customer', {
         this.hideQueryButton();
         this.hideCusOrderButton();
         this.hideCusPosButton();
+        this.hideSalesButton();
         switch (viewType) {
             case "goodslist":
             case "goods":
@@ -378,6 +417,9 @@ Ext.define('CustomerApp.controller.Customer', {
             case "orderedslist":
             case "ordereds":
                 this.showCusPosButton();
+                if (this.getTxtConsumed().getValue() >= 100){
+                    this.showSalesButton();
+                };     
                 // this.hideOrderButton();
                 // this.hideQueryButton();
 
@@ -440,6 +482,20 @@ Ext.define('CustomerApp.controller.Customer', {
             return;
         }
         cusPosButton.hide();
+    },
+    showSalesButton: function () {
+        var salesButton = this.getSalesButton();
+        if (!salesButton || !salesButton.isHidden()) {
+            return;
+        }
+        salesButton.show();
+    },
+    hideSalesButton: function () {
+        var salesButton = this.getSalesButton();
+        if (!salesButton || salesButton.isHidden()) {
+            return;
+        }
+        salesButton.hide();
     },
     showQueryButton: function () {
         var queryButton = this.getQueryButton();
