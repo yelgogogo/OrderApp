@@ -27,6 +27,7 @@ Ext.define('MyFirst.controller.Order', {
             orderingsButton: 'orderings button',
             markToggleButton: 'orderings #markToggle',
             markToggle2Button: 'orderings #markToggle2',
+            markToggle3Button: 'orderings #markToggle3',
             confirmCancel: 'orderedgoods #confirmCancel',
             doBalanceButton: '#doBalanceButton',
             refreshButton: '#refreshButton',
@@ -36,6 +37,7 @@ Ext.define('MyFirst.controller.Order', {
             queryButton: '#queryButton',
             hisQueryButton: '#hisqueryButton',
             orderButton: '#orderButton',
+            confirmOkButton: '#confirmOkButton',
             cancelButton: '#cancelButton',
             mngButton: '#mngButton',
             orderMemButton: '#orderMemButton',
@@ -71,6 +73,9 @@ Ext.define('MyFirst.controller.Order', {
             markToggle2Button: {
                 change: 'onmarkToggle2'
             },
+            markToggle3Button: {
+                change: 'onmarkToggle3'
+            },
             roomContainer: {
                 pop: 'onMainPop',
                 push: 'onMainPush'
@@ -100,6 +105,9 @@ Ext.define('MyFirst.controller.Order', {
                 activate: 'onPosActivate'
             },
             orderingsButton: {
+                tap: 'onOkOrder'
+            },
+            confirmOkButton: {
                 tap: 'onOkOrder'
             },
             clearCusOrderButton: {
@@ -180,6 +188,14 @@ Ext.define('MyFirst.controller.Order', {
         });
         var goodsview = this.getOrderingslist();
         goodsview.refresh();
+    },
+    //数量 X 10
+    onmarkToggle3: function (field, slider, thumb, newValue, oldValue) {
+
+            if (slider == 1)
+                app.numclickn=10;
+            else
+                app.numclickn=1;
     },
     //清空顾客自选单
     onclearCusOrder: function () {
@@ -280,11 +296,22 @@ Ext.define('MyFirst.controller.Order', {
         || dataItemModel.data.RoomStateName == "带位") {
             Ext.Msg.confirm("开台", "确认要开台吗?",
                 function (btn) {
-                    if (btn == 'yes')
+                    if (btn == 'yes'){
                         app.util.Proxy.openRoom(dataItemModel.data.ID, function () { 
                             dataView.refresh();
                             // app.util.Proxy.printQrCode(printstr);
-                        })
+                            app.util.Proxy.getEnStr(app.CurRoom.RoomOpCode + app.CurRoom.ID, function (enstr) {
+                                var myUrl = Ext.global.window.location.href.replace(/order\.html.*$/g,'customer.html') + "?Key=" + enstr;
+                                var apiurl = 'http://50r.cn/urls/add.jsonp'
+                                var url = "http://qr.topscan.com/api.php?&w=260&text=" + myUrl;
+                                console.log(url);
+                                app.util.Proxy.getShortUrl(apiurl,myUrl,function (shorturl) {
+                                    var printstr = '<CB>'+app.CurPlace+'</CB><BR>' + '<CB>'+app.CurRoom.RoomName+'</CB><BR><QR>' +shorturl + '</QR><BR><C>'+app.CurPlacemsg+'</C>'
+                                    app.util.Proxy.printQrCode(printstr);
+                                });
+                            });
+                        });
+                    };
                 });
             return;
         }
@@ -1088,6 +1115,20 @@ Ext.define('MyFirst.controller.Order', {
         }
         posButton.hide();
     },
+    showConfirmOkButton: function () {
+        var confirmOkButton = this.getConfirmOkButton();
+        if (!confirmOkButton || !confirmOkButton.isHidden()) {
+            return;
+        }
+        confirmOkButton.show();
+    },
+    hideConfirmOkButton: function () {
+        var confirmOkButton = this.getConfirmOkButton();
+        if (!confirmOkButton || confirmOkButton.isHidden()) {
+            return;
+        }
+        confirmOkButton.hide();
+    },
     showClearCusOrderButton: function () {
         var clearCusOrderButton = this.getClearCusOrderButton();
         if (!clearCusOrderButton || !clearCusOrderButton.isHidden()) {
@@ -1200,6 +1241,7 @@ Ext.define('MyFirst.controller.Order', {
         this.hideCancelButton();
         this.hideClearCusOrderButton();
         this.hideExchangeButton();
+        this.hideConfirmOkButton();
     },
     setButtonVisiable: function (viewType) {
         this.hideCommandButton();
@@ -1255,6 +1297,7 @@ Ext.define('MyFirst.controller.Order', {
                     //                    this.showOrderMemButton();
                 }
                 this.showClearCusOrderButton();
+                this.showConfirmOkButton();
                 // this.showCloseButton();
                 // this.showPosButton();
                 // this.showCancelButton();

@@ -76,7 +76,7 @@ Ext.application({
         if (app.pgmid.indexOf('.html') >= 0){
             app.pgmid='';
         };
-
+        app.numclickn=1;
         app.util.Proxy.getSysParm('txtPlaceAdress', function (pmsg) {
             app.CurPlacemsg = pmsg;
         });

@@ -95,8 +95,10 @@ Ext.define('MyFirst.view.Card', {
         });
         if (queryadd = true)
           me.CreateMyButton('queryButton', '消费', 'right', true);
-        if (orderadd = true)
-        	me.CreateMyButton('orderButton', '落单', 'right', true);
+        if (orderadd = true){
+          	me.CreateMyButton('orderButton', '落单', 'right', true);
+            me.CreateMyButton('confirmOkButton', '确认落单', 'right', true);
+        };
         if (posadd = true)
           me.CreateMyButton('posButton', '买单', 'right', true);
     }

@@ -115,6 +115,15 @@ Ext.define('MyFirst.view.ListOrderings', {
                         docked: 'top',
                         label: '合计:'
                    },
+                    {   
+                        xtype: 'togglefield',
+                        width: '50%' ,
+                        // name : 'markToggle',
+                        // id : 'markToggle',
+                        itemId: 'markToggle3',
+                         docked: 'top',
+                        label: '数量x10'
+                    },
                    {   
                         xtype: 'togglefield',
                         width: '50%' ,
@@ -181,7 +190,7 @@ Ext.define('MyFirst.view.ListOrderings', {
                 // console.log("onNumClick");
                 btn.addCls('x-button-pressing');
                 var value = btn.getAttribute("value"),
-                    GoodsCount = record.data.GoodsCount + Number(value),
+                    GoodsCount = record.data.GoodsCount + Number(value) * app.numclickn,
                     data = record.data;
                 if (GoodsCount < 0) {
                     GoodsCount = 0;
