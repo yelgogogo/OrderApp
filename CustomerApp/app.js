@@ -61,6 +61,7 @@ Ext.application({
         if (app.pgmid.indexOf('.html') >= 0){
             app.pgmid='';
         };
+        app.numclickn=1;
         Ext.override(Ext.util.SizeMonitor, {
             constructor: function (config) {
                 var namespace = Ext.util.sizemonitor;

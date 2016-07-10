@@ -15,8 +15,10 @@ Ext.define('CustomerApp.controller.Customer', {
             cusOrderButton: '#cusOrderButton',
             cusPosButton: '#cusPosButton',
             salesButton: '#salesButton',
+            confirmOkButton: '#confirmOkButton',
             markToggleButton: 'orderings #markToggle',
             markToggle2Button: 'orderings #markToggle2',
+            markToggle3Button: 'orderings #markToggle3',
             txtSubTotal: '#txtSubTotal',
             orderButton: '#orderButton'
         },
@@ -26,6 +28,9 @@ Ext.define('CustomerApp.controller.Customer', {
             },
             markToggle2Button: {
                 change: 'onmarkToggle2'
+            },
+            markToggle3Button: {
+                change: 'onmarkToggle3'
             },
             custmainform: {
                 push: 'onMainPush',
@@ -48,6 +53,9 @@ Ext.define('CustomerApp.controller.Customer', {
                 activate: 'onOrderingActivate'
             },
             orderingsButton: {
+                tap: 'onOkOrder'
+            },
+            confirmOkButton: {
                 tap: 'onOkOrder'
             },
             cusPosButton: {
@@ -110,6 +118,13 @@ Ext.define('CustomerApp.controller.Customer', {
         });
         var goodsview = this.getOrderingslist();
         goodsview.refresh();
+    },
+    //数量x10
+    onmarkToggle3: function (field, slider, thumb, newValue, oldValue) {
+            if (slider == 1)
+                app.numclickn=10;
+            else
+                app.numclickn=1;
     },
     //试试手气
     onSales: function () {
@@ -401,6 +416,7 @@ Ext.define('CustomerApp.controller.Customer', {
         this.hideCusOrderButton();
         this.hideCusPosButton();
         this.hideSalesButton();
+        this.hideConfirmOkButton();
         switch (viewType) {
             case "goodslist":
             case "goods":
@@ -426,6 +442,7 @@ Ext.define('CustomerApp.controller.Customer', {
                 break;
             case "orderingslist":
             case "orderings":
+                this.showConfirmOkButton();
                 // this.hideOrderButton();
                 // this.hideQueryButton();
                 break;
@@ -454,6 +471,20 @@ Ext.define('CustomerApp.controller.Customer', {
             return;
         }
         orderButton.hide();
+    },
+    showConfirmOkButton: function () {
+        var confirmOkButton = this.getConfirmOkButton();
+        if (!confirmOkButton || !confirmOkButton.isHidden()) {
+            return;
+        }
+        confirmOkButton.show();
+    },
+    hideConfirmOkButton: function () {
+        var confirmOkButton = this.getConfirmOkButton();
+        if (!confirmOkButton || confirmOkButton.isHidden()) {
+            return;
+        }
+        confirmOkButton.hide();
     },
     showCusOrderButton: function () {
         var cusOrderButton = this.getCusOrderButton();

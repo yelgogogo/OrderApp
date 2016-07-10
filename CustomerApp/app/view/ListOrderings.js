@@ -106,7 +106,6 @@ Ext.define('CustomerApp.view.ListOrderings', {
                 },
                 layout: 'hbox',
                 items: [
-                    
                     {
                         xtype: 'textfield',
                         itemId: 'txtSubTotal',
@@ -115,23 +114,33 @@ Ext.define('CustomerApp.view.ListOrderings', {
                         docked: 'top',
                         label: '合计:'
                    },
-                   {   
+                    {   
                         xtype: 'togglefield',
                         width: '50%' ,
                         // name : 'markToggle',
                         // id : 'markToggle',
-                        itemId: 'markToggle',
-                         docked: 'right',
-                        label: '全部加辣'
+                        itemId: 'markToggle3',
+                        id:'markToggle3',
+                        docked: 'top',
+                        label: '数量x10'
+                    },
+                    {   
+                        xtype: 'togglefield',
+                        width: '50%' ,
+                        // name : 'markToggle',
+                        // id : 'markToggle',
+                        itemId: 'markToggle2',
+                        docked: 'left',
+                        label: '全部微辣'
                     },
                    {   
                         xtype: 'togglefield',
                         width: '50%' ,
                         // name : 'markToggle',
                         // id : 'markToggle',
-                        itemId: 'markToggle2',
-                         docked: 'left',
-                        label: '全部微辣'
+                        itemId: 'markToggle',
+                        docked: 'right',
+                        label: '全部加辣'
                     }
                ]
             }
@@ -181,7 +190,7 @@ Ext.define('CustomerApp.view.ListOrderings', {
                 // console.log("onNumClick");
                 btn.addCls('x-button-pressing');
                 var value = btn.getAttribute("value"),
-                    GoodsCount = record.data.GoodsCount + Number(value),
+                    GoodsCount = record.data.GoodsCount + Number(value) * app.numclickn,
                     data = record.data;
                 if (GoodsCount < 0) {
                     GoodsCount = 0;
