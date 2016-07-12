@@ -1195,7 +1195,34 @@ Ext.define('MyFirst.controller.Order', {
         });
         var me = this;
         Ext.Viewport.setMasked({ xtype: 'loadmask' });
-        app.util.Proxy.doBalance(function () { me.onRefresh(); });
+        app.util.Proxy.loadOverView(function() {
+            var viewStore = Ext.getStore('OverViews');
+            var strrights = '经理查询';
+            var templateid = 'J2Y3L14ThLGBnniv1DxDG-5X6DGYRbU8gsSsYEBt2OQ';
+            var url = '';
+            var Sysdate = new Date();  
+            var Curdate = Ext.Date.format(Sysdate, 'Y-m-d H:i:s'); 
+            var first = { value: '营业结束已完成', color: '#A68C00' },
+                tName = { value: viewStore.data.items[0].data.PosedAmount +'元, 累计开台:'+viewStore.data.items[0].data.HallPosed, color: '#A68C00' },
+                storeName = { value: app.CurPlace, color: '#A68C00' },
+                gTime = { value: Curdate, color: '#A68C00' },
+                remark = { value: '星星点单消息推送', color: '#A68C00' };
+            var weChatData =
+                {
+                    first: first,
+                    tName: tName,
+                    storeName: storeName,
+                    gTime: gTime,
+                    remark: remark
+                };
+            app.util.Proxy.sendMsg(strrights,templateid,url,weChatData,function () {});
+            app.util.Proxy.doBalance(function () { 
+                me.onRefresh(); 
+            });
+        });
+        
+        
+
     },
     onRoomAreaChange: function (seg, btn, toggle) {
         if (toggle) {
