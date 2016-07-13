@@ -21,7 +21,7 @@ Ext.define('CustomerApp.view.ListGoods', {
         '<div class="bh">',
             '<div class="bone bh">',
                 '<img class="mydiv goodsimg" src = "../resources/img/xxsk/{ID}.jpg" fire="onGoodsImgClick">',
-                '<div class="mydiv bone" fire="onGoodsClick"><div>{GoodsName}</div><div>{Price}/{Unit}</div></div>',
+                '<div class="mydiv bone" fire="onGoodsClick"><div>{GoodsName}</div><div>¥{Price} / {Unit}</div></div>',
             '</div>',
             '<div class="bv">',
                 '<div class="mydiv x-button" fire="onNumClick" value="-1">',

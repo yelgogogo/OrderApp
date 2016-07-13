@@ -77,6 +77,7 @@ Ext.application({
             app.pgmid='';
         };
         app.numclickn=1;
+        app.CusRoomId = -1;
         app.util.Proxy.getSysParm('txtPlaceAdress', function (pmsg) {
             app.CurPlacemsg = pmsg;
         });
@@ -120,15 +121,17 @@ Ext.application({
         var r = window.location.search.substr(1).match(reg);
         var rstate = window.location.search.substr(1).match(regstate);
         // console.log(r);        
+        if (rstate != null) {
+            app.CusRoomId = unescape(rstate[2]);
+            // Ext.Msg.alert('room'+app.CusRoomIndex);
+        };
         if (r != null) {
             var code = unescape(r[2]);
 
             app.util.Proxy.getOpenid(code, function (openid) {    
                 app.openid = openid;
                 app.util.Proxy.chkOpenid(app.openid, function () { 
-                    // if (rstate != null) {
-                    //     var statevalue = unescape(rstate[2]);
-                    // };
+
                 });
             });
         }

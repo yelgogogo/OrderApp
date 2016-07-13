@@ -24,7 +24,7 @@ Ext.define('MyFirst.view.ListOrderings', {
         //useSimpleItems: false,listTpl
         itemTpl: new Ext.XTemplate(
         '<div class="bh">',
-            '<div class="mydiv bone" fire="onGoodsClick"><div>{GoodsName}</div><div>{Price}/{Unit}</div></div>',
+            '<div class="mydiv bone" fire="onGoodsClick"><div>{GoodsName}</div><div>¥{Price} / {Unit}</div></div>',
             '<div class="bv">',
                 '<div class="mydiv x-button x-button-chili" fire="onMarkClick" value="-1">',
                 '<span class="x-button-icon x-shown chili"></span></div>',
@@ -106,42 +106,54 @@ Ext.define('MyFirst.view.ListOrderings', {
                 },
                 layout: 'hbox',
                 items: [
-                    
                     {
-                        xtype: 'textfield',
-                        itemId: 'txtSubTotal',
-                        readOnly: true,
-                        width: '50%' ,
+                        xtype: 'fieldset',
                         docked: 'top',
-                        label: '合计:'
-                   },
-                    {   
-                        xtype: 'togglefield',
-                        width: '50%' ,
-                        // name : 'markToggle',
-                        // id : 'markToggle',
-                        itemId: 'markToggle3',
-                         docked: 'top',
-                        label: '数量x10'
+                        defaults: {                    
+                            xtype: 'textfield',
+                            labelWidth: '50%',
+                            inputCls: 'dxtextright',
+                            flex: 1
+                        },
+                        layout: 'hbox',
+                        items: [
+                            {
+                            xtype: 'textfield',
+                            itemId: 'txtSubTotal',
+                            readOnly: true,
+                            width: '50%' ,
+                            docked: 'left',
+                            label: '合计:'
+                            },
+                            {   
+                            xtype: 'togglefield',
+                            width: '50%' ,
+                            // name : 'markToggle',
+                            // id : 'markToggle',
+                            itemId: 'markToggle2',
+                             docked: 'right',
+                            label: '全微辣'
+                            }
+                        ]
                     },
-                   {   
+                    {   
                         xtype: 'togglefield',
                         width: '50%' ,
                         // name : 'markToggle',
                         // id : 'markToggle',
                         itemId: 'markToggle',
                          docked: 'right',
-                        label: '全部加辣'
+                        label: '全加辣'
                     },
-                   {   
+                    {   
                         xtype: 'togglefield',
                         width: '50%' ,
                         // name : 'markToggle',
                         // id : 'markToggle',
-                        itemId: 'markToggle2',
+                        itemId: 'markToggle3',
                          docked: 'left',
-                        label: '全部微辣'
-                    }
+                        label: '数x10'
+                    }   
                ]
             }
         ],

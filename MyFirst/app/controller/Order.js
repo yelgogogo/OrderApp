@@ -95,6 +95,7 @@ Ext.define('MyFirst.controller.Order', {
                 onPackGoodsClicked: 'onPackGoodsClicked'
             },
             goodstypelist: {
+                activate: 'onGoodsTypeActivate',
                 itemtap: 'onGoodsTypeTap'
             },
             orderingslist: {
@@ -288,6 +289,31 @@ Ext.define('MyFirst.controller.Order', {
                  Ext.Viewport.setMasked(false);
              });
     },
+    goRoom: function (roomid) {
+        //获取房台ID
+        var roomstore = Ext.getStore('Rooms');
+        var roomselect = roomstore.findRecord('ID', roomid, 0, false, false, true);
+        // var roomID = roomstore.data.ID;
+        if (roomselect.data.RoomStateName == "消费" || roomselect.data.RoomStateName == "开房"){
+            app.CurRoom = roomselect.data;
+            var frmMain = this.getRoomContainer();
+            frmMain.getNavigationBar().show();
+            frmMain.down('titlebar').show();
+            if (app.CurRoom.RoomStateName == "打单" || app.CurRoom.RoomStateName == "收银") {
+                this.loadRoomOrder(app.CurRoom.ID);
+            }else {
+                var user = Ext.getStore('User').load().data.items[0].data;
+                // this.showCustomerButton();
+                if (Ext.Array.contains(user.rights, "赠送")) {
+                    app.OrderType = "赠送";
+                    this.loadPresentGoods(app.CurRoom.ID);
+                }else if (Ext.Array.contains(user.rights, "落单")) {
+                    app.OrderType = "落单";
+                    this.loadOrderGoods(app.CurRoom.ID);
+                }
+            };
+        };
+    },
     onRoomTap: function (dataView, index, dataItem, dataItemModel, e, eOpts) {
         if (dataItemModel.data.RoomStateName == "坏房")
             return;
@@ -458,8 +484,20 @@ Ext.define('MyFirst.controller.Order', {
             Ext.Viewport.setMasked(false);
         });
     },
+    goGoodsType: function (goodtypename) {
+        var goodsStore = Ext.getStore('Goods');
+        goodsStore.clearFilter(true);
+        goodsStore.filterBy(function (goods) {
+            return goods.get('GoodsTypeName') == goodtypename;
+        });
+        var frmMain = this.getRoomContainer();
+        if (!this.goodslist) {
+            this.goodslist = Ext.widget('goodslist');
+        };
+        frmMain.push(this.goodslist);
+    },
     onGoodsTypeTap: function (dataView, index, dataItem, dataItemModel, e, eOpts) {
-        app.GoodsTypeName = dataItemModel.data.GoodsTypeName;
+        var goodstypename = dataItemModel.data.GoodsTypeName;
         var goodsStore = Ext.getStore('Goods');
         // this.hideQueryButton();
         // this.hideHisQueryButton();
@@ -479,10 +517,10 @@ Ext.define('MyFirst.controller.Order', {
         }
         goodsStore.clearFilter(true);
         goodsStore.filterBy(function (goods) {
-            if (app.GoodsTypeName == '店长推荐'){
+            if (goodstypename == '店长推荐'){
                 return goods.get('IsHot') == true;
             }else{
-                return goods.get('GoodsTypeName') == app.GoodsTypeName;
+                return goods.get('GoodsTypeName') == goodstypename;
             };
         });
         var frmMain = this.getRoomContainer();
@@ -1220,31 +1258,40 @@ Ext.define('MyFirst.controller.Order', {
                 me.onRefresh(); 
             });
         });
-        
-        
-
     },
     onRoomAreaChange: function (seg, btn, toggle) {
         if (toggle) {
             this.filterByButton(btn);
         }
     },
+    onGoodsTypeActivate: function (seg, btn, toggle) {
+        if (app.CusRoomId >= 0){
+            this.onCustomerButton_Clicked();
+            app.CusRoomId = -1;
+        };
+        if (app.CurRoom.RoomStateName=="开房"){
+            this.goGoodsType('一次用品');
+        };
+    },
     onRoomActivate: function () {
         var frmMain = this.getRoomslist().parent;
         var refreshButton = this.getRefreshButton();
         if (refreshButton) {
             refreshButton.show();
-        }
+        };
         var doBalanceButton = this.getDoBalanceButton();
         if (doBalanceButton) {
             doBalanceButton.show();
-        }
+        };
         var mngButton = this.getMngButton();
         if (mngButton) {
             mngButton.show();
-        }
+        };
         //frmMain.getNavigationBar().hide();
         frmMain.down('titlebar').hide();
+        if (app.CusRoomId >= 0){
+            this.goRoom(app.CusRoomId);
+        };
     },
     filterByButton: function (btn) {
         Ext.getStore('Rooms').clearFilter(true);
