@@ -106,13 +106,13 @@ Ext.define('CustomerApp.controller.Customer', {
         var goodsview = this.getOrderingslist();
         goodsview.refresh();
     },
-    //全部微辣
+    //全部不辣
     onmarkToggle2: function (field, slider, thumb, newValue, oldValue) {
         var goodsStore = Ext.getStore('Goods');
 
         goodsStore.each(function (records) {
             if (slider == 1)
-                records.data.Remarks = '微辣';
+                records.data.Remarks = '不辣';
             else
                 records.data.Remarks = '';
         });

@@ -132,7 +132,7 @@ Ext.define('CustomerApp.view.ListOrderings', {
                             // id : 'markToggle',
                             itemId: 'markToggle2',
                              docked: 'right',
-                            label: '全微辣'
+                            label: '全不辣'
                             }
                         ]
                     },
@@ -172,21 +172,21 @@ Ext.define('CustomerApp.view.ListOrderings', {
                 switch (data.Remarks)
                 {
                 case "":{
-                   data.Remarks = '微辣';
+                   data.Remarks = '加辣';
                     };
                    break;
-                case "微辣":{
-                   data.Remarks = '加辣';
+                case "不辣":{
+                   data.Remarks = '';
                    };
                    break;
                 case "加辣":{
-                   data.Remarks = '';
+                   data.Remarks = '不辣';
                    };
                    break;
                 default:{
                     data.Remarks = '微辣';
                     };
-                    break; 
+                    break;
                 };
                 var task = Ext.create('Ext.util.DelayedTask', function() {
                         item.setData(data);

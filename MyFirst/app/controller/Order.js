@@ -185,13 +185,13 @@ Ext.define('MyFirst.controller.Order', {
         var goodsview = this.getOrderingslist();
         goodsview.refresh();
     },
-    //全部微辣
+    //全部不辣
     onmarkToggle2: function (field, slider, thumb, newValue, oldValue) {
         var goodsStore = Ext.getStore('Goods');
 
         goodsStore.each(function (records) {
             if (slider == 1)
-                records.data.Remarks = '微辣';
+                records.data.Remarks = '不辣';
             else
                 records.data.Remarks = '';
         });
@@ -335,7 +335,7 @@ Ext.define('MyFirst.controller.Order', {
                     Ext.each(ordergroup[i-1],function(ordgroup){
                         var goods = goodsstore.findRecord('GoodsName', ordgroup.name, 0, false, false, true);
                         goods.data.GoodsCount += ordgroup.quantity;
-                        goods.data.Remarks = ordgroup.specs;
+                        goods.data.Remarks = ordgroup.specs.toString();
                     });
                     
                 };
