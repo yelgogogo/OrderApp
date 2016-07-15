@@ -41,6 +41,8 @@ Ext.define('MyFirst.view.PosForm', {
                                 { text: '微信', value: '微信' },
                                 { text: '支付宝', value: '支付宝' },
                                 { text: '信用卡', value: '信用卡' },
+                                { text: '饿了么', value: '饿了么' },
+                                { text: '美团', value: '美团' },
                                 { text: '会员卡', value: '会员卡' }
                             ]
                     }

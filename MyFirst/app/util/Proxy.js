@@ -67,6 +67,27 @@ Ext.define('app.util.Proxy', {
           failure: failureCallback
        });     
     },
+    //elemeAPI
+    elemeAPI: function (apiUrl,args,callback) {
+        var successCallback = function (resp, ops) {
+            var data = Ext.decode(resp.responseText).d;
+            var eleme = Ext.decode(data);
+            // Ext.Msg.alert("撤单成功!");
+            callback(eleme);
+        };
+        var failureCallback = function (result) {
+            Ext.Msg.alert("获取新订单失败!");
+        };
+       Ext.Ajax.request({
+          url: '../'+app.pgmid+'WebServiceEx.asmx/JSON_ElemeRequest',
+          jsonData: {
+                apiUrl: apiUrl,
+                args: args
+          },
+          success: successCallback,
+          failure: failureCallback
+       });     
+    },
     //打印
     printQrCode: function (printstr) {
         var successCallback = function (resp, ops) {
@@ -712,7 +733,7 @@ loadOverView: function (callback) {
     failure: failureCallback
 });
 },
-openRoom: function (roomID, callback) {
+openRoom: function (roomID, reservationNo, callback) {
 
     var successCallback = function (resp, ops) {
         var data = Ext.decode(resp.responseText).d;
@@ -737,7 +758,8 @@ openRoom: function (roomID, callback) {
         url: '../'+app.pgmid+'WebServiceEx.asmx/JSON_OpenRoom',
         jsonData: {
             roomID: roomID,
-            userNo: Ext.getStore('User').load().data.items[0].data.userno
+            userNo: Ext.getStore('User').load().data.items[0].data.userno,
+            reservationNo: reservationNo
         },
         success: successCallback,
         failure: failureCallback
