@@ -334,7 +334,7 @@ Ext.define('MyFirst.controller.Order', {
                     // var groupidy = ordergroup[groupidx-1].length;
                     Ext.each(ordergroup[i-1],function(ordgroup){
                         var goods = goodsstore.findRecord('GoodsName', ordgroup.name, 0, false, false, true);
-                        goods.data.GoodsCount += ordgroup.quantity;
+                        goods.data.GoodsCount = ordgroup.quantity;
                         goods.data.Remarks = ordgroup.specs.toString();
                     });
                     
