@@ -549,7 +549,7 @@ loadOrder: function (roomID, callback) {
         // var temp = Ext.create('MyFirst.model.Order', { 'GoodsName': '菜品','GoodsTypeName': '分类', 'Price': '价格', 'Unit': '', 'GoodsCount': '数量', 'SubTotal': '小计', 'PresentUser': '落单人', 'OpCode':app.CurRoom.RoomOpCode });
         // orderStore.add(temp);
         var data = Ext.decode(resp.responseText).d;
-        var Json_Order = eval('(' + data + ')');
+        var Json_Order = Ext.decode(data);
         Ext.Array.each(Json_Order.Orders, function (order) {
             orderModel = Ext.create('MyFirst.model.Order', order);
             orderStore.add(orderModel);

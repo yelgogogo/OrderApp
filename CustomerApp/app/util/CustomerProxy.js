@@ -235,7 +235,7 @@ Ext.define('app.util.CustomerProxy', {
 //    	});
         var successCallback = function (resp, ops) {
             var data = Ext.decode(resp.responseText).d;
-            var Json_Order = eval('(' + data + ')');
+            var Json_Order = Ext.decode(data);
             roomcount = 0;
             Ext.Array.each(Json_Order.Orders, function (order) {
                 orderModel = Ext.create('CustomerApp.model.Order', order);
