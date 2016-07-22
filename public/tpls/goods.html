@@ -1,0 +1,27 @@
+<div class="list-group">
+	<div class="list-group-item" ng-show="goods.length <= 0">该品类没有任何商品</div>
+	 
+    <div class="list-group-item good-item col-xs-12" ng-repeat="gd in goods">
+    	<div class="col-xs-6 text-center" ng-show="gd.pics.length > 0">
+    		<img ng-src="{{gd.pics[0]}}" class="food-img" />
+    	</div>
+        <div class="col-xs-6 no-pic" ng-show="gd.pics.length <= 0">
+            暂无图片
+        </div>
+    	<div class="col-xs-6">
+    		<b ng-bind="gd.GoodsName"></b>
+    		<div class="good-description" ng-bind="gd.description"></div>
+    		<div class="good-vote">
+    			<rating></rating>
+    		</div>
+    		<div class="good-action">
+    			<label class="good-price">￥{{gd.Price}}</label>
+    			<div class="pull-right">
+                    <cart-decrease ng-click="decrease(gd)" ng-show="GoodsCount > 0"></cart-decrease>
+                    <span class="food-count" ng-bind="GoodsCount" ng-show="GoodsCount > 0"></span>
+    				<cart-add ng-click="add(gd)"></cart-add>
+    			</div>
+    		</div>    		
+    	</div>
+    </div>
+</div>

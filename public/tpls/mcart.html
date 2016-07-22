@@ -1,0 +1,67 @@
+<div ng-controller="McartController">
+    <header class="shop-header">
+        <a class="header-back col-xs-4" ng-href="/shop">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+        </a>
+        <div class="header-title col-xs-4 text-center">
+            <b>已点菜单</b>
+        </div>
+        <div class="col-xs-4">
+        </div>
+    </header>
+    <div class="col-xs-12 text-center" ng-if="!cartData || cartData.length <= 0">
+        <div class="no-pic empty-cart-info">
+            <h1><i class="glyphicon glyphicon-shopping-cart"></i></h1>
+            <p class="">购物车什么都没有，快去点餐吧！</p>
+        </div>
+    </div>
+    <div class="restaurant-cart col-xs-12">
+        <div class="ui-block" ng-if="cartData && cartData.length > 0">
+            <div class="list-group-item good-item col-xs-12" data-toggle="collapse" href="#{{gd.ID}}" ng-repeat="gd in cartData">
+                <div class="col-xs-12">
+                    <div class="col-xs-5">
+                        <b class="food-name" ng-bind="gd.GoodsName"></b>
+                        <p class="good-price">￥{{gd.Price}} / {{gd.Unit}}</p>
+                    </div>
+                    <div class="col-xs-3 text-right">
+                        <span>{{gd.Remarks}}</span>
+                        <a class="btn-remarks" ng-click="remark(gd)"><i class="glyphicon glyphicon-fire"></i></a>
+                    </div>
+                    <div class="col-xs-4 text-right">
+                        <a class="btn-minus" ng-click="countMinus(gd)"><i class="glyphicon glyphicon-minus-sign"></i></a>
+                        <span class="food-count" ng-bind="gd.GoodsCount" ng-show="gd.GoodsCount >= 0"></span>
+                    	<a class="btn-add" ng-click="countPlus(gd)"><i class="glyphicon glyphicon-plus-sign"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-cart-bottom col-xs-12">
+        <div class="col-xs-12 text-right" ng-if="totalCount > 0">
+            <h2 class="mcart-total">
+    			<i class="glyphicon glyphicon-shopping-cart"></i>
+    			&nbsp;{{totalCount}}份 
+    			<label class="good-price">￥{{totalPrice}}</label>
+    		</h2>
+    	</div>
+        <div class="col-xs-12 text-center form-inline mark-container" ng-if="totalCount > 0">
+            <div class="col-xs-3 text-nowrap">
+                <label>不辣/全加辣</label>
+            </div>
+            <div class="col-xs-3">
+                <switch name="chili" ng-model="chili" ng-change="changeTaste(chili)"></switch>
+            </div>
+            <div class="col-xs-3 text-nowrap">
+                <label>数+10</label>
+            </div>
+            <div class="col-xs-3">
+                <switch name="tens" ng-model="tensFlag" ng-change="changeTens(tensFlag)"></switch>
+            </div>
+        </div>
+        <div class="col-xs-8">
+        </div>
+        <div class="col-xs-4 text-right" ng-if="totalCount > 0">
+            <button class="mbtn mbtn-confirm" ng-click="sendtoserver(cartData)"><b class="white">确认下单</b></button>
+        </div>
+    </div>
+</div>

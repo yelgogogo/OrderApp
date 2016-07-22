@@ -237,7 +237,7 @@ Ext.define('app.util.CustomerProxy', {
             var data = Ext.decode(resp.responseText).d;
             var Json_Order = Ext.decode(data);
             roomcount = 0;
-            Ext.Array.each(Json_Order.Orders, function (order) {
+            Ext.Array.each(Json_Order, function (order) {
                 orderModel = Ext.create('CustomerApp.model.Order', order);
                 roomcount += order.SubTotal;
                 orderStore.add(orderModel);

@@ -550,7 +550,7 @@ loadOrder: function (roomID, callback) {
         // orderStore.add(temp);
         var data = Ext.decode(resp.responseText).d;
         var Json_Order = Ext.decode(data);
-        Ext.Array.each(Json_Order.Orders, function (order) {
+        Ext.Array.each(Json_Order, function (order) {
             orderModel = Ext.create('MyFirst.model.Order', order);
             orderStore.add(orderModel);
         });
@@ -559,7 +559,7 @@ loadOrder: function (roomID, callback) {
         //更新该房台的记录
         var roomStore = Ext.getStore('Rooms');
         var record = roomStore.findRecord('ID', roomID);
-        record.setData(Json_Order.Room[0]);
+        // record.setData(Json_Order.Room[0]);
         app.CurRoom = record.data;
         callback();
     };

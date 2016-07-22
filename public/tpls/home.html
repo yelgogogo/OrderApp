@@ -1,0 +1,15 @@
+<header class="shop-header">
+    <a class="shop-logo icon-logo-shop"><b>{{CurPlace}}</b></a>
+    <nav class="header-user-info pull-right">
+        <a class="link" href="/shop">登录</a> |
+        <a class="link" href="/register">注册</a>
+    </nav>
+</header>
+
+<div ng-app="app" ng-controller="HomeController">    
+
+    <div ng-repeat="goods in goodslist track by $index">
+        <span>菜品分类:{{goods.GoodsTypeName}}</span>
+        <p>菜品名:{{goods.GoodsName}}</p>
+    </div>
+</div>
