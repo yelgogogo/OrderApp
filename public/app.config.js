@@ -60,7 +60,7 @@ function loadCss(urls) {
 }
 
 loadCss([
-    'libs/bootstrap.min.css',
+    'http://cdn.bootcss.com/bootstrap/3.3.2/css/bootstrap.min.css',
     'libs/angular-ui-switch.css',
     'css/styles.css',
 ]);

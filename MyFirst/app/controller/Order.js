@@ -418,7 +418,7 @@ Ext.define('MyFirst.controller.Order', {
             frmMain.getNavigationBar().show();
             frmMain.down('titlebar').show();
             if (app.CurRoom.RoomStateName == "打单" || app.CurRoom.RoomStateName == "收银") {
-                this.loadRoomOrder(app.CurRoom.ID);
+                this.loadRoomOrder(app.CurRoom.ID, app.CurRoom.RoomOpCode);
             }else {
                 var user = Ext.getStore('User').load().data.items[0].data;
                 // this.showCustomerButton();
@@ -427,7 +427,7 @@ Ext.define('MyFirst.controller.Order', {
                     this.loadPresentGoods(app.CurRoom.ID);
                 }else if (Ext.Array.contains(user.rights, "落单")) {
                     app.OrderType = "落单";
-                    this.loadOrderGoods(app.CurRoom.ID);
+                    this.loadOrderGoods(app.CurRoom.ID,app.CurRoom.RoomOpCode);
                 }
             };
         };
@@ -473,7 +473,7 @@ Ext.define('MyFirst.controller.Order', {
         // this.hideDoBalanceButton();
         // this.hideMngButton();
         if (app.CurRoom.RoomStateName == "打单" || app.CurRoom.RoomStateName == "收银") {
-            this.loadRoomOrder(app.CurRoom.ID);
+            this.loadRoomOrder(app.CurRoom.ID, app.CurRoom.RoomOpCode);
             // this.showCloseButton();
             // this.hideOrderButton();
             // this.hideOrderMemButton();
@@ -505,7 +505,7 @@ Ext.define('MyFirst.controller.Order', {
                 // this.showPresentButton();
                 // this.showQueryButton();
                 // this.showHisQueryButton();
-                this.loadOrderGoods(app.CurRoom.ID);
+                this.loadOrderGoods(app.CurRoom.ID,app.CurRoom.RoomOpCode);
             }
         }
     },
@@ -521,11 +521,11 @@ Ext.define('MyFirst.controller.Order', {
         this.getTxtConsumed().setValue(app.roomhisconsumed);
         // this.getTxtPresented().setValue(room.PresentAmount);
     },
-    loadRoomOrder: function (roomID) {
+    loadRoomOrder: function (roomID,opCode) {
         Ext.Viewport.setMasked({ xtype: 'loadmask' });
         var frmMain = this.getRoomContainer();
         frmMain.down('titlebar').setTitle(app.CurRoom.RoomName + ' 消费查询');
-        app.util.Proxy.loadOrder(roomID, function () {
+        app.util.Proxy.loadOrder(roomID,opCode, function () {
             //点击房台后，先载入房台消费信息
             if (!this.orderedlist) {
                 this.orderedlist = Ext.widget('orderedslist');
@@ -881,7 +881,7 @@ Ext.define('MyFirst.controller.Order', {
                 
             // if (app.CurRoom.RoomStateName == "开房" || app.CurRoom.RoomStateName == "收银")
             //     this.showCloseButton();
-            this.loadRoomOrder(app.CurRoom.ID);
+            this.loadRoomOrder(app.CurRoom.ID, app.CurRoom.RoomOpCode);
         }
     },
     //消费历史查询

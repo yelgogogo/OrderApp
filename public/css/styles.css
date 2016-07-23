@@ -176,7 +176,7 @@ a:focus, a:hover {
 	background: #f7f7f7;
 }
 .food-img {
-	height: inherit;
+	height: 75px;
 }
 .restaurant-menu .restaurant-menu-item.active {
     margin-right: -1px;

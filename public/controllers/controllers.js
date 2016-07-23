@@ -202,7 +202,7 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
         $('.restaurant-cart').height($('body').outerHeight(true) - $('.shop-header').outerHeight(true) - $('.restaurant-cart-bottom').outerHeight(true));
     });
 
-    app.controller("CheckoutController", function($scope, APP_TITLE, Cart, Rooms, FoodService) {
+    app.controller("CheckoutController", function($scope, APP_TITLE, Cart, Rooms, FoodService,MsgService, $filter) {
         
         $scope.APP_TITLE = APP_TITLE;
 

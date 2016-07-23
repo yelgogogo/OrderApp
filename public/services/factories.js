@@ -170,7 +170,7 @@ define(['angular'], function (angular) {
                             // tempdata.GoodsName=tempdata.GoodsName;
                             // tempdata.Price=tempdata.Price;
                             // tempdata.description==tempdata.Unit;
-                            tempdata.pics=['images\/'+tempdata.ID+'.jpg'];
+                            tempdata.pics=['resources/img'+$rootScope.apppgmid+'/'+tempdata.ID+'.jpg'];
                             // delete tempdata.DisplayOrder;
                             // delete tempdata.GoodsTypeName;
                         });

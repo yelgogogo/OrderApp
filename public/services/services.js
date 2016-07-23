@@ -28,7 +28,11 @@ define(['angular'], function(angular) {
 
     app.service('RoomService', function($resource,$rootScope,$location) {
         if($location.path().split("\/")[1]){
-            $rootScope.apppgmid = "\/" + $location.path().split("\/")[1] ;
+            if($location.path().split("\/")[1].search(".html")>0){
+                $rootScope.apppgmid ="";
+            }else{
+                $rootScope.apppgmid = "\/" + $location.path().split("\/")[1] ;
+            };
         };
         this.getUnStr = function() {
             return $resource(web_url + $rootScope.apppgmid +'/WebServiceEx.asmx/JSON_Decrypt', {}, {

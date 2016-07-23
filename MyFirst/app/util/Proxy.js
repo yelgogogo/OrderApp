@@ -537,7 +537,7 @@ loadPresentGoods: function (roomID, callback) {
         failure: failureCallback
     });
 },
-loadOrder: function (roomID, callback) {
+loadOrder: function (roomID, opCode, callback) {
 
     var orderStore = Ext.getStore('Orders');
     orderStore.removeAll();
@@ -569,7 +569,8 @@ loadOrder: function (roomID, callback) {
     Ext.Ajax.request({
         url: '../'+app.pgmid+'WebServiceEx.asmx/JSON_GetRoomOrderList',
         jsonData: {
-            roomID: roomID
+            roomID: roomID,
+            opCode: opCode
         },
         success: successCallback,
         failure: failureCallback

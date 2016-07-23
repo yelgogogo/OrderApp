@@ -17,7 +17,7 @@
     </div>
     <div class="restaurant-cart col-xs-12">
         <div class="ui-block" ng-if="cartData && cartData.length > 0">
-            <div class="list-group-item good-item col-xs-12" data-toggle="collapse" href="#{{gd.ID}}" ng-repeat="gd in cartData">
+            <div class="list-group-item good-item col-xs-12" data-toggle="collapse" href="#{{gd.ID}}" ng-repeat="gd in cartData" ng-show="gd.GoodsCount > 0">
                 <div class="col-xs-12">
                     <div class="col-xs-5">
                         <b class="food-name" ng-bind="gd.GoodsName"></b>
