@@ -111,7 +111,6 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
         $scope.sendtoserver = function (o) {                
             var submitMobile = {};
             var app_OrderType='下单';
-            var app_CurRoom_ID=Rooms.getRoomID();
             var msgtxt='';
             submitMobile.SubmitOrders = angular.copy(o);
             submitMobile.SubmitOrders.forEach(function(goods){
@@ -127,8 +126,8 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
 
             submitMobile.orderType = app_OrderType;
             //        submitMobile.isPresent = app.IsPresent;
-            submitMobile.roomID = app_CurRoom_ID;
-
+            submitMobile.roomID = Rooms.getRoomID();
+            submitMobile.opCode = Rooms.getOpCode();
             var submitMobile_json = angular.toJson(submitMobile);
             var app_pgmid = '';
             var app_CurPlace = '麦克食品店';
@@ -233,7 +232,7 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
                 }
             );
 
-        FoodService.getOrdered().get({roomID:roomID})
+        FoodService.getOrdered().get({roomID:roomID,opCode:opCode})
             .$promise.then(function(goods){  
                 if(!goods.d){ 
                     return;
@@ -258,7 +257,6 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
         $scope.sendtoserver = function (o) {                
             var submitMobile = {};
             var app_OrderType='下单';
-            var app_CurRoom_ID=Rooms.getRoomID();
             var msgtxt='';
             submitMobile.SubmitOrders = angular.copy(o);
             submitMobile.SubmitOrders.forEach(function(goods){
@@ -272,7 +270,8 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
 
             submitMobile.orderType = app_OrderType;
             //        submitMobile.isPresent = app.IsPresent;
-            submitMobile.roomID = app_CurRoom_ID;
+            submitMobile.roomID = Rooms.getRoomID();
+            submitMobile.opCode = Rooms.getOpCode();
 
             var submitMobile_json = angular.toJson(submitMobile);
             var app_pgmid = '';
