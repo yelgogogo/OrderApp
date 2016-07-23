@@ -74,12 +74,16 @@ a:focus, a:hover {
     text-decoration: none;
 }
 .header-user-info {
-	font-size: .75rem;
+	font-size: large;
 	padding: 0 10px 0 0;
+	text-align: center;
 }
 .header-back,.header-user-info>.link {	
 	color: #fff;
-	font-size: 2em;
+	font-size: large;
+}
+.header-title {	
+	font-size: large;
 }
 .header-user-info>.link {
 	padding: 4px;
@@ -148,8 +152,10 @@ a:focus, a:hover {
 .restaurant-cart-bottom {
 	position: fixed;
 	bottom: 0;
-	height: 15em;
+	height: 25%;
 	width: 100%;
+	padding-right: 2px;
+    padding-left: 2px;
 }
 .restaurant-checkout {
 	height: 100%;
@@ -159,8 +165,10 @@ a:focus, a:hover {
 .restaurant-checkout-bottom {
 	position: fixed;
 	bottom: 0;
-	height: 10em;
+	height: 17%;
 	width: 100%;
+	padding-right: 2px;
+    padding-left: 2px;
 }
 .restaurant-food {
 	height: 100%;
@@ -168,7 +176,7 @@ a:focus, a:hover {
 	background: #f7f7f7;
 }
 .food-img {
-	height: 6em;
+	height: inherit;
 }
 .restaurant-menu .restaurant-menu-item.active {
     margin-right: -1px;
@@ -180,6 +188,7 @@ a:focus, a:hover {
 	border-left: none;
 	border-right: none;
 	background: #f7f7f7;
+	font-size: large;
 }
 .list-group-item:focus ,.list-group-item:hover{
 	border-left: none;
@@ -218,7 +227,7 @@ a:focus, a:hover {
 }
 .good-price {
 	color: #ff6000;
-	font-size: 1.5em;
+	font-size: large;
 }
 .good-name {
 	font-size: 2em;
@@ -236,15 +245,29 @@ a:focus, a:hover {
 	width: 100%;
 	color: #fff;
 }
+.shop-enter {
+	margin: auto;  
+	position: absolute;  
+	top: 0; 
+	left: 0; 
+	bottom: 0; 
+	right: 0; 
+	position: fixed;
+	height: 45px;
+	line-height: 45px;
+	width: 100%;
+	color: #fff;
+}
 .bottom-render {
 	width: 100%;
 	height: 45px;
 }
 .mcart-info {
 	color: #fff;
+	font-size: x-large;
 }
 .mcart-total {
-	font-size: 2em;
+	font-size: x-large;
 }
 .mcart-checkout {
 	padding: 6px 18px;
@@ -253,7 +276,8 @@ a:focus, a:hover {
     color: #fff;
 }
 .mbtn-confirm {
-	background: #3199e8;
+	background: #4cd964;
+	font-size: large;
 	display: block;
     width: 100%;
     padding: 10px 0;
@@ -265,9 +289,6 @@ a:focus, a:hover {
     transition: color .4s;
 }
 
-.mbtn-confirm {
-	background: #4cd964;
-}
 .no-pic {
 	color: #ccc;
 	text-align: center;
@@ -276,7 +297,7 @@ a:focus, a:hover {
 	margin-top: 40%;
 }
 .btn-add, .btn-minus {
-	font-size: 2em;
+	font-size: x-large;
 	color: #79ec8d;
 }
 .btn-remarks{
@@ -289,14 +310,17 @@ a:focus, a:hover {
 .btn-add:focus, .btn-minus:focus, .btn-add:hover, .btn-minus:hover {
 	color: #4cd964;
 }
-.food-count {
-	font-size: 2em;
+.font-large {
+	font-size: large;
 }
-.food-price {
-	font-size: 2em;
+.font-smaller {
+	font-size: smaller;
+}
+.font-x-large {
+	font-size: x-large;
 }
 .mark-container {
-	margin-top: 20px;
+	margin-bottom: 10px;
 }
 .count-asc, .count-dec {
 	font-size: 1em;

@@ -93,7 +93,6 @@ define(['angular'], function (angular) {
 		    $rootScope.Key = $location.search().Key;
 	    	};
 
-		$rootScope.apppgmid='';
 		$rootScope.roomData = [];
 		$rootScope.roomID='';
 		$rootScope.opCode='';

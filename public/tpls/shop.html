@@ -1,6 +1,8 @@
 <div ng-controller="ShopController" class="restaurant-container">
 	<header class="shop-header">
-		<div class="col-xs-2"></div>
+		<a class="header-back col-xs-2" ng-href="/home">
+        	<i class="glyphicon glyphicon-chevron-left"></i>
+    	</a>
 		<div class="header-title col-xs-8 text-center">
 			<b>{{CurPlace}} {{roomData.Room[0].RoomName}}</b>
 		</div>
@@ -17,13 +19,14 @@
 		</div>
 	</div>
 	<div class="menu-cart">
+		<div class="col-xs-6 text-right">
+			<a href="/checkout" class="mcart-checkout font-x-large">消费查询</a>
+		</div>
 		<div class="col-xs-6">
 			<a href="/mcart" class="mcart-info">
 				<i class="glyphicon glyphicon-shopping-cart"></i>&nbsp;{{totalCount}}份 ￥{{totalPrice}}
 			</a>
 		</div>
-		<div class="col-xs-6 text-right">
-			<a href="/checkout" class="mcart-checkout">消费查询</a>
-		</div>
+
 	</div>
 </div>

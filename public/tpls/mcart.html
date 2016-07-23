@@ -29,14 +29,14 @@
                     </div>
                     <div class="col-xs-4 text-right">
                         <a class="btn-minus" ng-click="countMinus(gd)"><i class="glyphicon glyphicon-minus-sign"></i></a>
-                        <span class="food-count" ng-bind="gd.GoodsCount" ng-show="gd.GoodsCount >= 0"></span>
+                        <span class="font-large" ng-bind="gd.GoodsCount" ng-show="gd.GoodsCount >= 0"></span>
                     	<a class="btn-add" ng-click="countPlus(gd)"><i class="glyphicon glyphicon-plus-sign"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="restaurant-cart-bottom col-xs-12">
+    <div class="restaurant-cart-bottom font-large col-xs-12">
         <div class="col-xs-12 text-right" ng-if="totalCount > 0">
             <h2 class="mcart-total">
     			<i class="glyphicon glyphicon-shopping-cart"></i>
@@ -44,23 +44,23 @@
     			<label class="good-price">￥{{totalPrice}}</label>
     		</h2>
     	</div>
-        <div class="col-xs-12 text-center form-inline mark-container" ng-if="totalCount > 0">
-            <div class="col-xs-3 text-nowrap">
-                <label>不辣/全加辣</label>
+        <div class="col-xs-12 text-center form-inline mark-container " ng-if="totalCount > 0">
+            <div class="col-xs-3 text-nowrap font-smaller">
+                <label>全加辣/不辣</label>
             </div>
             <div class="col-xs-3">
                 <switch name="chili" ng-model="chili" ng-change="changeTaste(chili)"></switch>
             </div>
             <div class="col-xs-3 text-nowrap">
-                <label>数+10</label>
+                <label>数x10</label>
             </div>
             <div class="col-xs-3">
                 <switch name="tens" ng-model="tensFlag" ng-change="changeTens(tensFlag)"></switch>
             </div>
         </div>
-        <div class="col-xs-8">
+        <div class="col-xs-6">
         </div>
-        <div class="col-xs-4 text-right" ng-if="totalCount > 0">
+        <div class="col-xs-6 text-right" ng-if="totalCount > 0">
             <button class="mbtn mbtn-confirm" ng-click="sendtoserver(cartData)"><b class="white">确认下单</b></button>
         </div>
     </div>

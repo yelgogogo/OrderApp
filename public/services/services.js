@@ -1,8 +1,8 @@
 define(['angular'], function(angular) {
-    // apppgmid ='';
-    var web_url = "../";
+    // $rootScope.apppgmid ='';
+    var web_url = "..";
     // if($location.path().split("\/")[1]){
-    //     var apppgmid = $location.path().split("\/")[1] + "\/";
+    //     var $rootScope.apppgmid = $location.path().split("\/")[1] + "\/";
     // };
     var app = angular.module('services', ['ngResource']);
 
@@ -26,9 +26,12 @@ define(['angular'], function(angular) {
 
     });
 
-    app.service('RoomService', function($resource) {
+    app.service('RoomService', function($resource,$rootScope,$location) {
+        if($location.path().split("\/")[1]){
+            $rootScope.apppgmid = "\/" + $location.path().split("\/")[1] ;
+        };
         this.getUnStr = function() {
-            return $resource(web_url + apppgmid +'/WebServiceEx.asmx/JSON_Decrypt', {}, {
+            return $resource(web_url + $rootScope.apppgmid +'/WebServiceEx.asmx/JSON_Decrypt', {}, {
                 get: {
                     method: "POST"
                 }
@@ -36,7 +39,7 @@ define(['angular'], function(angular) {
         };
 
         this.getSysParm = function() {
-            return $resource(web_url + apppgmid +'/WebServiceEx.asmx/JSON_GetSysParam', {}, {
+            return $resource(web_url + $rootScope.apppgmid +'/WebServiceEx.asmx/JSON_GetSysParam', {}, {
                 get: {
                     method: "POST"
                 }
@@ -45,7 +48,7 @@ define(['angular'], function(angular) {
 
 
         this.chkCustomerOp = function() {
-            return $resource(web_url + apppgmid +'/WebServiceEx.asmx/JSON_ChkCustomerOp', {}, {
+            return $resource(web_url + $rootScope.apppgmid +'/WebServiceEx.asmx/JSON_ChkCustomerOp', {}, {
                 get: {
                     method: "POST"
                 }
@@ -53,9 +56,9 @@ define(['angular'], function(angular) {
         };
     });
 
-    app.service('MsgService', function ($resource) {
+    app.service('MsgService', function ($resource,$rootScope) {
         this.sendMsg = function () {
-            return $resource(web_url + apppgmid +"/WebServiceEx.asmx/JSON_SendWeChatTemplateMessageToRights", {}, {
+            return $resource(web_url + $rootScope.apppgmid +"/WebServiceEx.asmx/JSON_SendWeChatTemplateMessageToRights", {}, {
                 send: {
                     method: "POST"
                 }
@@ -63,9 +66,9 @@ define(['angular'], function(angular) {
         }
     });
 
-    app.service('FoodService', function ($resource) {
+    app.service('FoodService', function ($resource,$rootScope) {
         this.getFoodList = function () {
-            return $resource(web_url + apppgmid +"/WebServiceEx.asmx/JSON_Get_RoomGoods", {}, {
+            return $resource(web_url + $rootScope.apppgmid +"/WebServiceEx.asmx/JSON_Get_RoomGoods", {}, {
                 query: {
                     method: "POST"
                 }
@@ -73,7 +76,15 @@ define(['angular'], function(angular) {
         };
 
         this.addCustomerOrder = function () {
-            return $resource(web_url + apppgmid +"/WebServiceEx.asmx/JSON_Add_CustomerOrders", {}, {
+            return $resource(web_url + $rootScope.apppgmid +"/WebServiceEx.asmx/JSON_Add_CustomerOrders", {}, {
+                add: {
+                    method: "POST"
+                }
+            });
+        };
+
+        this.modCustomerOrder = function () {
+            return $resource(web_url + $rootScope.apppgmid +"/WebServiceEx.asmx/JSON_Mod_CustomerOrders", {}, {
                 add: {
                     method: "POST"
                 }
@@ -81,7 +92,7 @@ define(['angular'], function(angular) {
         };
 
         this.getCustomerOrder = function () {
-            return $resource(web_url + apppgmid +"/WebServiceEx.asmx/JSON_GetRoomCustomerOrderList", {}, {
+            return $resource(web_url + $rootScope.apppgmid +"/WebServiceEx.asmx/JSON_GetRoomCustomerOrderList", {}, {
                 get: {
                     method: "POST"
                 }
@@ -89,7 +100,7 @@ define(['angular'], function(angular) {
         };
 
         this.getOrdered = function () {
-            return $resource(web_url + apppgmid +"/WebServiceEx.asmx/JSON_GetRoomOrderList", {}, {
+            return $resource(web_url + $rootScope.apppgmid +"/WebServiceEx.asmx/JSON_GetRoomOrderList", {}, {
                 get: {
                     method: "POST"
                 }

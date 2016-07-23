@@ -9,8 +9,7 @@ define(['angular', 'require', 'angular-route','angular-resource', 'uiSwitch','bo
         $routeProvider
             .when('/', {
                 // controller: 'HomeController',
-                // templateUrl:'tpls/home.html'
-                templateUrl: 'tpls/shop.html'
+                templateUrl:'tpls/home.html'
 
             })
             .when('/shop', {
@@ -26,8 +25,8 @@ define(['angular', 'require', 'angular-route','angular-resource', 'uiSwitch','bo
                 templateUrl: 'tpls/checkout.html'
             })
             .otherwise({
-                // templateUrl:'tpls/home.html'
-                templateUrl: 'tpls/shop.html'
+                templateUrl:'tpls/home.html'
+
             });
 
         $locationProvider.html5Mode(true);
