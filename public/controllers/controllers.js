@@ -130,10 +130,10 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
             submitMobile.opCode = Rooms.getOpCode();
             var submitMobile_json = angular.toJson(submitMobile);
             var app_pgmid = '';
-            var app_CurPlace = '麦克食品店';
-            var app_CurRoom_RoomName = '大厅01';
+            var app_CurPlace = Rooms.getPlaceName();
+            var app_CurRoom_RoomName = Rooms.getRooms().Room[0].RoomName;
             var strrights = '落单';
-            var strstate = app_CurRoom_ID;
+            var strstate = Rooms.getRoomID();
             var templateid = 'tc6Ayn7IGJk5BtQzi94BniwSqHMb3ErgG7rZwpL1eoA';
             var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9f51df2624282eb1&redirect_uri=http%3a%2f%2fstarstech.cc%2f'+app_pgmid+'order.html&response_type=code&scope=snsapi_base&state='+strstate+'#wechat_redirect';
             var Sysdate = new Date();  
@@ -157,6 +157,8 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
 
             FoodService.addCustomerOrder().add({submitMobile: submitMobile_json})
                 .$promise.then(function(msg){
+                	alert("已经通知服务员确认");
+                	Cart.setProducts([]);
                     MsgService.sendMsg().send({
                         strrights: strrights,
                         templateID: templateid,
@@ -278,7 +280,7 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
             var app_CurPlace = '麦克食品店';
             var app_CurRoom_RoomName = '大厅01';
             var strrights = '落单';
-            var strstate = app_CurRoom_ID;
+            var strstate = Rooms.getRoomID();
             var templateid = 'tc6Ayn7IGJk5BtQzi94BniwSqHMb3ErgG7rZwpL1eoA';
             var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9f51df2624282eb1&redirect_uri=http%3a%2f%2fstarstech.cc%2f'+app_pgmid+'order.html&response_type=code&scope=snsapi_base&state='+strstate+'#wechat_redirect';
             var Sysdate = new Date();  
@@ -302,6 +304,7 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
 
             FoodService.modCustomerOrder().add({submitMobile: submitMobile_json})
                 .$promise.then(function(msg){
+                	alert("已经通知服务员确认，请勿重复提交");
                     MsgService.sendMsg().send({
                         strrights: strrights,
                         templateID: templateid,
@@ -323,7 +326,11 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
         $scope.decrease = function(gd) {
             gd.GoodsCount -= 1;
             if (gd.GoodsCount<0){gd.GoodsCount=0};
-        };   
+        }; 
+
+        $scope.increase = function(gd) {
+            gd.GoodsCount += 1;
+        };  
 
         $('.restaurant-checkout').height($('body').outerHeight(true) - $('.shop-header').outerHeight(true) - $('.restaurant-checkout-bottom').outerHeight(true));
 

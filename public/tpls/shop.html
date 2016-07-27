@@ -10,22 +10,25 @@
 	</header>
 	<restaurant-tab restaurant="restaurant" state="currentState"></restaurant-tab>
 	<div class="restaurant-content">
-		<div class="restaurant-menu col-xs-3">
+		<div class="restaurant-menu col-xs-2">
 			<menu-nav items="types" category="currentType"></menu-nav>
 		</div>
-		<div class="restaurant-food col-xs-9">
+		<div class="restaurant-food col-xs-10">
 			<div><label class="restaurant-menu-description">{{currentName}}</label></div>
 			<restaurant-food goods="currentGoods"></restaurant-food>			
 		</div>
 	</div>
 	<div class="menu-cart">
-		<div class="col-xs-6 text-right">
-			<a href="/checkout" class="mcart-checkout font-x-large">消费查询</a>
-		</div>
-		<div class="col-xs-6">
-			<a href="/mcart" class="mcart-info">
-				<i class="glyphicon glyphicon-shopping-cart"></i>&nbsp;{{totalCount}}份 ￥{{totalPrice}}
+		<div class="col-xs-4 text-left">
+			<a href="/checkout" class="mcart-checkout font-large">订单
+				<i class="glyphicon glyphicon-search"></i>
 			</a>
+		</div>
+		<div class="col-xs-8 text-right">
+			<b class="mcart-info">
+				{{totalCount}}份 ￥{{totalPrice}}
+			</b>
+			<a href="/mcart" class="mcart-checkout font-large">下单<i class="glyphicon glyphicon-shopping-cart"></i></a>
 		</div>
 
 	</div>

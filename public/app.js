@@ -16,6 +16,10 @@ define(['angular', 'require', 'angular-route','angular-resource', 'uiSwitch','bo
                 // controller: 'ShopController',
                 templateUrl: 'tpls/shop.html'
             })
+            .when('/pos', {
+                // controller: 'ShopController',
+                templateUrl: 'tpls/pos.html'
+            })
             .when('/mcart', {
                 // controller: 'McartController',
                 templateUrl: 'tpls/mcart.html'

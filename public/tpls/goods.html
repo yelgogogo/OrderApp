@@ -5,18 +5,20 @@
     	<div class="col-xs-7 text-center" ng-show="gd.pics.length > 0">
     		<img ng-src="{{gd.pics[0]}}" class="food-img" />
     	</div>
-        <div class="col-xs-7 no-pic" ng-show="gd.pics.length <= 0">
+        <div class="col-xs-7 no-pic padding-5px" ng-show="gd.pics.length <= 0">
             暂无图片
         </div>
-    	<div class="col-xs-5">
-    		<b ng-bind="gd.GoodsName"></b>
+    	<div class="col-xs-5 font-medium padding-5px">
+    		<p ng-bind="gd.GoodsName"></p>
     		<div class="good-action">
     			<label class="good-price">￥{{gd.Price}} /{{gd.Unit}}</label>
+                <p>
     			<div class="pull-right">
                     <cart-decrease ng-click="decrease(gd)" ng-show="GoodsCount > 0"></cart-decrease>
                     <span class="font-large" ng-bind="GoodsCount" ng-show="GoodsCount > 0"></span>
     				<cart-add ng-click="add(gd)"></cart-add>
     			</div>
+                </p>
     		</div>    		
     	</div>
     </div>

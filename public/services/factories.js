@@ -51,7 +51,7 @@ define(['angular'], function (angular) {
 				return cartData;
 			},
 			setProducts: function (data) {
-				cartData=data;
+				$rootScope.cartData=data;
 			},
 			setRemarks: function (data) {
 				// cartData.forEach(function(data, i) {
@@ -134,8 +134,10 @@ define(['angular'], function (angular) {
 	        });       
 
 		return {
+			getRooms: function () {
+				return $rootScope.roomData;
+			},
 			getRoomID: function () {
-
 				return $rootScope.roomID;
 			},
 			getOpCode: function () {
