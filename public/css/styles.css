@@ -145,7 +145,6 @@ a:focus, a:hover {
 	padding: 0;
 }
 .restaurant-cart {
-	height: 100%;
 	overflow-y: auto; 
 	background: #f7f7f7;
 }

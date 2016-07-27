@@ -1,0 +1,29 @@
+<div ng-controller="CheckoutController">
+	<header class="shop-header">
+	<div class="col-xs-2">
+	<a class="header-back col-xs-2" ng-href="/checkout">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+        </a>
+        </div>
+	    <div class="header-title col-xs-8 text-center"><b>{{CurPlace}} {{roomData.Room[0].RoomName}}</b></div>
+	    <div class="col-xs-2"></div>
+	</header>
+	<div class="col-xs-12 text-center" >
+	<h1>
+		<label class="good-price  font-xx-large">￥{{posPrice}}</label>
+	</h1>
+	</div>
+	<div class="col-xs-12 text-center" >
+	<h2> 
+		<label class="header-user-info font-x-large">长按识别二维码微信转账,<br>记得和店主确认哟</label>
+	</h2> 
+	</div>
+	<div class="col-xs-12" >
+		<div class="shop-enter">
+			
+		    <nav class="header-user-info">
+		        <img ng-src="resources/img{{apppgmid}}/cuspos.jpg"  />
+		    </nav>
+	    </div>
+	</div>
+</div>
