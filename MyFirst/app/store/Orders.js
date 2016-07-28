@@ -10,7 +10,18 @@ Ext.define('MyFirst.store.Orders', {
             groupFn: function (record) {
                 return record.get('OpCode');
             }
-        }
+        },
 
+        sorters: [        
+            {
+                property: 'Price',
+                direction: 'DESC'
+            },
+            {
+                property: 'GoodsName',
+                direction: 'ASC'
+            }
+        ]
+        
     }
 });

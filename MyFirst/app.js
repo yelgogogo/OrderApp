@@ -78,11 +78,14 @@ Ext.application({
         };
         app.numclickn=1;
         app.CusRoomId = -1;
-        app.util.Proxy.getSysParm('txtPlaceAdress', function (pmsg) {
-            app.CurPlacemsg = pmsg;
+        app.util.Proxy.getSysParm('txtPlaceAdress', function (sysparm) {
+            app.CurPlacemsg = sysparm;
         });
-        app.util.Proxy.getSysParm('txtPlaceName', function (pname) {
-            app.CurPlace = pname;
+        app.util.Proxy.getSysParm('txtPlaceName', function (sysparm) {
+            app.CurPlace = sysparm;
+        });
+        app.util.Proxy.getSysParm('txtElemeRestaurantID', function (sysparm) {
+            app.ElemeRestaurantId = sysparm;
         });
         Ext.override(Ext.util.SizeMonitor, {
             constructor: function (config) {

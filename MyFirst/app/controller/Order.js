@@ -275,67 +275,42 @@ Ext.define('MyFirst.controller.Order', {
 
         if (app.CurRoom.ReservationEmpName.length > 19){
             var orderid=app.CurRoom.ReservationEmpName.substr(0,18)
-            var eleurl='http://v2.openapi.ele.me/order/' + orderid;
+            var eleurl='http://v2.openapi.ele.me/order/' + orderid +'/';
             var elearg=Ext.encode({"eleme_order_id":orderid,"tp_id":"0"});
             app.util.Proxy.elemeAPI(eleurl,elearg,function (eleme) {
-                // var orderdetail = eleme.data.detail;
-             var   orderdetail = {
-      "group": [
-        [
-          {
-            "category_id": 1,
-            "name": "烤黄鱼",
-            "price": 100,
-            "garnish": [],
-            "id": 1541311,
-            "quantity": 5,
-            "tp_food_id": "1312312",
-            "specs":["辣","大份"]
-          },
-          {
-            "category_id": 1,
-            "name": "大排",
-            "price": 100,
-            "garnish": [
-              {
-                "category_id": 1,
-                "name": "荷包蛋",
-                "price": 2,
-                "id": 1541313,
-                "quantity": 1,
-                "tp_food_id": "1312313"
-              }
-            ],
-            "id": 1541312,
-            "quantity": 6,
-            "tp_food_id": "1312314",
-            "specs":[]
-          }
-        ]
-      ],
-      "extra": [
-        {
-          "description": "",
-          "price": 20,
-          "name": "配送费",
-          "category_id": 2,
-          "id": -10,
-          "quantity": 1
-        }
-      ],
-      "abandoned_extra": null
-    };
+                var orderdetail = eleme.data.detail;
+              // var   orderdetail = {"abandoned_extra":[],"group":[[{"category_id":1,"name":"扬州炒饭","price":12,"sale_mode":0,"id":85957046,"garnish":[],"specs":[],"quantity":2},{"category_id":1,"name":"骨肉相连","price":3,"sale_mode":0,"id":85941515,"garnish":[],"specs":[],"quantity":2},{"category_id":1,"name":"全味虾球","price":48,"sale_mode":0,"id":85990293,"garnish":[],"specs":[],"quantity":1},{"category_id":1,"name":"果粒橙（大瓶）","price":10,"sale_mode":0,"id":101531094,"garnish":[],"specs":[],"quantity":1},{"category_id":1,"name":"土豆片","price":1,"sale_mode":0,"id":85942807,"garnish":[],"specs":[],"quantity":4},{"category_id":1,"name":"猪肉串-串","price":2,"sale_mode":0,"id":85519640,"garnish":[],"specs":["串"],"quantity":5},{"category_id":1,"name":"香菇","price":2,"sale_mode":0,"id":85943259,"garnish":[],"specs":[],"quantity":2}]],"extra":[{"description":"","price":2,"name":"餐盒","category_id":102,"id":-70000,"quantity":1},{"description":"","price":2,"name":"配送费","category_id":2,"id":-10,"quantity":1}]}
 
                 var ordergroup = orderdetail.group;
                 var groupidx = ordergroup.length;
+                var orderextra = orderdetail.extra;
                 var goodsstore = Ext.getStore('Goods');
                 goodsstore.clearFilter(true);
+
+                Ext.each(orderextra,function(ordextra){
+                    if(ordextra.name!="使用红包"){
+                        var goodsx = goodsstore.findRecord('GoodsName', ordextra.name, 0, false, false, true);
+                        if(goodsx){
+                            goodsx.data.GoodsCount = ordextra.quantity;
+                            goodsx.data.Price = ordextra.price;
+                            goodsx.data.Remarks = ordextra.description.toString();
+                        }else{
+                            Ext.Msg.alert(ordextra.name+"获取失败");
+                        };
+                    };
+                });
+
                 for (var i = groupidx;i>0;i--){
                     // var groupidy = ordergroup[groupidx-1].length;
                     Ext.each(ordergroup[i-1],function(ordgroup){
                         var goods = goodsstore.findRecord('GoodsName', ordgroup.name, 0, false, false, true);
-                        goods.data.GoodsCount = ordgroup.quantity;
-                        goods.data.Remarks = ordgroup.specs.toString();
+                        if(goods){
+                            goods.data.GoodsCount = ordgroup.quantity;
+                            goods.data.Price = ordgroup.price;
+                            goods.data.Remarks = ordgroup.specs.toString();
+                        }else{
+                            Ext.Msg.alert(ordgroup.name+"获取失败");
+                        };
                     });
                     
                 };
@@ -350,11 +325,10 @@ Ext.define('MyFirst.controller.Order', {
         // Ext.Viewport.setMasked({ xtype: 'loadmask' });
         me=this;
         var eleurl='http://v2.openapi.ele.me/order/new/';
-        var elearg=Ext.encode({"restaurant_id":"62028381"});
+        var elearg=Ext.encode({"restaurant_id":app.ElemeRestaurantId});
         var dataView = me.getRoomslist();
         app.util.Proxy.elemeAPI(eleurl,elearg,function (eleme) {
             var neworder = eleme.data.order_ids;
-            neworder = [100921241024677200,100915599412548940];
             if (neworder.length > 0){
                 var getnum = 0;
                 var roomstore = Ext.getStore('Rooms');
@@ -444,16 +418,18 @@ Ext.define('MyFirst.controller.Order', {
                         app.util.Proxy.openRoom(dataItemModel.data.ID, Ext.getStore('User').load().data.items[0].data.username, function () { 
                             dataView.refresh();
                             // app.util.Proxy.printQrCode(printstr);
-                            app.util.Proxy.getEnStr(app.CurRoom.RoomOpCode + app.CurRoom.ID, function (enstr) {
-                                var myUrl = Ext.global.window.location.href.replace(/order\.html.*$/g,'customer.html') + "?Key=" + enstr;
-                                var apiurl = 'http://50r.cn/urls/add.jsonp'
-                                var url = "http://qr.topscan.com/api.php?&w=260&text=" + myUrl;
-                                console.log(url);
-                                app.util.Proxy.getShortUrl(apiurl,myUrl,function (shorturl) {
-                                    var printstr = '<CB>'+app.CurPlace+'</CB><BR>' + '<CB>'+app.CurRoom.RoomName+'</CB><BR><QR>' +shorturl + '</QR><BR><C>'+app.CurPlacemsg+'</C>'
-                                    app.util.Proxy.printQrCode(printstr);
+                            if(app.CurRoom.RoomAreaName != "外卖"){
+                                app.util.Proxy.getEnStr(app.CurRoom.RoomOpCode + app.CurRoom.ID, function (enstr) {
+                                    var myUrl = Ext.global.window.location.href.replace(/order\.html.*$/g,'customer.html') + "?Key=" + enstr.replace('+','%2B');
+                                    var apiurl = 'http://50r.cn/urls/add.jsonp'
+                                    var url = "http://qr.topscan.com/api.php?&w=260&text=" + myUrl;
+                                    console.log(url);
+                                    app.util.Proxy.getShortUrl(apiurl,myUrl,function (shorturl) {
+                                        var printstr = '<CB>'+app.CurPlace+'</CB><BR>' + '<CB>'+app.CurRoom.RoomName+'</CB><BR><QR>' +shorturl + '</QR><BR><C>'+app.CurPlacemsg+'</C>'
+                                        app.util.Proxy.printQrCode(printstr);
+                                    });
                                 });
-                            });
+                            };
                         });
                     };
                 });
@@ -944,7 +920,7 @@ Ext.define('MyFirst.controller.Order', {
         }
 
        app.util.Proxy.getEnStr(app.CurRoom.RoomOpCode + app.CurRoom.ID, function (enstr) {
-            var myUrl = Ext.global.window.location.href.replace(/order\.html.*$/g,'customer.html') + "?Key=" + enstr;
+            var myUrl = Ext.global.window.location.href.replace(/order\.html.*$/g,'customer.html') + "?Key=" + enstr.replace('+','%2B');
             // var myUrl = 'http://t.cn/R5nSrRs'
             var apiurl = 'http://50r.cn/urls/add.jsonp'
             // window.location=myUrl;
@@ -1420,7 +1396,7 @@ Ext.define('MyFirst.controller.Order', {
             this.onCustomerButton_Clicked();
             app.CusRoomId = -1;
         };
-        if (app.CurRoom.RoomStateName=="开房"){
+        if (app.CurRoom.RoomStateName=="开房" && app.CurRoom.RoomAreaName != "外卖"){
             this.goGoodsType('一次用品');
         };
     },
