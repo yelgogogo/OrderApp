@@ -155,6 +155,7 @@ a:focus, a:hover {
 	width: 100%;
 	padding-right: 2px;
     padding-left: 2px;
+    padding-top: 10px;
 }
 .restaurant-checkout {
 	overflow-y: auto; 
@@ -168,6 +169,7 @@ a:focus, a:hover {
 	width: 100%;
 	padding-right: 2px;
     padding-left: 2px;
+    padding-top: 10px;
 }
 .restaurant-food {
 	height: 100%;
@@ -241,6 +243,16 @@ a:focus, a:hover {
 	color: #ff6000;
 	font-size: large;
 }
+.cart-price {
+	margin: 5px 0px;
+	position: absolute;
+	color: #ff6000;
+	font-size: large;
+}
+.total-price {
+	color: #ff6000;
+	font-size: x-large;
+}
 .good-name {
 	font-size: 2em;
 }
@@ -260,12 +272,25 @@ a:focus, a:hover {
 .shop-enter {
 	margin: auto;  
 	position: absolute;  
-	top: 0; 
+	top: 15%; 
 	left: 0; 
 	bottom: 0; 
-	right: 0; 
+	right: -20px; 
 	position: fixed;
-	height: 45px;
+	height: 70px;
+	line-height: 45px;
+	width: 100%;
+	color: #fff;
+}
+.shop-icon {
+	margin: auto;  
+	position: absolute;  
+	top: 0; 
+	left: 0; 
+	bottom: 40%; 
+	right: -10px; 
+	position: fixed;
+	height: 70px;
 	line-height: 45px;
 	width: 100%;
 	color: #fff;
@@ -287,6 +312,14 @@ a:focus, a:hover {
     background: #4cd964;
     color: #fff;
     padding: 5px 5px;
+}
+.btn-shop-enter {
+	padding: 5px 5px;
+    border-radius: 5px;
+    background: #4cd964;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: xx-large;
 }
 .mbtn-confirm {
 	background: #4cd964;
@@ -310,11 +343,11 @@ a:focus, a:hover {
 	margin-top: 40%;
 }
 .btn-add, .btn-minus {
-	font-size: large;
+	font-size: x-large;
 	color: #79ec8d;
 }
 .btn-remarks{
-	font-size: large;
+	font-size: x-large;
 	color: #ff4040;
 }
 .btn-remarks:focus, .btn-remarks:hover{

@@ -107,11 +107,22 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
     app.controller("McartController", function($scope,$rootScope, Cart,Rooms, FoodService, MsgService, $filter) {
 
 
-
+        $rootScope.tens = 1;
+        $rootScope.RemarksAll = false;
         $scope.sendtoserver = function (o) {                
             var submitMobile = {};
             var app_OrderType='下单';
             var msgtxt='';
+            if(!Rooms.getRooms()){
+                alert("Key错误");
+                return;
+            }else{
+                if(Rooms.getOpCode()!=Rooms.getRooms().Room[0].RoomOpCode){
+                    alert("opcode错误");
+                    return;
+                };
+            };
+
             submitMobile.SubmitOrders = angular.copy(o);
             submitMobile.SubmitOrders.forEach(function(goods){
                 goods.GoodsCount = goods.GoodsCount;
@@ -129,13 +140,12 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
             submitMobile.roomID = Rooms.getRoomID();
             submitMobile.opCode = Rooms.getOpCode();
             var submitMobile_json = angular.toJson(submitMobile);
-            var app_pgmid = '';
             var app_CurPlace = Rooms.getPlaceName();
             var app_CurRoom_RoomName = Rooms.getRooms().Room[0].RoomName;
             var strrights = '落单';
             var strstate = Rooms.getRoomID();
             var templateid = 'tc6Ayn7IGJk5BtQzi94BniwSqHMb3ErgG7rZwpL1eoA';
-            var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9f51df2624282eb1&redirect_uri=http%3a%2f%2fstarstech.cc%2f'+app_pgmid+'order.html&response_type=code&scope=snsapi_base&state='+strstate+'#wechat_redirect';
+            var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9f51df2624282eb1&redirect_uri=http%3a%2f%2fstarstech.cc'+$rootScope.apppgmid+'%2forder.html&response_type=code&scope=snsapi_base&state='+strstate+'#wechat_redirect';
             var Sysdate = new Date();  
             var Curdate= $filter('date')(Sysdate,'yyyy-MM-dd HH:mm:ss');
             // var Curdate = Ext.Date.format(Sysdate, 'Y-m-d H:i:s'); 
@@ -203,7 +213,7 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
         $('.restaurant-cart').height($('body').outerHeight(true) - $('.shop-header').outerHeight(true) - $('.restaurant-cart-bottom').outerHeight(true));
     });
 
-    app.controller("CheckoutController", function($scope, APP_TITLE, Cart, Rooms, FoodService,MsgService, $filter) {
+    app.controller("CheckoutController", function($scope,$rootScope, APP_TITLE, Cart, Rooms, FoodService,MsgService, $filter) {
         
         $scope.APP_TITLE = APP_TITLE;
 
@@ -260,6 +270,16 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
             var submitMobile = {};
             var app_OrderType='下单';
             var msgtxt='';
+            if(!Rooms.getRooms()){
+                alert("Key错误");
+                return;
+            }else{
+                if(Rooms.getOpCode()!=Rooms.getRooms().Room[0].RoomOpCode){
+                    alert("opcode错误");
+                    return;
+                };
+            };
+
             submitMobile.SubmitOrders = angular.copy(o);
             submitMobile.SubmitOrders.forEach(function(goods){
                 if (!goods.Remarks){goods.Remarks='';};
@@ -276,13 +296,12 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
             submitMobile.opCode = Rooms.getOpCode();
 
             var submitMobile_json = angular.toJson(submitMobile);
-            var app_pgmid = '';
-            var app_CurPlace = '麦克食品店';
-            var app_CurRoom_RoomName = '大厅01';
+            var app_CurPlace = Rooms.getPlaceName();
+            var app_CurRoom_RoomName = Rooms.getRooms().Room[0].RoomName;
             var strrights = '落单';
             var strstate = Rooms.getRoomID();
             var templateid = 'tc6Ayn7IGJk5BtQzi94BniwSqHMb3ErgG7rZwpL1eoA';
-            var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9f51df2624282eb1&redirect_uri=http%3a%2f%2fstarstech.cc%2f'+app_pgmid+'order.html&response_type=code&scope=snsapi_base&state='+strstate+'#wechat_redirect';
+            var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9f51df2624282eb1&redirect_uri=http%3a%2f%2fstarstech.cc'+$rootScope.apppgmid+'%2forder.html&response_type=code&scope=snsapi_base&state='+strstate+'#wechat_redirect';
             var Sysdate = new Date();  
             var Curdate= $filter('date')(Sysdate,'yyyy-MM-dd HH:mm:ss');
             // var Curdate = Ext.Date.format(Sysdate, 'Y-m-d H:i:s'); 

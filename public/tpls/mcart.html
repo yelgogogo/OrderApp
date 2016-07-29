@@ -17,15 +17,15 @@
     </div>
     <div class="restaurant-cart col-xs-12">
         <div class="ui-block" ng-if="cartData && cartData.length > 0">
-            <div class="list-group-item good-item col-xs-12" data-toggle="collapse" href="#{{gd.ID}}" ng-repeat="gd in cartData" ng-show="gd.GoodsCount > 0">
+            <div class="list-group-item good-item col-xs-12" data-toggle="collapse" href="#{{gd.ID}}" ng-repeat="gd in cartData | orderBy:['GoodsTypeName','-Price','GoodsName']" ng-show="gd.GoodsCount > 0">
                 <div class="col-xs-12 no-padding">
                     <div class="col-xs-6 no-padding">
                         <b class="food-name" ng-bind="gd.GoodsName"></b>
                         <a class="btn-remarks" ng-click="remark(gd)"><i class="glyphicon glyphicon-fire"></i></a>
                         <p ng-if="gd.Remarks">{{gd.Remarks}}</p>   
                     </div>
-                    <div class="col-xs-3 text-right no-padding"> 
-                        <span class="good-price">￥{{gd.Price}}/{{gd.Unit}}</span>
+                    <div class="col-xs-3 text-left no-padding"> 
+                        <span class="cart-price">￥{{gd.Price}}/{{gd.Unit}}</span>
                     </div>
                     <div class="col-xs-3 text-right no-padding">
                         <a class="btn-minus" ng-click="countMinus(gd)"><i class="glyphicon glyphicon-minus-sign"></i></a>
@@ -39,7 +39,7 @@
     <div class="restaurant-cart-bottom font-large col-xs-12">
         <div class="col-xs-12 text-center form-inline mark-container " ng-if="totalCount > 0">
             <div class="col-xs-3 text-nowrap font-smaller">
-                <label>全加辣/不辣</label>
+                <label>全部调味</label>
             </div>
             <div class="col-xs-3">
                 <switch name="chili" ng-model="chili" ng-change="changeTaste(chili)"></switch>
@@ -51,12 +51,12 @@
                 <switch name="tens" ng-model="tensFlag" ng-change="changeTens(tensFlag)"></switch>
             </div>
         </div>
-        <div class="col-xs-6 text-left" ng-if="totalCount > 0">
-            <h2 class="mcart-total">
+        <div class="col-xs-6 text-left padding-5px" ng-if="totalCount > 0">
+            <b class="mcart-total">
                 <i class="glyphicon glyphicon-shopping-cart"></i>
                 &nbsp;{{totalCount}}份 
-                <label class="good-price">￥{{totalPrice}}</label>
-            </h2>
+                <label class="total-price">￥{{totalPrice}}</label>
+            </b>
         </div>
         <div class="col-xs-6 text-right" ng-if="totalCount > 0">
             <button class="mbtn mbtn-confirm" ng-click="sendtoserver(cartData)"><b class="white">确认下单</b></button>
