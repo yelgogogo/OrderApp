@@ -354,8 +354,15 @@ Ext.define('MyFirst.controller.Order', {
         });
     },
     checkEleme:function(orderid,callback){
-        for(var i=0 ;i<10;i++){
-            var chkorderid=orderid.toString().substr(0,17)+i;
+        for(var i=-10 ;i<10;i++){
+            var k='';
+            var j = parseInt(orderid.toString().substr(12,6))+i;
+            if(j>100000){
+                k=j.toString()
+            }else{
+                k='0'+j.toString()
+            }
+            var chkorderid=orderid.toString().substr(0,12)+k;
             var eleurl="http://v2.openapi.ele.me/order/"+chkorderid+"/";
             var elearg=Ext.encode({"eleme_order_id":chkorderid,"tp_id":"0"});
             app.util.Proxy.elemeAPI(eleurl,elearg,function (eleme) {

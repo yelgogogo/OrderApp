@@ -40,6 +40,7 @@ Ext.define('MyFirst.view.ListOrders', {
                             docked: 'top', 
                             readOnly: true,
                             label: '订房人',
+                            labelWidth: '20%',
                             itemId: 'txtReserver'
                         },
                         {
