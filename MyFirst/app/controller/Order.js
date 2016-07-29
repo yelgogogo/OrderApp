@@ -41,6 +41,7 @@ Ext.define('MyFirst.controller.Order', {
             cancelButton: '#cancelButton',
             mngButton: '#mngButton',
             pullElemeButton: '#pullElemeButton',
+            pullOrderButton: '#pullOrderButton',
             getElemeButton: '#getElemeButton',
             orderMemButton: '#orderMemButton',
             presentButton: '#presentButton',
@@ -112,6 +113,9 @@ Ext.define('MyFirst.controller.Order', {
             },
             pullElemeButton: {
                 tap: 'onPullEleme'
+            },
+            pullOrderButton: {
+                tap: 'onPullOrder'
             },
             getElemeButton: {
                 tap: 'onGetEleme'
@@ -321,8 +325,6 @@ Ext.define('MyFirst.controller.Order', {
     },
     //Eleme新订单
     onPullEleme: function () {
-        
-        // Ext.Viewport.setMasked({ xtype: 'loadmask' });
         me=this;
         var eleurl='http://v2.openapi.ele.me/order/new/';
         var elearg=Ext.encode({"restaurant_id":app.ElemeRestaurantId});
@@ -350,7 +352,59 @@ Ext.define('MyFirst.controller.Order', {
                 Ext.Msg.alert('没有发现新订单');
             };
         });
-        // Ext.Viewport.setMasked(false);
+    },
+    checkEleme:function(orderid,callback){
+        for(var i=0 ;i<10;i++){
+            var chkorderid=orderid.toString().substr(0,17)+i;
+            var eleurl="http://v2.openapi.ele.me/order/"+chkorderid+"/";
+            var elearg=Ext.encode({"eleme_order_id":chkorderid,"tp_id":"0"});
+            app.util.Proxy.elemeAPI(eleurl,elearg,function (eleme) {
+                if(eleme.data){
+                    if (eleme.data.status_code=='2'){
+                        callback(eleme.data.order_id);
+                    }; 
+                };
+            });
+        }
+    },
+    //Eleme抓取最后一个订单
+    onPullOrder: function () {
+        me=this;
+        var eleurl='http://v2.openapi.ele.me/orders/batch_get/';
+        var Sysdate = new Date();  
+        var Curday = Ext.Date.format(Sysdate, 'Y-m-d'); 
+        var elearg=Ext.encode({"restaurant_id":app.ElemeRestaurantId,"day":Curday,"statuses":"2"});
+        var dataView = me.getRoomslist();
+        app.util.Proxy.elemeAPI(eleurl,elearg,function (eleme) {
+            if(eleme.data.order_ids.length<=0){
+                Ext.Msg.alert('没有发现订单');
+                return;
+            }; 
+            // var neworder = [eleme.data.order_ids[0]];
+            me.checkEleme(eleme.data.order_ids[0],function(chkord){  
+                var neworder=[chkord];
+                if (neworder.length > 0){
+                    var getnum = 0;
+                    var roomstore = Ext.getStore('Rooms');
+                    Ext.each(neworder,function(order){
+                        roomstore.each(function(room){
+                            if(room.data.RoomStateName == '空房'){
+                                app.util.Proxy.openRoom(room.data.ID,order, function () { 
+                                    
+                                    dataView.refresh();
+                                });
+                                room.data.RoomStateName = "开房";
+                                getnum += 1
+                                return false;
+                            };
+                        });
+                    });
+                    Ext.Msg.alert('抓取到订单 x ' + getnum + '/'+ neworder.length);
+                }else{
+                    Ext.Msg.alert('没有发现订单');
+                };
+            });
+        });
     },
     //确认撤单
     onConfirmCancel: function () {
@@ -1275,6 +1329,20 @@ Ext.define('MyFirst.controller.Order', {
         }
         pullElemeButton.hide();
     },    
+    showPullOrderButton: function () {
+        var pullOrderButton = this.getPullOrderButton();
+        if (!pullOrderButton || !pullOrderButton.isHidden()) {
+            return;
+        }
+        pullOrderButton.show();
+    },
+    hidePullOrderButton: function () {
+        var pullOrderButton = this.getPullOrderButton();
+        if (!pullOrderButton || pullOrderButton.isHidden()) {
+            return;
+        }
+        pullOrderButton.hide();
+    },  
     showGetElemeButton: function () {
         var getElemeButton = this.getGetElemeButton();
         if (!getElemeButton || !getElemeButton.isHidden()) {
@@ -1386,8 +1454,10 @@ Ext.define('MyFirst.controller.Order', {
             this.filterByButton(btn);
             if (btn._text=="外卖"){
                 this.showPullElemeButton();
+                this.showPullOrderButton();
             }else{
                 this.hidePullElemeButton();
+                this.hidePullOrderButton();
             };
         }
     },
@@ -1444,6 +1514,7 @@ Ext.define('MyFirst.controller.Order', {
         this.hideExchangeButton();
         this.hideConfirmOkButton();
         this.hidePullElemeButton();
+        this.hidePullOrderButton();
         this.hideGetElemeButton();
     },
     setButtonVisiable: function (viewType) {

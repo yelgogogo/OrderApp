@@ -4,24 +4,24 @@ Ext.define('MyFirst.store.Orders', {
     config: {
 
         model: 'MyFirst.model.Order',
-        grouper: {
-            sortProperty: 'OpCode',
-//            sortProperty: 'Price', direction: "ASC",
-            groupFn: function (record) {
-                return record.get('OpCode');
-            }
-        },
-
-        sorters: [        
-            {
+        sorters: [{
+                property: 'GoodsTypeName',
+                direction: 'ASC'
+            },{
                 property: 'Price',
                 direction: 'DESC'
-            },
-            {
+            },{
                 property: 'GoodsName',
                 direction: 'ASC'
             }
-        ]
-        
+        ],
+        grouper: {
+            sortProperty: 'OpCode',
+            // sortProperty: 'Price', direction: "DEC",
+            groupFn: function (record) {
+                return record.get('OpCode');
+            }
+        }
+
     }
 });

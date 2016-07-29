@@ -75,7 +75,8 @@ Ext.define('MyFirst.view.Card', {
                queryadd = true;
                me.CreateMyButton('customerButton', '自选', 'left', true);         
                orderadd = true;
-               me.CreateMyButton('pullElemeButton', '外卖抓单', 'right', true);
+               me.CreateMyButton('pullElemeButton', '新订单', 'right', true);
+               me.CreateMyButton('pullOrderButton', '抓单', 'right', true);
                me.CreateMyButton('getElemeButton', '取单', 'left', true);
                };
                break;
