@@ -209,19 +209,20 @@ define(['angular'], function (angular) {
 	});
 
 	app.factory('Types', function ($rootScope, FoodService, Rooms) {
-		var typeData = [];
+		// var typeData = [];
+		$rootScope.typeData = [];
 		var goodslist = '';
         var roomID=Rooms.getRoomID();
         // $rootScope.types=[];
         FoodService.getFoodList().query({roomID:roomID})
             .$promise.then(function(goods){    
                 var goodslist = angular.fromJson(goods.d);
-                var goodsTypesArr = {};
+                var goodsTypesArr = [];
                 var goodtypetemp = [];
                 var goodtemp = [];
                 var goodlistcopy = angular.copy(goodslist);
                 goodslist.forEach(function(data){
-                    if (!goodsTypesArr[data.DisplayOrder] ){
+                    if (!goodsTypesArr[data.DisplayOrder-1] ){
                         var goodtemp = goodlistcopy.filter(
                                 function(orderid){
                                     return orderid.DisplayOrder == data.DisplayOrder
@@ -235,23 +236,51 @@ define(['angular'], function (angular) {
                             // delete tempdata.DisplayOrder;
                             // delete tempdata.GoodsTypeName;
                         });
-                        goodsTypesArr[data.DisplayOrder] = {
+                        goodsTypesArr[data.DisplayOrder-1] = {
                             _id: data.DisplayOrder,
                             name: data.GoodsTypeName,
                             
                             goods:goodtemp
                         }
-                        typeData.push(goodsTypesArr[data.DisplayOrder]);
+                        
                     }
                 });
+                // typeData=goodsTypesArr;
+                $rootScope.typeData=goodsTypesArr;
             }, function(err){
                 console.log(err);
             });
 
 		return {
 			getTypes: function () {
-				return typeData;
+				return $rootScope.typeData;
+			},
+			clearProducts: function () {
+				$rootScope.typeData.forEach(function(type){
+					type.goods.forEach(function(good){
+						good.GoodsCount = 0;
+					})
+				});
+				// $rootScope.typeData=typeData;
 			}
+			// addProduct: function (goods) {
+			// 	typeData[goods.DisplayOrder-1].goods.forEach(function (gd, i) {
+			// 		if(gd.ID === goods.ID) {
+			// 			gd.GoodsCount = (gd.GoodsCount || 0) + 1 * ($rootScope.tens || 1);
+			// 			return;
+			// 		}					
+			// 	});
+
+			// },
+			// decreaseProduct: function (goods) {
+			// 	typeData[goods.DisplayOrder-1].goods.forEach(function (gd, i) {
+			// 		if(gd.ID === goods.ID) {
+			// 			gd.GoodsCount = gd.GoodsCount - 1 * ($rootScope.tens || 1);
+			// 			if(gd.GoodsCount < 0) gd.GoodsCount = 0;
+			// 			return;
+			// 		}					
+			// 	});
+			// }
 		};
 	});
 

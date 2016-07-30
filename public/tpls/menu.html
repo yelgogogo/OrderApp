@@ -1,0 +1,5 @@
+<ul class="list-group">
+	<li class="list-group-item restaurant-goods-item" ng-show="itemsTypes <= 0">此店铺还未添加任何品类</li>
+	
+ 	<li class="list-group-item restaurant-goods-item" ng-repeat="tp in itemsTypes" ng-class="{active : tp._id == good}" ng-bind="tp.name" ng-click="selectMenu(tp._id)"></li>
+</ul>

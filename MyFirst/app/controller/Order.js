@@ -278,47 +278,49 @@ Ext.define('MyFirst.controller.Order', {
         me=this;
 
         if (app.CurRoom.ReservationEmpName.length > 19){
-            var orderid=app.CurRoom.ReservationEmpName.substr(0,18)
-            var eleurl='http://v2.openapi.ele.me/order/' + orderid +'/';
-            var elearg=Ext.encode({"eleme_order_id":orderid,"tp_id":"0"});
-            app.util.Proxy.elemeAPI(eleurl,elearg,function (eleme) {
-                var orderdetail = eleme.data.detail;
-              // var   orderdetail = {"abandoned_extra":[],"group":[[{"category_id":1,"name":"扬州炒饭","price":12,"sale_mode":0,"id":85957046,"garnish":[],"specs":[],"quantity":2},{"category_id":1,"name":"骨肉相连","price":3,"sale_mode":0,"id":85941515,"garnish":[],"specs":[],"quantity":2},{"category_id":1,"name":"全味虾球","price":48,"sale_mode":0,"id":85990293,"garnish":[],"specs":[],"quantity":1},{"category_id":1,"name":"果粒橙（大瓶）","price":10,"sale_mode":0,"id":101531094,"garnish":[],"specs":[],"quantity":1},{"category_id":1,"name":"土豆片","price":1,"sale_mode":0,"id":85942807,"garnish":[],"specs":[],"quantity":4},{"category_id":1,"name":"猪肉串-串","price":2,"sale_mode":0,"id":85519640,"garnish":[],"specs":["串"],"quantity":5},{"category_id":1,"name":"香菇","price":2,"sale_mode":0,"id":85943259,"garnish":[],"specs":[],"quantity":2}]],"extra":[{"description":"","price":2,"name":"餐盒","category_id":102,"id":-70000,"quantity":1},{"description":"","price":2,"name":"配送费","category_id":2,"id":-10,"quantity":1}]}
+            var chkord=app.CurRoom.ReservationEmpName.substr(0,18)
+            me.checkEleme(chkord,function(orderid){ 
+                var eleurl='http://v2.openapi.ele.me/order/' + orderid +'/';
+                var elearg=Ext.encode({"eleme_order_id":orderid,"tp_id":"0"});
+                app.util.Proxy.elemeAPI(eleurl,elearg,function (eleme) {
+                    var orderdetail = eleme.data.detail;
+                  // var   orderdetail = {"abandoned_extra":[],"group":[[{"category_id":1,"name":"扬州炒饭","price":12,"sale_mode":0,"id":85957046,"garnish":[],"specs":[],"quantity":2},{"category_id":1,"name":"骨肉相连","price":3,"sale_mode":0,"id":85941515,"garnish":[],"specs":[],"quantity":2},{"category_id":1,"name":"全味虾球","price":48,"sale_mode":0,"id":85990293,"garnish":[],"specs":[],"quantity":1},{"category_id":1,"name":"果粒橙（大瓶）","price":10,"sale_mode":0,"id":101531094,"garnish":[],"specs":[],"quantity":1},{"category_id":1,"name":"土豆片","price":1,"sale_mode":0,"id":85942807,"garnish":[],"specs":[],"quantity":4},{"category_id":1,"name":"猪肉串-串","price":2,"sale_mode":0,"id":85519640,"garnish":[],"specs":["串"],"quantity":5},{"category_id":1,"name":"香菇","price":2,"sale_mode":0,"id":85943259,"garnish":[],"specs":[],"quantity":2}]],"extra":[{"description":"","price":2,"name":"餐盒","category_id":102,"id":-70000,"quantity":1},{"description":"","price":2,"name":"配送费","category_id":2,"id":-10,"quantity":1}]}
 
-                var ordergroup = orderdetail.group;
-                var groupidx = ordergroup.length;
-                var orderextra = orderdetail.extra;
-                var goodsstore = Ext.getStore('Goods');
-                goodsstore.clearFilter(true);
+                    var ordergroup = orderdetail.group;
+                    var groupidx = ordergroup.length;
+                    var orderextra = orderdetail.extra;
+                    var goodsstore = Ext.getStore('Goods');
+                    goodsstore.clearFilter(true);
 
-                Ext.each(orderextra,function(ordextra){
-                    if(ordextra.name!="使用红包"){
-                        var goodsx = goodsstore.findRecord('GoodsName', ordextra.name, 0, false, false, true);
-                        if(goodsx){
-                            goodsx.data.GoodsCount = ordextra.quantity;
-                            goodsx.data.Price = ordextra.price;
-                            goodsx.data.Remarks = ordextra.description.toString();
-                        }else{
-                            Ext.Msg.alert(ordextra.name+"获取失败");
-                        };
-                    };
-                });
-
-                for (var i = groupidx;i>0;i--){
-                    // var groupidy = ordergroup[groupidx-1].length;
-                    Ext.each(ordergroup[i-1],function(ordgroup){
-                        var goods = goodsstore.findRecord('GoodsName', ordgroup.name, 0, false, false, true);
-                        if(goods){
-                            goods.data.GoodsCount = ordgroup.quantity;
-                            goods.data.Price = ordgroup.price;
-                            goods.data.Remarks = ordgroup.specs.toString();
-                        }else{
-                            Ext.Msg.alert(ordgroup.name+"获取失败");
+                    Ext.each(orderextra,function(ordextra){
+                        if(ordextra.name!="使用红包"){
+                            var goodsx = goodsstore.findRecord('GoodsName', ordextra.name, 0, false, false, true);
+                            if(goodsx){
+                                goodsx.data.GoodsCount = ordextra.quantity;
+                                goodsx.data.Price = ordextra.price;
+                                goodsx.data.Remarks = ordextra.description.toString();
+                            }else{
+                                Ext.Msg.alert(ordextra.name+"获取失败");
+                            };
                         };
                     });
-                    
-                };
-                me.selectOrders();
+
+                    for (var i = groupidx;i>0;i--){
+                        // var groupidy = ordergroup[groupidx-1].length;
+                        Ext.each(ordergroup[i-1],function(ordgroup){
+                            var goods = goodsstore.findRecord('GoodsName', ordgroup.name, 0, false, false, true);
+                            if(goods){
+                                goods.data.GoodsCount = ordgroup.quantity;
+                                goods.data.Price = ordgroup.price;
+                                goods.data.Remarks = ordgroup.specs.toString();
+                            }else{
+                                Ext.Msg.alert(ordgroup.name+"获取失败");
+                            };
+                        });
+                        
+                    };
+                    me.selectOrders();
+                });
             });
         };
         // Ext.Viewport.setMasked(false);
@@ -354,7 +356,7 @@ Ext.define('MyFirst.controller.Order', {
         });
     },
     checkEleme:function(orderid,callback){
-        for(var i=-10 ;i<10;i++){
+        for(var i=-10 ;i<20;i++){
             var k='';
             var j = parseInt(orderid.toString().substr(12,6))+i;
             if(j>100000){
@@ -374,7 +376,17 @@ Ext.define('MyFirst.controller.Order', {
             });
         }
     },
-    //Eleme抓取最后一个订单
+    checkElemeOrderId:function(orders,callback){
+
+            app.util.Proxy.checkElemeOrderId(orders,function (neworders) {
+                        if(neworders){
+                            callback(neworders);
+                        }else{
+                            Ext.Msg.alert('没有发现新订单');
+                        };
+            });
+    },
+    //Eleme抓取新订单
     onPullOrder: function () {
         me=this;
         var eleurl='http://v2.openapi.ele.me/orders/batch_get/';
@@ -387,24 +399,26 @@ Ext.define('MyFirst.controller.Order', {
                 Ext.Msg.alert('没有发现订单');
                 return;
             }; 
-            // var neworder = [eleme.data.order_ids[0]];
-            me.checkEleme(eleme.data.order_ids[0],function(chkord){  
-                var neworder=[chkord];
+            me.checkElemeOrderId(eleme.data.order_ids.toString(),function (neworders) {
+             
+                var neworder=neworders.split(',');
                 if (neworder.length > 0){
                     var getnum = 0;
                     var roomstore = Ext.getStore('Rooms');
                     Ext.each(neworder,function(order){
-                        roomstore.each(function(room){
-                            if(room.data.RoomStateName == '空房'){
-                                app.util.Proxy.openRoom(room.data.ID,order, function () { 
-                                    
-                                    dataView.refresh();
-                                });
-                                room.data.RoomStateName = "开房";
-                                getnum += 1
-                                return false;
-                            };
-                        });
+                        
+                            roomstore.each(function(room){
+                                if(room.data.RoomStateName == '空房'){
+                                    app.util.Proxy.openRoom(room.data.ID,order, function () { 
+                                        
+                                        dataView.refresh();
+                                    });
+                                    room.data.RoomStateName = "开房";
+                                    getnum += 1
+                                    return false;
+                                };
+                            });
+                        // });
                     });
                     Ext.Msg.alert('抓取到订单 x ' + getnum + '/'+ neworder.length);
                 }else{

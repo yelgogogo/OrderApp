@@ -14,8 +14,8 @@
     			<label class="good-price">￥{{gd.Price}} /{{gd.Unit}}</label>
                 <br>
     			<div class="pull-right">
-                    <cart-decrease ng-click="decrease(gd)" ng-show="GoodsCount > 0"></cart-decrease>
-                    <span class="font-large" ng-bind="GoodsCount" ng-show="GoodsCount > 0"></span>
+                    <cart-decrease ng-click="decrease(gd)" ng-show="gd.GoodsCount > 0"></cart-decrease>
+                    <span class="font-large" ng-bind="gd.GoodsCount" ng-show="gd.GoodsCount > 0"></span>
     				<cart-add ng-click="add(gd)"></cart-add>
     			</div>
                 

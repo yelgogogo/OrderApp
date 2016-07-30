@@ -75,8 +75,8 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
         //     });
 
 
-        $scope.types=[];
-	    $scope.types= Types.getTypes();
+     //    $scope.types=[];
+	    // $scope.types= Types.getTypes();
 	    $scope.tabs  = data.tabs;
         // $scope.types = data.goodTypes;
         $scope.Cart  = Cart;
@@ -88,10 +88,17 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
         $scope.currentGoods = [];
         $scope.currentName  = "";
 
+        Types.getTypes().forEach(function (gt, i) {
+                if(gt._id == $scope.currentType) {
+                    $scope.currentGoods = gt.goods;
+                    $scope.currentName  = gt.GoodsName;               
+                }
+            });
+
         $scope.$watch('currentType', function (n, o) {
             // console.log(n + 'changed' + o);
-            $scope.types.forEach(function (gt, i) {
-                if(gt._id === $scope.currentType) {
+            Types.getTypes().forEach(function (gt, i) {
+                if(gt._id == $scope.currentType) {
                     $scope.currentGoods = gt.goods;
                     $scope.currentName  = gt.GoodsName;               
                 }
@@ -104,7 +111,7 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
 
     });
 
-    app.controller("McartController", function($scope,$rootScope, Cart,Rooms, FoodService, MsgService, $filter) {
+    app.controller("McartController", function($scope,$rootScope, Types,Cart,Rooms, FoodService, MsgService, $filter) {
 
 
         $rootScope.tens = 1;
@@ -169,6 +176,7 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
                 .$promise.then(function(msg){
                 	alert("已经通知服务员确认");
                 	Cart.setProducts([]);
+                    Types.clearProducts();
                     MsgService.sendMsg().send({
                         strrights: strrights,
                         templateID: templateid,

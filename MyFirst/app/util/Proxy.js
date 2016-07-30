@@ -73,7 +73,9 @@ Ext.define('app.util.Proxy', {
             var data = Ext.decode(resp.responseText).d;
             var eleme = Ext.decode(data);
             // Ext.Msg.alert("撤单成功!");
-            callback(eleme);
+            if (eleme.code == 200){
+              callback(eleme);
+            };
         };
         var failureCallback = function (result) {
             Ext.Msg.alert("获取新订单失败!");
@@ -104,6 +106,24 @@ Ext.define('app.util.Proxy', {
               printStr : printstr,
               roomID : app.CurRoom.ID,
               userNo:Ext.getStore('User').load().data.items[0].data.userno
+          },
+          success: successCallback,
+          failure: failureCallback
+       });     
+    },
+    checkElemeOrderId: function (instr,callback) {
+        var successCallback = function (resp, ops) {
+            var data = Ext.decode(resp.responseText).d;
+            // var strvalue = Ext.decode(data);
+            callback(data);
+        };
+        var failureCallback = function (result) {
+            Ext.Msg.alert("验证失败!");
+        };
+       Ext.Ajax.request({
+          url: '../'+app.pgmid+'WebServiceEx.asmx/JSON_ElemeExistOrderID',
+          jsonData: {
+              orderIDs : instr
           },
           success: successCallback,
           failure: failureCallback

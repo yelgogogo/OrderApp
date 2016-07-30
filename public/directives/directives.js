@@ -102,7 +102,7 @@ define(['angular'], function(angular) {
         };
     });
 
-    app.directive('cartAdd', ['Cart',function(Cart) {
+    app.directive('cartAdd', ['Cart','Types',function(Cart,Types) {
         return {
             restrict: "E",
             template: '<a class="btn-add"><i class="glyphicon glyphicon-plus-sign"></i></a>',
@@ -110,10 +110,12 @@ define(['angular'], function(angular) {
                 scope.GoodsCount = 0;
                 scope.add = function (o) {
                     Cart.addProduct(o);
+                    // Types.addProduct(o);
                     ++scope.GoodsCount;
                 }
                 scope.decrease = function (o) {
                     Cart.decreaseProduct(o);
+                    // Types.decreaseProduct(o);
                     --scope.GoodsCount;
                 }
             }
