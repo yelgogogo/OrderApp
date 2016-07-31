@@ -185,6 +185,10 @@ a:focus, a:hover {
 .padding-5px {
 	padding: 5px;
 }
+.good-img {
+	overflow: hidden;
+	padding: 5px;
+}
 .background-blue {
     background: #35c0cd;
  }  
@@ -248,6 +252,7 @@ a:focus, a:hover {
 .good-price {
 	color: #ff6000;
 	font-size: large;
+	font-weight: initial;
 }
 .cart-price {
 	margin: 5px 0px;
@@ -307,7 +312,7 @@ a:focus, a:hover {
 }
 .mcart-info {
 	color: #fff;
-	font-size: x-large;
+	font-size: large;
 }
 .mcart-total {
 	font-size: x-large;
@@ -318,6 +323,7 @@ a:focus, a:hover {
     background: #4cd964;
     color: #fff;
     padding: 5px 5px;
+    vertical-align: top;
 }
 .btn-shop-enter {
 	padding: 5px 5px;
@@ -365,11 +371,18 @@ a:focus, a:hover {
 .font-large {
 	font-size: large;
 }
+.shop-goodcount{
+	vertical-align: top;
+	font-size: large;
+}
 .font-smaller {
 	font-size: smaller;
 }
 .font-medium {
 	font-size: medium;
+}
+.font-small {
+	font-size: small;
 }
 .font-x-large {
 	font-size: x-large;

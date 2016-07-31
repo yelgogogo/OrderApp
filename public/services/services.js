@@ -71,6 +71,14 @@ define(['angular'], function(angular) {
     });
 
     app.service('FoodService', function ($resource,$rootScope) {
+        this.getEleme = function () {
+            return $resource(web_url + $rootScope.apppgmid +"/WebServiceEx.asmx/JSON_ElemeRequest", {}, {
+                query: {
+                    method: "POST"
+                }
+            });
+        };
+
         this.getFoodList = function () {
             return $resource(web_url + $rootScope.apppgmid +"/WebServiceEx.asmx/JSON_Get_RoomGoods", {}, {
                 query: {

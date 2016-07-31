@@ -137,6 +137,7 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
                 if (!goods.Remarks){goods.Remarks='';};
                 msgtxt += goods.GoodsName + ' ' + goods.GoodsCount + goods.Unit + goods.Remarks +';'
                 delete goods.pics;
+                delete goods.sales;
                 delete goods.$$hashKey;
 
                 });
@@ -293,6 +294,7 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
                 if (!goods.Remarks){goods.Remarks='';};
                 msgtxt += goods.GoodsName + ' ' + goods.GoodsCount + goods.Unit + goods.Remarks +';'
                 delete goods.pics;
+                delete goods.sales;
                 delete goods.$$hashKey;
 
                 });

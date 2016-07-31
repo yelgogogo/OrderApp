@@ -1,23 +1,25 @@
 <div class="list-group">
-	<div class="list-group-item" ng-show="goods.length <= 0">该品类没有任何商品</div>
+	<div class="list-group-item" ng-show="goods.length <= 0">请选择右边菜品分类</div>
 	 
-    <div class="list-group-item good-item col-xs-12" ng-repeat="gd in goods">
-    	<div class="col-xs-7 text-center" ng-show="gd.pics.length > 0">
+    <div class="list-group-item good-item col-xs-12" ng-repeat="gd in goods | orderBy:['-sales','-Price']">
+    	<div class="col-xs-6 text-center good-img" ng-show="gd.pics.length > 0">
     		<img ng-src="{{gd.pics[0]}}" class="food-img" />
     	</div>
-        <div class="col-xs-7 no-pic padding-5px" ng-show="gd.pics.length <= 0">
+        <div class="col-xs-6 no-pic good-img" ng-show="gd.pics.length <= 0">
             暂无图片
         </div>
-    	<div class="col-xs-5 font-large padding-5px">
-    		<b ng-bind="gd.GoodsName"></b>
+    	<div class="col-xs-6 font-large padding-5px">
+    		<b> {{gd.GoodsName}}-{{gd.Unit}}</b>
+            <br>
+            <span class="font-small" ng-show="gd.sales > 0">月销:{{gd.sales}}</span>
+            <br>
     		<div class="good-action">
-    			<label class="good-price">￥{{gd.Price}} /{{gd.Unit}}</label>
-                <br>
-    			<div class="pull-right">
+    			<span class="good-price">￥{{gd.Price}}</span>
+    			<span class="pull-right">
                     <cart-decrease ng-click="decrease(gd)" ng-show="gd.GoodsCount > 0"></cart-decrease>
-                    <span class="font-large" ng-bind="gd.GoodsCount" ng-show="gd.GoodsCount > 0"></span>
+                    <span class="shop-goodcount" ng-bind="gd.GoodsCount" ng-show="gd.GoodsCount > 0"></span>
     				<cart-add ng-click="add(gd)"></cart-add>
-    			</div>
+    			</span>
                 
     		</div>    		
     	</div>

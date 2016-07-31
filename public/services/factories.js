@@ -155,6 +155,7 @@ define(['angular'], function (angular) {
 		$rootScope.roomData = [];
 		$rootScope.roomID='';
 		$rootScope.opCode='';
+		$rootScope.ElemeRestaurantID='';
 
 	    var text=$rootScope.Key;
         // $rootScope.types=[];
@@ -192,7 +193,21 @@ define(['angular'], function (angular) {
 	            console.log(err);
 	        });       
 
+        RoomService.getSysParm().get({paraCode:"txtElemeRestaurantID"})
+	        .$promise.then(function(data){    
+	        	if(!data.d){
+	        		return;
+	        	};
+	        	var placeName=angular.fromJson(data.d);
+	        	$rootScope.ElemeRestaurantID = placeName[0].ParaValue;
+	        }, function(err){
+	            console.log(err);
+	        });  
+
 		return {
+			getElemeRestaurantID: function () {
+				return $rootScope.ElemeRestaurantID;
+			},
 			getRooms: function () {
 				return $rootScope.roomData;
 			},
@@ -212,44 +227,78 @@ define(['angular'], function (angular) {
 		// var typeData = [];
 		$rootScope.typeData = [];
 		var goodslist = '';
-        var roomID=Rooms.getRoomID();
-        // $rootScope.types=[];
-        FoodService.getFoodList().query({roomID:roomID})
+        // var roomID=Rooms.getRoomID();
+        // var restaurantid=Rooms.getElemeRestaurantID();
+        var apiUrl="http://v2.openapi.ele.me/restaurant/"+Rooms.getElemeRestaurantID()+"/menu/"
+        var args=angular.toJson({restaurant_id:Rooms.getElemeRestaurantID(),tp_id:"0"});
+        FoodService.getEleme().query({apiUrl: apiUrl,args:args })
             .$promise.then(function(goods){    
-                var goodslist = angular.fromJson(goods.d);
-                var goodsTypesArr = [];
-                var goodtypetemp = [];
-                var goodtemp = [];
-                var goodlistcopy = angular.copy(goodslist);
-                goodslist.forEach(function(data){
-                    if (!goodsTypesArr[data.DisplayOrder-1] ){
-                        var goodtemp = goodlistcopy.filter(
-                                function(orderid){
-                                    return orderid.DisplayOrder == data.DisplayOrder
-                                });
-                        goodtemp.forEach(function(tempdata){
-                            // tempdata._id=tempdata.ID;
-                            // tempdata.GoodsName=tempdata.GoodsName;
-                            // tempdata.Price=tempdata.Price;
-                            // tempdata.description==tempdata.Unit;
-                            tempdata.pics=['resources/img'+$rootScope.apppgmid+'/'+tempdata.ID+'.jpg'];
-                            // delete tempdata.DisplayOrder;
-                            // delete tempdata.GoodsTypeName;
-                        });
-                        goodsTypesArr[data.DisplayOrder-1] = {
-                            _id: data.DisplayOrder,
-                            name: data.GoodsTypeName,
-                            
-                            goods:goodtemp
-                        }
-                        
-                    }
-                });
+                var elemeData = angular.fromJson(goods.d);
+                if(elemeData.code!=200){
+                	return
+                };
+                var elemeMenu= elemeData.data.restaurant_menu
+                
+                FoodService.getFoodList().query({roomID:Rooms.getRoomID()})
+		            .$promise.then(function(goods){    
+		                var goodslist = angular.fromJson(goods.d);
+		                var goodsTypesArr = [];
+		                var goodtypetemp = [];
+		                var goodtemp = [];
+		                var goodlistcopy = angular.copy(goodslist);
+		                goodslist.forEach(function(data){
+		                    if (!goodsTypesArr[data.DisplayOrder-1] ){
+		                        var goodtemp = goodlistcopy.filter(
+		                                function(orderid){
+		                                    return orderid.DisplayOrder == data.DisplayOrder
+		                                });
+		                        goodtemp.forEach(function(tempdata){
+		                            // tempdata._id=tempdata.ID;
+		                            // tempdata.GoodsName=tempdata.GoodsName;
+		                            // tempdata.Price=tempdata.Price;
+		                            // tempdata.description==tempdata.Unit;
+		                            var elemeselect={};
+		                            var breakeach=false;
+		                            elemeMenu.forEach(function(eleme){
+		                            	if(!breakeach){
+			                            	elemeselect=eleme.foods.find(function(elme){return elme.name==tempdata.GoodsName})
+			                            	if(elemeselect){
+			                            		breakeach = true;
+			                            	};
+		                            	};
+		                            });
+		                            if(elemeselect){
+		                            	tempdata.sales=elemeselect.sales;
+	                            		tempdata.pics=[elemeselect.image_url];
+		                            }else{
+		                            	tempdata.sales=0;
+		                            	tempdata.pics=['resources/img'+$rootScope.apppgmid+'/'+tempdata.ID+'.jpg'];
+		                            };
+		                            // tempdata.pics=['resources/img'+$rootScope.apppgmid+'/'+tempdata.ID+'.jpg'];
+		                            // delete tempdata.DisplayOrder;
+		                            // delete tempdata.GoodsTypeName;
+		                        
+		                        });
+		                        goodsTypesArr[data.DisplayOrder-1] = {
+		                            _id: data.DisplayOrder,
+		                            name: data.GoodsTypeName,
+		                            goods:goodtemp
+		                        }
+		                        
+		                    }
+		                });
+		                // typeData=goodsTypesArr;
+		                $rootScope.typeData=goodsTypesArr;
+		            }, function(err){
+		                console.log(err);
+		            });
                 // typeData=goodsTypesArr;
-                $rootScope.typeData=goodsTypesArr;
+                
             }, function(err){
                 console.log(err);
             });
+        // $rootScope.types=[];
+
 
 		return {
 			getTypes: function () {
