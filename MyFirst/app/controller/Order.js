@@ -494,7 +494,9 @@ Ext.define('MyFirst.controller.Order', {
                             dataView.refresh();
                             // app.util.Proxy.printQrCode(printstr);
                             if(app.CurRoom.RoomAreaName != "外卖"){
-                                app.util.Proxy.getEnStr(app.CurRoom.RoomOpCode + app.CurRoom.ID, function (enstr) {
+                                var appCurRoomID='000'+app.CurRoom.ID;
+                                appCurRoomID = appCurRoomID.substr(appCurRoomID.length-3,3);
+                                app.util.Proxy.getEnStr(app.CurRoom.RoomOpCode + appCurRoomID + app.ElemeRestaurantId , function (enstr) {
                                     var myUrl = Ext.global.window.location.href.replace(/order\.html.*$/g,'customer.html') + "?Key=" + enstr.replace('+','%2B');
                                     var apiurl = 'http://50r.cn/urls/add.jsonp'
                                     var url = "http://qr.topscan.com/api.php?&w=260&text=" + myUrl;
@@ -993,8 +995,9 @@ Ext.define('MyFirst.controller.Order', {
                 }
             });
         }
-
-       app.util.Proxy.getEnStr(app.CurRoom.RoomOpCode + app.CurRoom.ID, function (enstr) {
+        var appCurRoomID='000'+app.CurRoom.ID;
+        appCurRoomID = appCurRoomID.substr(appCurRoomID.length-3,3);
+        app.util.Proxy.getEnStr(app.CurRoom.RoomOpCode + appCurRoomID+ app.ElemeRestaurantId , function (enstr) {
             var myUrl = Ext.global.window.location.href.replace(/order\.html.*$/g,'customer.html') + "?Key=" + enstr.replace('+','%2B');
             // var myUrl = 'http://t.cn/R5nSrRs'
             var apiurl = 'http://50r.cn/urls/add.jsonp'
@@ -1012,7 +1015,7 @@ Ext.define('MyFirst.controller.Order', {
                 var printstr = '<CB>'+app.CurPlace+'</CB><BR>' + '<CB>'+app.CurRoom.RoomName+'</CB><BR><QR>' +shorturl + '</QR><BR><C>'+app.CurPlacemsg+'</C>'
                 app.util.Proxy.printQrCode(printstr);
             });
-       });
+        });
        
     },
     //顾客自选单
