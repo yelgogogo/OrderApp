@@ -481,7 +481,16 @@ Ext.define('MyFirst.controller.Order', {
             };
         };
     },
+    pad: function (num, n) {  
+        var len = num.toString().length;  
+        while(len < n) {  
+            num = "0" + num;  
+            len++;  
+        }  
+        return num;  
+    },
     onRoomTap: function (dataView, index, dataItem, dataItemModel, e, eOpts) {
+        me=this;
         if (dataItemModel.data.RoomStateName == "坏房")
             return;
         if (dataItemModel.data.RoomStateName == "空房"
@@ -494,9 +503,9 @@ Ext.define('MyFirst.controller.Order', {
                             dataView.refresh();
                             // app.util.Proxy.printQrCode(printstr);
                             if(app.CurRoom.RoomAreaName != "外卖"){
-                                var appCurRoomID='000'+app.CurRoom.ID;
-                                appCurRoomID = appCurRoomID.substr(appCurRoomID.length-3,3);
-                                app.util.Proxy.getEnStr(app.CurRoom.RoomOpCode + appCurRoomID + app.ElemeRestaurantId , function (enstr) {
+                                var appCurRoomID=me.pad(app.CurRoom.ID,3);
+                                var appElemeRestaurantId=me.pad(app.ElemeRestaurantId,8);
+                                app.util.Proxy.getEnStr(app.CurRoom.RoomOpCode + appCurRoomID + appElemeRestaurantId, function (enstr) {
                                     var myUrl = Ext.global.window.location.href.replace(/order\.html.*$/g,'customer.html') + "?Key=" + enstr.replace('+','%2B');
                                     var apiurl = 'http://50r.cn/urls/add.jsonp'
                                     var url = "http://qr.topscan.com/api.php?&w=260&text=" + myUrl;
@@ -995,9 +1004,9 @@ Ext.define('MyFirst.controller.Order', {
                 }
             });
         }
-        var appCurRoomID='000'+app.CurRoom.ID;
-        appCurRoomID = appCurRoomID.substr(appCurRoomID.length-3,3);
-        app.util.Proxy.getEnStr(app.CurRoom.RoomOpCode + appCurRoomID+ app.ElemeRestaurantId , function (enstr) {
+        var appCurRoomID=this.pad(app.CurRoom.ID,3);
+        var appElemeRestaurantId=this.pad(app.ElemeRestaurantId,8);
+        app.util.Proxy.getEnStr(app.CurRoom.RoomOpCode + appCurRoomID + appElemeRestaurantId, function (enstr) {
             var myUrl = Ext.global.window.location.href.replace(/order\.html.*$/g,'customer.html') + "?Key=" + enstr.replace('+','%2B');
             // var myUrl = 'http://t.cn/R5nSrRs'
             var apiurl = 'http://50r.cn/urls/add.jsonp'
