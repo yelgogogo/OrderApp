@@ -164,8 +164,9 @@ define(['angular'], function (angular) {
             	if(!destr.d){
             		return;
 		        };
-            	$rootScope.opCode = destr.d.substr(0,12);
-            	$rootScope.roomID = destr.d.substr(12,20);
+            	$rootScope.opCode = destr.d.substr(0,12)
+            	$rootScope.roomID = destr.d.substr(12,3).replace(/^0+/,"");
+            	$rootScope.ElemeRestaurantID = destr.d.substr(15,8).replace(/^0+/,"")
     	        RoomService.chkCustomerOp().get({roomID:$rootScope.roomID,opCode:$rootScope.opCode})
 		            .$promise.then(function(data){    
 		            	if(!data.d){
@@ -193,16 +194,16 @@ define(['angular'], function (angular) {
 	            console.log(err);
 	        });       
 
-        RoomService.getSysParm().get({paraCode:"txtElemeRestaurantID"})
-	        .$promise.then(function(data){    
-	        	if(!data.d){
-	        		return;
-	        	};
-	        	var placeName=angular.fromJson(data.d);
-	        	$rootScope.ElemeRestaurantID = placeName[0].ParaValue;
-	        }, function(err){
-	            console.log(err);
-	        });  
+        // RoomService.getSysParm().get({paraCode:"txtElemeRestaurantID"})
+	       //  .$promise.then(function(data){    
+	       //  	if(!data.d){
+	       //  		return;
+	       //  	};
+	       //  	var placeName=angular.fromJson(data.d);
+	       //  	$rootScope.ElemeRestaurantID = placeName[0].ParaValue;
+	       //  }, function(err){
+	       //      console.log(err);
+	       //  });  
 
 		return {
 			getElemeRestaurantID: function () {
@@ -223,23 +224,79 @@ define(['angular'], function (angular) {
 		};
 	});
 
-	app.factory('Types', function ($rootScope, FoodService, Rooms) {
-		// var typeData = [];
-		$rootScope.typeData = [];
-		var goodslist = '';
-        // var roomID=Rooms.getRoomID();
-        // var restaurantid=Rooms.getElemeRestaurantID();
-        var apiUrl="http://v2.openapi.ele.me/restaurant/"+Rooms.getElemeRestaurantID()+"/menu/"
-        var args=angular.toJson({restaurant_id:Rooms.getElemeRestaurantID(),tp_id:"0"});
+	app.factory('Eleme', function ($rootScope, FoodService, Rooms) {
+		$rootScope.elemeData = [];
+		
+
+		return {
+			getEleme: function (rid) {
+				var apiUrl="http://v2.openapi.ele.me/restaurant/"+rid+"/menu/"
+        var args=angular.toJson({restaurant_id:rid,tp_id:"0"});
+
         FoodService.getEleme().query({apiUrl: apiUrl,args:args })
             .$promise.then(function(goods){    
                 var elemeData = angular.fromJson(goods.d);
                 if(elemeData.code!=200){
                 	return
                 };
-                var elemeMenu= elemeData.data.restaurant_menu
+                $rootScope.elemeData= elemeData.data.restaurant_menu;
+                // alert("eleme");
+				return $rootScope.elemeData;
+        	}, function(err){
+            console.log(err);
+        });
+				
+
+			}
+		};
+	});
+
+	app.factory('Types', function ($rootScope, FoodService, Rooms) {
+		// var typeData = [];
+		$rootScope.typeData = [];
+		var goodslist = '';
+        
+        
+              //   FoodService.getFoodList().query({roomID:Rooms.getRoomID()})
+		            // .$promise.then(function(goods){    
+		            //     var goodslist = angular.fromJson(goods.d);
+		            //     var goodsTypesArr = [];
+		            //     var goodtypetemp = [];
+		            //     var goodtemp = [];
+		            //     var goodlistcopy = angular.copy(goodslist);
+		            //     goodslist.forEach(function(data){
+		            //         if (!goodsTypesArr[data.DisplayOrder-1] ){
+		            //             var goodtemp = goodlistcopy.filter(
+		            //                     function(orderid){
+		            //                         return orderid.DisplayOrder == data.DisplayOrder
+		            //                     });
+		            //             goodtemp.forEach(function(tempdata){
+
+		            //                 	tempdata.rating=0;
+		            //                 	tempdata.sales=0;
+		            //                 	tempdata.pics=['resources/img'+$rootScope.apppgmid+'/'+tempdata.ID+'.jpg'];
+		                        
+		            //             });
+		            //             goodsTypesArr[data.DisplayOrder-1] = {
+		            //                 _id: data.DisplayOrder,
+		            //                 name: data.GoodsTypeName,
+		            //                 goods:goodtemp
+		            //             }
+		                        
+		            //         }
+		            //     });
+		            //     $rootScope.typeData=goodsTypesArr;
+		            // }, function(err){
+		            //     console.log(err);
+		            // });
                 
-                FoodService.getFoodList().query({roomID:Rooms.getRoomID()})
+        
+        // $rootScope.types=[];
+
+
+		return {
+			getTypes: function (roomid) {
+				                FoodService.getFoodList().query({roomID:roomid})
 		            .$promise.then(function(goods){    
 		                var goodslist = angular.fromJson(goods.d);
 		                var goodsTypesArr = [];
@@ -257,23 +314,26 @@ define(['angular'], function (angular) {
 		                            // tempdata.GoodsName=tempdata.GoodsName;
 		                            // tempdata.Price=tempdata.Price;
 		                            // tempdata.description==tempdata.Unit;
-		                            var elemeselect={};
-		                            var breakeach=false;
-		                            elemeMenu.forEach(function(eleme){
-		                            	if(!breakeach){
-			                            	elemeselect=eleme.foods.find(function(elme){return elme.name==tempdata.GoodsName})
-			                            	if(elemeselect){
-			                            		breakeach = true;
-			                            	};
-		                            	};
-		                            });
-		                            if(elemeselect){
-		                            	tempdata.sales=elemeselect.sales;
-	                            		tempdata.pics=[elemeselect.image_url];
-		                            }else{
+		                            // var elemeselect={};
+		                            // var breakeach=false;
+		                            // var elemeMenu=[];
+		                            // elemeMenu.forEach(function(eleme){
+		                            // 	if(!breakeach){
+			                           //  	elemeselect=eleme.foods.find(function(elme){return elme.name==tempdata.GoodsName})
+			                           //  	if(elemeselect){
+			                           //  		breakeach = true;
+			                           //  	};
+		                            // 	};
+		                            // });
+		                            // if(elemeselect){
+		                            // 	tempdata.rating=elemeselect.rating;
+		                            // 	tempdata.sales=elemeselect.sales;
+	                            	// 	tempdata.pics=[elemeselect.image_url];
+		                            // }else{
+		                            	tempdata.rating=0;
 		                            	tempdata.sales=0;
 		                            	tempdata.pics=['resources/img'+$rootScope.apppgmid+'/'+tempdata.ID+'.jpg'];
-		                            };
+		                            // };
 		                            // tempdata.pics=['resources/img'+$rootScope.apppgmid+'/'+tempdata.ID+'.jpg'];
 		                            // delete tempdata.DisplayOrder;
 		                            // delete tempdata.GoodsTypeName;
@@ -289,20 +349,13 @@ define(['angular'], function (angular) {
 		                });
 		                // typeData=goodsTypesArr;
 		                $rootScope.typeData=goodsTypesArr;
+		                // alert("types");
+				return $rootScope.typeData;
 		            }, function(err){
 		                console.log(err);
 		            });
-                // typeData=goodsTypesArr;
-                
-            }, function(err){
-                console.log(err);
-            });
-        // $rootScope.types=[];
+				
 
-
-		return {
-			getTypes: function () {
-				return $rootScope.typeData;
 			},
 			clearProducts: function () {
 				$rootScope.typeData.forEach(function(type){

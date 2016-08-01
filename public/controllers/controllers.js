@@ -4,10 +4,24 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
 
     app.constant('APP_TITLE', 'BB Shop');
 
-    app.controller("rootCtrl", function ($scope,Rooms, $rootScope) {
+    app.controller("rootCtrl", function ($scope,Rooms,Eleme,Types, $rootScope) {
         var a=Rooms.getRoomID();
         var b=Rooms.getOpCode();
         var c=Rooms.getPlaceName();
+        var d=Rooms.getElemeRestaurantID();
+        
+        $scope.$watch('ElemeRestaurantID', function (n, o) {
+            // console.log(n + 'changed' + o);
+            if(n){ 
+            var e=Eleme.getEleme(n);}
+        });
+
+        $scope.$watch('roomID', function (n, o) {
+            // console.log(n + 'changed' + o);
+            if(n){ 
+            var f=Types.getTypes(n);}
+        });
+
 
         $scope.$watch(function() {
             return $rootScope.cartData;
@@ -26,79 +40,102 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
         }, true);
     });
 
-    app.controller("HomeController", function($scope,$rootScope, APP_TITLE, Cart, Rooms, FoodService) {
+    app.controller("HomeController", function($scope,$rootScope, Types,APP_TITLE,Eleme,Cart, Rooms, FoodService) {
+        // var a=Eleme.getEleme();
+        $rootScope.currentType  = "1";
+        $rootScope.elemeload = false;
+
         
-        // $scope.APP_TITLE = $rootScope.CurPlace;
-
-        // $scope.hotCities = data.hotCities;
-
 
     });
 
-    app.controller("ShopController", function($scope, APP_TITLE, Cart, Rooms, Types, FoodService) {
-        // $scope.goodslist = '';
-        // var roomID='1';
-        // $scope.types=[];
-        // FoodService.getFoodList().query({roomID:roomID})
-        //     .$promise.then(function(goods){    
-        //         $scope.goodslist = angular.fromJson(goods.d);
-        //         var goodsTypesArr = {};
-        //         var goodtypetemp = [];
-        //         var goodtemp = [];
-        //         var goodlistcopy = angular.copy($scope.goodslist);
-        //         $scope.goodslist.forEach(function(data){
-        //             if (!goodsTypesArr[data.DisplayOrder] ){
-        //                 var goodtemp = goodlistcopy.filter(
-        //                         function(orderid){
-        //                             return orderid.DisplayOrder == data.DisplayOrder
-        //                         });
-        //                 goodtemp.forEach(function(tempdata){
-        //                     tempdata._id=tempdata.ID;
-        //                     tempdata.GoodsName=tempdata.GoodsName;
-        //                     tempdata.Price=tempdata.Price;
-        //                     tempdata.description==tempdata.Unit;
-        //                     tempdata.pics=['images\/'+tempdata.ID+'.jpg'];
-        //                     // delete tempdata.DisplayOrder;
-        //                     // delete tempdata.GoodsTypeName;
-        //                 });
-        //                 goodsTypesArr[data.DisplayOrder] = {
-        //                     _id: data.DisplayOrder,
-        //                     name: data.GoodsTypeName,
-                            
-        //                     goods:goodtemp
-        //                 }
-        //                 $scope.types.push(goodsTypesArr[data.DisplayOrder]);
-        //             }
-        //         });
-        //     }, function(err){
-        //         console.log(err);
-        //     });
 
 
-     //    $scope.types=[];
-	    // $scope.types= Types.getTypes();
+    app.controller("ShopController", function($scope,$filter,$rootScope, Eleme,Cart, Rooms, Types, FoodService) {
+        
+        $rootScope.tens = 1;
+        $rootScope.RemarksAll = false;
+
+        $scope.types=$rootScope.typeData;
+        
 	    $scope.tabs  = data.tabs;
-        // $scope.types = data.goodTypes;
         $scope.Cart  = Cart;
 
         $scope.shop_title   = Rooms.getPlaceName;
 
         $scope.currentState = "menu";
-        $scope.currentType  = "1"; // type id
+         // type id
         $scope.currentGoods = [];
         $scope.currentName  = "";
 
-        Types.getTypes().forEach(function (gt, i) {
-                if(gt._id == $scope.currentType) {
+        // alert($rootScope.typeData);
+        // alert($rootScope.elemeData);
+        if(!$rootScope.elemeload){
+            $rootScope.elemeload=true;
+            $rootScope.typeData.forEach(function(tdata){
+                // alert(tdata._id);
+                tdata.goods.forEach(function(gdata){
+                    var breakeach=false;
+                    var elemeselect =[];
+                    $rootScope.elemeData.forEach(function(edata){
+                        // alert(edata.category);
+                                if(!breakeach){
+                                    // alert("2");
+                                    elemeselect=edata.foods.filter(function(elmeid){return elmeid.name==gdata.GoodsName});
+                                    if(elemeselect.length>0){
+                                        // alert("3");
+                                        breakeach = true;
+                                    }
+                                    
+                                    }
+                    });
+                    if(elemeselect.length>0){
+                        gdata.rating=elemeselect[0].rating;
+                        gdata.sales=elemeselect[0].sales;
+                        gdata.pics=[elemeselect[0].image_url];
+                    }else{
+                        gdata.rating=0;
+                        gdata.sales=0;
+                        gdata.pics=['resources/img'+$rootScope.apppgmid+'/'+gdata.ID+'.jpg'];
+                    };
+                });
+            });
+        };
+            // $rootScope.typeData.forEach(function(tdata){
+            //     tdata.goods.forEach(function(gdata){
+            //         var breakeach=false;
+            //         var elemeselect ={};
+            //         $rootScope.elemeData.forEach(function(edata){
+            //                     if(!breakeach){
+            //                         elemeselect=edata.foods.find(function(elme){return elme.name==gdata.GoodsName})
+            //                         if(elemeselect){
+            //                             breakeach = true;
+            //                         };
+            //                     };
+            //         });
+            //         if(elemeselect){
+            //             gdata.rating=elemeselect.rating;
+            //             gdata.sales=elemeselect.sales;
+            //             gdata.pics=[elemeselect.image_url];
+            //         }else{
+            //             gdata.rating=0;
+            //             gdata.sales=0;
+            //             gdata.pics=['resources/img'+$rootScope.apppgmid+'/'+gdata.ID+'.jpg'];
+            //         };
+            //     });
+            // });
+
+        $rootScope.typeData.forEach(function (gt, i) {
+                if(gt._id == $rootScope.currentType) {
                     $scope.currentGoods = gt.goods;
                     $scope.currentName  = gt.GoodsName;               
                 }
             });
 
         $scope.$watch('currentType', function (n, o) {
-            // console.log(n + 'changed' + o);
-            Types.getTypes().forEach(function (gt, i) {
-                if(gt._id == $scope.currentType) {
+            $rootScope.currentType=n;
+            $rootScope.typeData.forEach(function (gt, i) {
+                if(gt._id == $rootScope.currentType) {
                     $scope.currentGoods = gt.goods;
                     $scope.currentName  = gt.GoodsName;               
                 }
@@ -107,12 +144,10 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
 
         $('.restaurant-content').height($('body').outerHeight(true) - $('.shop-header').outerHeight(true) - $('.menu-cart').outerHeight(true) * 2);
 
-        // $('.restaurant-food').height(screen.height - $('.shop-header').outerHeight(true) - $('.menu-cart').outerHeight(true) * 2);
 
     });
 
     app.controller("McartController", function($scope,$rootScope, Types,Cart,Rooms, FoodService, MsgService, $filter) {
-
 
         $rootScope.tens = 1;
         $rootScope.RemarksAll = false;
@@ -138,6 +173,7 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
                 msgtxt += goods.GoodsName + ' ' + goods.GoodsCount + goods.Unit + goods.Remarks +';'
                 delete goods.pics;
                 delete goods.sales;
+                delete goods.rating;
                 delete goods.$$hashKey;
 
                 });
@@ -222,8 +258,8 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
         $('.restaurant-cart').height($('body').outerHeight(true) - $('.shop-header').outerHeight(true) - $('.restaurant-cart-bottom').outerHeight(true));
     });
 
-    app.controller("CheckoutController", function($scope,$rootScope, APP_TITLE, Cart, Rooms, FoodService,MsgService, $filter) {
-        
+    app.controller("CheckoutController", function($scope,$rootScope, Types, APP_TITLE, Cart, Rooms, FoodService,MsgService, $filter) {
+
         $scope.APP_TITLE = APP_TITLE;
 
         $scope.orderingData = [];
@@ -295,6 +331,7 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
                 msgtxt += goods.GoodsName + ' ' + goods.GoodsCount + goods.Unit + goods.Remarks +';'
                 delete goods.pics;
                 delete goods.sales;
+                delete goods.rating;
                 delete goods.$$hashKey;
 
                 });
