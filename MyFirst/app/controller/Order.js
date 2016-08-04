@@ -506,7 +506,7 @@ Ext.define('MyFirst.controller.Order', {
                                 var appCurRoomID=me.pad(app.CurRoom.ID,3);
                                 var appElemeRestaurantId=me.pad(app.ElemeRestaurantId,8);
                                 app.util.Proxy.getEnStr(app.CurRoom.RoomOpCode + appCurRoomID + appElemeRestaurantId, function (enstr) {
-                                    var myUrl = Ext.global.window.location.href.replace(/order\.html.*$/g,'customer.html') + "?Key=" + enstr.replace('+','%2B');
+                                    var myUrl = Ext.global.window.location.href.replace(/order\.html.*$/g,'customer.html') + "?Key=" + enstr.replace(/\+/g,'%2B');
                                     var apiurl = 'http://50r.cn/urls/add.jsonp'
                                     var url = "http://qr.topscan.com/api.php?&w=260&text=" + myUrl;
                                     console.log(url);
@@ -1007,7 +1007,7 @@ Ext.define('MyFirst.controller.Order', {
         var appCurRoomID=this.pad(app.CurRoom.ID,3);
         var appElemeRestaurantId=this.pad(app.ElemeRestaurantId,8);
         app.util.Proxy.getEnStr(app.CurRoom.RoomOpCode + appCurRoomID + appElemeRestaurantId, function (enstr) {
-            var myUrl = Ext.global.window.location.href.replace(/order\.html.*$/g,'customer.html') + "?Key=" + enstr.replace('+','%2B');
+            var myUrl = Ext.global.window.location.href.replace(/order\.html.*$/g,'customer.html') + "?Key=" + enstr.replace(/\+/g,'%2B');
             // var myUrl = 'http://t.cn/R5nSrRs'
             var apiurl = 'http://50r.cn/urls/add.jsonp'
             // window.location=myUrl;
