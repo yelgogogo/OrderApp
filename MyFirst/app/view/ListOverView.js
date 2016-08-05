@@ -87,8 +87,8 @@ Ext.define('MyFirst.view.ListOverView', {
                         },
                         {
                             readOnly: true,
-                            label: '包房收款',
-                            name: 'PosedRoomAmount'
+                            label: '外卖收款',
+                            name: 'PosedTakeoutAmount'
                         },
                         {
                             docked: 'bottom',

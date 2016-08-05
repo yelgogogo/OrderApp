@@ -292,6 +292,9 @@ Ext.define('MyFirst.controller.Order', {
                     var goodsstore = Ext.getStore('Goods');
                     goodsstore.clearFilter(true);
 
+                    var printstr = '<CB>'+app.CurRoom.RoomName+'</CB><BR>日期: '+eleme.data.created_at+'<BR>客人: '+eleme.data.consignee+'('+eleme.data.phone_list +')<BR>地址: '+eleme.data.address+'<BR>送餐地址: '+eleme.data.delivery_poi_address+'<BR><L>送餐时间: '+(eleme.data.deliver_time||'')+'</L><BR><L>备注: '+eleme.data.description+'</L>';
+                    app.util.Proxy.printQrCode(printstr);
+
                     Ext.each(orderextra,function(ordextra){
                         if(ordextra.name!="使用红包"){
                             var goodsx = goodsstore.findRecord('GoodsName', ordextra.name, 0, false, false, true);
@@ -338,7 +341,7 @@ Ext.define('MyFirst.controller.Order', {
                 var roomstore = Ext.getStore('Rooms');
                 Ext.each(neworder,function(order){
                     roomstore.each(function(room){
-                        if(room.data.RoomStateName == '空房'){
+                        if(room.data.RoomStateName == '空房' && room.data.RoomOpenTimes==''){
                             app.util.Proxy.openRoom(room.data.ID,order, function () { 
                                 
                                 dataView.refresh();
@@ -408,9 +411,8 @@ Ext.define('MyFirst.controller.Order', {
                     Ext.each(neworder,function(order){
                         
                             roomstore.each(function(room){
-                                if(room.data.RoomStateName == '空房'){
+                                if(room.data.RoomStateName == '空房' && room.data.RoomOpenTimes==''){
                                     app.util.Proxy.openRoom(room.data.ID,order, function () { 
-                                        
                                         dataView.refresh();
                                     });
                                     room.data.RoomStateName = "开房";
@@ -974,6 +976,7 @@ Ext.define('MyFirst.controller.Order', {
                 //roomDetail.add(this.orderedlist);
             }
             var viewStore = Ext.getStore('OverViews');
+            viewStore.data.items[0].data.PosedTakeoutAmount=viewStore.data.items[0].data.PosedAmount-viewStore.data.items[0].data.PosedHallAmount-viewStore.data.items[0].data.PosedRoomAmount;
             this.overviewform.setValues(viewStore.data.items[0].data);
             frmMain.push(this.overviewform);
             //roomDetail.setActiveItem(this.orderedlist);

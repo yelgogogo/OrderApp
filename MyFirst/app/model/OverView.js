@@ -19,6 +19,7 @@ Ext.define('MyFirst.model.OverView', {
             { name: 'PosedAmount', type: 'number' },
             { name: 'PosedRoomAmount', type: 'number' },
             { name: 'PosedHallAmount', type: 'number' },
+            { name: 'PosedTakeoutAmount', type: 'number' },
             { name: 'PosingAmount', type: 'number' },
             { name: 'PosFinallyAmount', type: 'number' },
             { name: 'ConsumeAmount', type: 'number' },
