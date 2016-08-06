@@ -157,7 +157,7 @@ define(['angular'], function (angular) {
 		$rootScope.opCode='';
 		$rootScope.ElemeRestaurantID='';
 
-	    var text=$rootScope.Key;
+	    var text=$rootScope.Key.replace(/ /g,"+");
         // $rootScope.types=[];
         RoomService.getUnStr().get({text:text})
             .$promise.then(function(destr){
@@ -241,6 +241,7 @@ define(['angular'], function (angular) {
                 };
                 $rootScope.elemeData= elemeData.data.restaurant_menu;
                 // alert("eleme");
+                $rootScope.stage+=1;
 				return $rootScope.elemeData;
         	}, function(err){
             console.log(err);
@@ -349,6 +350,7 @@ define(['angular'], function (angular) {
 		                });
 		                // typeData=goodsTypesArr;
 		                $rootScope.typeData=goodsTypesArr;
+		                $rootScope.stage+=1;
 		                // alert("types");
 				return $rootScope.typeData;
 		            }, function(err){

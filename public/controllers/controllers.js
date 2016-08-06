@@ -9,19 +9,53 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
         var b=Rooms.getOpCode();
         var c=Rooms.getPlaceName();
         var d=Rooms.getElemeRestaurantID();
+        $rootScope.stage=0;
         
-        $scope.$watch('ElemeRestaurantID', function (n, o) {
+        var destroyElemeWatch = $scope.$watch('ElemeRestaurantID', function (n, o) {
             // console.log(n + 'changed' + o);
             if(n){ 
-            var e=Eleme.getEleme(n);}
+            var e=Eleme.getEleme(n);
+            destroyElemeWatch();}
         });
 
-        $scope.$watch('roomID', function (n, o) {
+        var destroyRoomWatch = $scope.$watch('roomID', function (n, o) {
             // console.log(n + 'changed' + o);
             if(n){ 
-            var f=Types.getTypes(n);}
+            var f=Types.getTypes(n);
+            destroyRoomWatch();}
         });
 
+        var destroyStageWatch = $scope.$watch('stage', function (n, o) {
+            // console.log(n + 'changed' + o);
+            if(n>1){ 
+                $rootScope.elemeload=true;
+                $rootScope.typeData.forEach(function(tdata){
+                    tdata.goods.forEach(function(gdata){
+                        var breakeach=false;
+                        var elemeselect =[];
+                        $rootScope.elemeData.forEach(function(edata){
+
+                                    if(!breakeach){
+                                        elemeselect=edata.foods.filter(function(elmeid){return elmeid.name==gdata.GoodsName});
+                                        if(elemeselect.length>0){
+                                            breakeach = true;
+                                        }
+                                    }
+                        });
+                        if(elemeselect.length>0){
+                            gdata.rating=elemeselect[0].rating;
+                            gdata.sales=elemeselect[0].sales;
+                            gdata.pics=[elemeselect[0].image_url];
+                        }else{
+                            gdata.rating=0;
+                            gdata.sales=0;
+                            gdata.pics=['resources/img'+$rootScope.apppgmid+'/'+gdata.ID+'.jpg'];
+                        };
+                    });
+                });
+                destroyStageWatch();
+            }
+        });
 
         $scope.$watch(function() {
             return $rootScope.cartData;
@@ -43,7 +77,7 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
     app.controller("HomeController", function($scope,$rootScope, Types,APP_TITLE,Eleme,Cart, Rooms, FoodService) {
         // var a=Eleme.getEleme();
         $rootScope.currentType  = "1";
-        $rootScope.elemeload = false;
+        // $rootScope.elemeload = false;
 
         
 
@@ -68,39 +102,36 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
         $scope.currentGoods = [];
         $scope.currentName  = "";
 
-        // alert($rootScope.typeData);
-        // alert($rootScope.elemeData);
-        if(!$rootScope.elemeload){
-            $rootScope.elemeload=true;
-            $rootScope.typeData.forEach(function(tdata){
-                // alert(tdata._id);
-                tdata.goods.forEach(function(gdata){
-                    var breakeach=false;
-                    var elemeselect =[];
-                    $rootScope.elemeData.forEach(function(edata){
-                        // alert(edata.category);
-                                if(!breakeach){
-                                    // alert("2");
-                                    elemeselect=edata.foods.filter(function(elmeid){return elmeid.name==gdata.GoodsName});
-                                    if(elemeselect.length>0){
-                                        // alert("3");
-                                        breakeach = true;
-                                    }
-                                    
-                                    }
-                    });
-                    if(elemeselect.length>0){
-                        gdata.rating=elemeselect[0].rating;
-                        gdata.sales=elemeselect[0].sales;
-                        gdata.pics=[elemeselect[0].image_url];
-                    }else{
-                        gdata.rating=0;
-                        gdata.sales=0;
-                        gdata.pics=['resources/img'+$rootScope.apppgmid+'/'+gdata.ID+'.jpg'];
-                    };
-                });
-            });
-        };
+
+        // if(!$rootScope.elemeload){
+        //     $rootScope.elemeload=true;
+        //     $rootScope.typeData.forEach(function(tdata){
+
+        //         tdata.goods.forEach(function(gdata){
+        //             var breakeach=false;
+        //             var elemeselect =[];
+        //             $rootScope.elemeData.forEach(function(edata){
+
+        //                         if(!breakeach){
+        //                             elemeselect=edata.foods.filter(function(elmeid){return elmeid.name==gdata.GoodsName});
+        //                             if(elemeselect.length>0){
+        //                                 breakeach = true;
+        //                             }
+        //                         }
+        //             });
+        //             if(elemeselect.length>0){
+        //                 gdata.rating=elemeselect[0].rating;
+        //                 gdata.sales=elemeselect[0].sales;
+        //                 gdata.pics=[elemeselect[0].image_url];
+        //             }else{
+        //                 gdata.rating=0;
+        //                 gdata.sales=0;
+        //                 gdata.pics=['resources/img'+$rootScope.apppgmid+'/'+gdata.ID+'.jpg'];
+        //             };
+        //         });
+        //     });
+        // };
+
             // $rootScope.typeData.forEach(function(tdata){
             //     tdata.goods.forEach(function(gdata){
             //         var breakeach=false;

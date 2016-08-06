@@ -53,16 +53,16 @@
         </div>
         <div class="restaurant-cart col-xs-12">
             <div class="ui-block" ng-if="orderedData && orderedData.length > 0">
-                <div class="list-group-item good-item col-xs-12" data-toggle="collapse" href="#{{gd.GoodsID}}" ng-repeat="gd in orderedData | orderBy:['GoodsTypeName','-Price','GoodsName']" ng-show="gd.GoodsCount > 0">
+                <div class="list-group-item good-item col-xs-12" data-toggle="collapse" href="#{{gd.GoodsID}}" ng-repeat="gd in orderedData | orderBy:['GoodsTypeName','-Price','GoodsName']" ng-show="gd.GoodsCount != 0">
                         <div class="col-xs-6 text-left no-padding">
                             <b class="food-name" ng-bind="gd.GoodsName"></b>
                             <p ng-if="gd.Remarks">{{gd.Remarks}}</p>
                         </div>
                         <div class="col-xs-3 text-right no-padding">
-                            <b class="font-large" ng-show="gd.GoodsCount >= 0">{{gd.GoodsCount}} {{gd.Unit}} </b>
+                            <b class="font-large" ng-show="gd.GoodsCount != 0">{{gd.GoodsCount}} {{gd.Unit}} </b>
                         </div>
                         <div class="col-xs-2 text-right no-padding">
-                            <b class="good-price" ng-show="gd.GoodsCount >= 0">￥{{gd.GoodsCount*gd.Price}} </b>
+                            <b class="good-price" ng-show="gd.GoodsCount != 0">￥{{gd.GoodsCount*gd.Price}} </b>
                         </div>
                 </div>
             </div>    
