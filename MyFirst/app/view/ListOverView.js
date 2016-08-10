@@ -12,7 +12,7 @@ Ext.define('MyFirst.view.ListOverView', {
                     xtype: 'fieldset',
                     defaults: {
                         xtype: 'textfield',
-                        labelWidth: '60%',
+                        labelWidth: '50%',
                         inputCls: 'dxtextright',
                         flex: 1
                     },
@@ -40,7 +40,7 @@ Ext.define('MyFirst.view.ListOverView', {
                     xtype: 'fieldset',
                     defaults: {
                         xtype: 'textfield',
-                        labelWidth: '60%',
+                        labelWidth: '50%',
                         inputCls: 'dxtextright',
                         flex: 1
                     },
@@ -68,7 +68,7 @@ Ext.define('MyFirst.view.ListOverView', {
                     xtype: 'fieldset',
                     defaults: {
                         xtype: 'textfield',
-                        labelWidth: '60%',
+                        labelWidth: '50%',
                         inputCls: 'dxtextright',
                         flex: 1
                     },
@@ -81,6 +81,14 @@ Ext.define('MyFirst.view.ListOverView', {
                             name: 'PosedAmount'
                         },
                         {
+                            docked: 'top',
+                            readOnly: true,
+                            itemId: 'posedBill',
+                            label: '详细',
+                            labelWidth: '20%',
+                            name: 'PosedBill'
+                        },
+                        {
                             readOnly: true,
                             label: '大厅收款',
                             name: 'PosedHallAmount'
@@ -88,7 +96,7 @@ Ext.define('MyFirst.view.ListOverView', {
                         {
                             readOnly: true,
                             label: '外卖收款',
-                            name: 'PosedTakeoutAmount'
+                            name: 'PosedRoomAmount'
                         },
                         {
                             docked: 'bottom',

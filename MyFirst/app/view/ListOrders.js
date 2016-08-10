@@ -72,15 +72,15 @@ Ext.define('MyFirst.view.ListOrders', {
                                 xtype: 'button',
                                 readOnly: true,
                                 text: '分类',
-                                width: '20%',
-                                itemId: 'txtGoodsType'
+                                width: '20%'
+                                // itemId: 'txtGoodsType'
                             },
                             {
                                 readOnly: true,
                                 xtype: 'button',
                                 text: '菜品',
                                 width: '43%',
-                                itemId: 'txtGoodsName',
+                                // itemId: 'txtGoodsName',
                                 value: '0'
                             },
                             {
@@ -88,7 +88,7 @@ Ext.define('MyFirst.view.ListOrders', {
                                 xtype: 'button',
                                 text: '数量',
                                 width: '15%',
-                                itemId: 'txtUnit',
+                                // itemId: 'txtUnit',
                                 value: '0'
                             },
                             {
@@ -96,7 +96,7 @@ Ext.define('MyFirst.view.ListOrders', {
                                 xtype: 'button',
                                 text: '小计',
                                 width: '15%',
-                                itemId: 'txtSubtotal',
+                                // itemId: 'txtSubtotal',
                                 value: '0'
                             }                     
                         ]

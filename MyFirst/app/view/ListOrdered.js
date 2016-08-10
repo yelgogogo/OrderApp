@@ -35,7 +35,7 @@ Ext.define('MyFirst.view.ListOrdered', {
         items: [
             {
                 xtype: 'textfield',
-                itemId: 'txtSubTotal',
+                itemId: 'txtSubTotal3',
                 readOnly: true,
                 docked: 'bottom',
                 label: '合计:'

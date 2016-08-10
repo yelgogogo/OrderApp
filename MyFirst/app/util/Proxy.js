@@ -133,6 +133,12 @@ Ext.define('app.util.Proxy', {
         var successCallback = function (resp, ops) {
             var data = Ext.decode(resp.responseText).d;
             // var strvalue = Ext.decode(data);
+            var Json_Order = Ext.decode(data);
+            //更新该房台的记录
+            var roomStore = Ext.getStore('Rooms');
+            var record = roomStore.findRecord('ID', app.CurRoom.ID);
+            record.setData(Json_Order.Room[0]);
+            app.CurRoom = record.data;
             Ext.Msg.alert("撤单成功!");
             callback();
         };
@@ -410,6 +416,7 @@ loadOrderGoods: function (roomID, callback) {
             var Json_Goods = Ext.decode(data);
             Ext.Array.each(Json_Goods, function (Good) {
                 goodsModels = Ext.create('MyFirst.model.Good', Good);
+                if (goodsModels.data.GoodsName =='餐具'){goodsModels.data.GoodsCount==app.CurRoom.GuestCount}
                 goodsStore.add(goodsModels);
 
                 if (goodsModels.data.GoodsTypeName) {

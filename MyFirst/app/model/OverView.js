@@ -19,7 +19,6 @@ Ext.define('MyFirst.model.OverView', {
             { name: 'PosedAmount', type: 'number' },
             { name: 'PosedRoomAmount', type: 'number' },
             { name: 'PosedHallAmount', type: 'number' },
-            { name: 'PosedTakeoutAmount', type: 'number' },
             { name: 'PosingAmount', type: 'number' },
             { name: 'PosFinallyAmount', type: 'number' },
             { name: 'ConsumeAmount', type: 'number' },
@@ -28,7 +27,19 @@ Ext.define('MyFirst.model.OverView', {
 
             { name: 'PresentAmount', type: 'number' },
             { name: 'PresentAmountEmp', type: 'number' },
+            { name: 'CurrentBill', type: 'auto' },
             { name: 'PresentAmountCompany', type: 'number' }
         ]
+        // associations: [//使用association，要用type配置关系类型
+        //     {type: 'hasMany', model: 'MyFirst.model.CurrentBill',    name: 'CurrentBill'}
+        // ]
     }
 });
+
+// Ext.define('MyFirst.model.CurrentBill', {
+//     extend: 'Ext.data.Model',
+//     config:{ 
+//     fields: ['PayName', 'Amount'],
+//     belongsTo: 'MyFirst.model.OverView'//使用belongsTo配置项，声明这个模型从属于另一个模型
+// }
+// });

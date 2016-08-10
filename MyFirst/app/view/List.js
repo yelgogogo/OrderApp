@@ -33,6 +33,8 @@ Ext.define('MyFirst.view.List', {
         itemTpl: [
 		'<div style ="background-color:{RoomColor};width:100px;height:50px;margin:5px;text-align:center;padding-top:15px;position: relative;">' +
         '<div style ="position: absolute;top:1px;color:red">{RoomOpenTimes}</div>' +
+        '<div style ="position: absolute;bottom:1px;right:1px;color:blue">{GuestCount}</div>' +
+        '<div style ="position: absolute;bottom:1px;right:1px;color:blue">{GuestName}</div>' +
         '<div style ="height:20px">{RoomName}</div></div>'
 		]
     },

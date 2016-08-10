@@ -20,7 +20,8 @@ Ext.define('MyFirst.model.Room', {
             { name: 'ReservationEmpName', type: 'string' },
             { name: 'ReservationDateTime', type: 'string' },
             { name: 'OpenRoomDateTime', type: 'string' },
-
+            { name: 'GuestCount', type: 'int' },
+            { name: 'GuestName', type: 'string' },
             { name: 'MinConsume', type: 'string' },
             { name: 'ConsumeAmount', type: 'string' },
             { name: 'PresentAmount', type: 'string' },

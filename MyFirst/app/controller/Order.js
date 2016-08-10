@@ -4,7 +4,7 @@ Ext.define('MyFirst.controller.Order', {
     config: {
         refs: {
             roomAreaPicker: 'rooms segmentedbutton',
-
+            goodsPicker: 'goods segmentedbutton',
             roomContainer: 'roomContainer',
             roomslist: 'rooms',
             orderedlist: 'ordereds',
@@ -21,6 +21,7 @@ Ext.define('MyFirst.controller.Order', {
             txtPayMode: '#txtPayMode',
 
             txtSubTotal: '#txtSubTotal',
+            txtSubTotal3: '#txtSubTotal3',
             txtReserver: '#txtReserver',
             txtConsumed: '#txtConsumed',
             txtPresented: '#txtPresented',
@@ -32,6 +33,7 @@ Ext.define('MyFirst.controller.Order', {
             doBalanceButton: '#doBalanceButton',
             refreshButton: '#refreshButton',
             posButton: '#posButton',
+            posedBill: '#posedBill',
             clearCusOrderButton: '#clearCusOrderButton',
             closeButton: '#closeButton',
             queryButton: '#queryButton',
@@ -60,6 +62,9 @@ Ext.define('MyFirst.controller.Order', {
             roomAreaPicker: {
                 toggle: 'onRoomAreaChange'
             },
+            goodsPicker: {
+                toggle: 'onGoodsChange'
+            },
             doBalanceButton: {
                 tap: 'onBalance'
             },
@@ -87,15 +92,17 @@ Ext.define('MyFirst.controller.Order', {
                 activate: 'onRoomOrdersActivate'
             },
             orderedgoodslist: {
-                onPackGoodsClicked: 'onPackGoodsClicked'
-                // activate: 'onRoomOrdersActivate',
+                onPackGoodsClicked: 'onPackGoodsClicked',
+                activate: 'onOrderedGoodsActivate'
                 // activate: 'onOrderingActivate'
             },
             // roomslist: {
             //     itemtap: 'onRoomTap'
             // },
             goodslist: {
-                onPackGoodsClicked: 'onPackGoodsClicked'
+                onPackGoodsClicked: 'onPackGoodsClicked',
+                itemtap: 'onGoodsTap',
+                activate: 'onGoodsListActivate'
             },
             goodstypelist: {
                 activate: 'onGoodsTypeActivate',
@@ -291,8 +298,7 @@ Ext.define('MyFirst.controller.Order', {
                     var orderextra = orderdetail.extra;
                     var goodsstore = Ext.getStore('Goods');
                     goodsstore.clearFilter(true);
-
-                    var printstr = '<CB>'+app.CurRoom.RoomName+'</CB><BR>日期: '+eleme.data.created_at+'<BR>客人: '+eleme.data.consignee+'('+eleme.data.phone_list +')<BR>地址: '+eleme.data.address+'<BR>送餐地址: '+eleme.data.delivery_poi_address+'<BR><L>送餐时间: '+(eleme.data.deliver_time||'')+'</L><BR><L>备注: '+eleme.data.description+'</L>';
+                    var printstr = '<CB>'+app.CurRoom.RoomName+'</CB><BR>日期: '+eleme.data.created_at+'<BR>客人: '+eleme.data.consignee+'('+eleme.data.phone_list +')<BR>地址: '+eleme.data.address+'<BR>送餐地址: '+eleme.data.delivery_poi_address+'<BR><L>送餐时间: '+(eleme.data.deliver_time||'')+'</L><BR><L>备注: '+eleme.data.description+'</L><BR><L>总价: '+eleme.data.original_price+'元</L>';
                     app.util.Proxy.printQrCode(printstr);
 
                     Ext.each(orderextra,function(ordextra){
@@ -453,7 +459,7 @@ Ext.define('MyFirst.controller.Order', {
         var dataView = this.getRoomslist();
         app.util.Proxy.cancelorders(dataToBeSentToServer,
              function () {
-                 //dataView.refresh();
+                 dataView.refresh();
                  roomCard.pop(roomCard.getInnerItems().length - 1);
                  Ext.Viewport.setMasked(false);
              });
@@ -498,28 +504,32 @@ Ext.define('MyFirst.controller.Order', {
         if (dataItemModel.data.RoomStateName == "空房"
         || dataItemModel.data.RoomStateName == "订房"
         || dataItemModel.data.RoomStateName == "带位") {
-            Ext.Msg.confirm("开台", "确认要开台吗?",
-                function (btn) {
-                    if (btn == 'yes'){
-                        app.util.Proxy.openRoom(dataItemModel.data.ID, Ext.getStore('User').load().data.items[0].data.username, function () { 
-                            dataView.refresh();
-                            // app.util.Proxy.printQrCode(printstr);
-                            if(app.CurRoom.RoomAreaName != "外卖"){
-                                var appCurRoomID=me.pad(app.CurRoom.ID,3);
-                                var appElemeRestaurantId=me.pad(app.ElemeRestaurantId,8);
-                                app.util.Proxy.getEnStr(app.CurRoom.RoomOpCode + appCurRoomID + appElemeRestaurantId, function (enstr) {
-                                    var myUrl = Ext.global.window.location.href.replace(/order\.html.*$/g,'customer.html') + "?Key=" + enstr.replace(/\+/g,'%2B');
-                                    var apiurl = 'http://50r.cn/urls/add.jsonp'
-                                    var url = "http://qr.topscan.com/api.php?&w=260&text=" + myUrl;
-                                    console.log(url);
-                                    app.util.Proxy.getShortUrl(apiurl,myUrl,function (shorturl) {
-                                        var printstr = '<CB>'+app.CurPlace+'</CB><BR>' + '<CB>'+app.CurRoom.RoomName+'</CB><BR><QR>' +shorturl + '</QR><BR><C>'+app.CurPlacemsg+'</C>'
-                                        app.util.Proxy.printQrCode(printstr);
-                                    });
-                                });
-                            };
+            Ext.Msg.prompt("开台", "请输入客人数量", function (buttonId, text) {
+                if (buttonId == 'cancel' || isNaN(text)||!text)
+                    return;
+            // Ext.Msg.confirm("开台", "请输入客人数量",
+            //     function (btn) {
+            //         if (btn == 'yes'){
+                dataItemModel.data.ConsumerNum=parseInt(text);
+                app.util.Proxy.openRoom(dataItemModel.data.ID, Ext.getStore('User').load().data.items[0].data.username, function () { 
+                    dataView.refresh();
+                    // app.util.Proxy.printQrCode(printstr);
+                    if(app.CurRoom.RoomAreaName != "外卖"){
+                        var appCurRoomID=me.pad(app.CurRoom.ID,3);
+                        var appElemeRestaurantId=me.pad(app.ElemeRestaurantId,8);
+                        app.util.Proxy.getEnStr(app.CurRoom.RoomOpCode + appCurRoomID + appElemeRestaurantId, function (enstr) {
+                            var myUrl = Ext.global.window.location.href.replace(/order\.html.*$/g,'customer.html') + "?Key=" + enstr.replace(/\+/g,'%2B');
+                            var apiurl = 'http://50r.cn/urls/add.jsonp'
+                            var url = "http://qr.topscan.com/api.php?&w=260&text=" + myUrl;
+                            console.log(url);
+                            app.util.Proxy.getShortUrl(apiurl,myUrl,function (shorturl) {
+                                var printstr = '<CB>'+app.CurPlace+'</CB><BR>' + '<CB>'+app.CurRoom.RoomName+'</CB><BR><QR>' +shorturl + '</QR><BR><C>'+app.CurPlacemsg+'</C>'
+                                app.util.Proxy.printQrCode(printstr);
+                            });
                         });
                     };
+                });
+                    // };
                 });
             return;
         }
@@ -572,6 +582,15 @@ Ext.define('MyFirst.controller.Order', {
                 this.loadOrderGoods(app.CurRoom.ID,app.CurRoom.RoomOpCode);
             }
         }
+    },
+    onGoodsListActivate: function () {
+
+        var goodsview = this.getGoodslist();
+        goodsview.refresh();
+        if (app.CusRoomId >= 0){
+            this.onCustomerButton_Clicked();
+            app.CusRoomId = -1;
+        };
     },
     onRoomOrdersActivate: function () {
         var room = app.CurRoom;
@@ -636,10 +655,10 @@ Ext.define('MyFirst.controller.Order', {
         frmMain.down('titlebar').setTitle(app.CurRoom.RoomName + ' 落单');
         app.util.Proxy.loadOrderGoods(roomID, function () {
             //点击房台后，先载入赠送菜品信息 
-            if (!this.goodstypelist) {
-                this.goodstypelist = Ext.widget('goodstypelist');
+            if (!this.goodslist) {
+                this.goodslist = Ext.widget('goodslist');
             }
-            frmMain.push(this.goodstypelist);
+            frmMain.push(this.goodslist);
             Ext.Viewport.setMasked(false);
         });
     },
@@ -721,6 +740,14 @@ Ext.define('MyFirst.controller.Order', {
         });
         this.getTxtSubTotal().setValue(sub);
     },
+    onOrderedGoodsActivate: function () {
+        var goodsStore = Ext.getStore('Goods');
+        var sub = 0;
+        goodsStore.each(function (item, index, length) {
+            sub += item.data.Price * item.data.GoodsCount;
+        });
+        this.getTxtSubTotal3().setValue(sub);
+    },
     onPackGoodsClicked: function (list, record, item, index, btn) {
         var detailStore = Ext.getStore('GoodsDetails');
         detailStore.removeAll();
@@ -743,6 +770,7 @@ Ext.define('MyFirst.controller.Order', {
     //选单
     selectOrders: function () {
         var goodsStore = Ext.getStore('Goods');
+        goodsStore.clearFilter(true);
         var idx = goodsStore.findBy(function (goods) {
             return goods.get('GoodsCount') > 0;
         });
@@ -759,7 +787,7 @@ Ext.define('MyFirst.controller.Order', {
         // this.hideCustomerButton();
         // this.hideCancelButton();
 
-        goodsStore.clearFilter(true);
+        // goodsStore.clearFilter(true);
         goodsStore.filterBy(function (goods) {
             return goods.get('GoodsCount') > 0;
         });
@@ -963,6 +991,7 @@ Ext.define('MyFirst.controller.Order', {
     },
     //经理查询
     onJinglichaxun: function () {
+        var me=this;
         var frmMain = this.getRoomContainer();
         var curView = frmMain.getActiveItem();
         // this.hideDoBalanceButton();
@@ -976,7 +1005,12 @@ Ext.define('MyFirst.controller.Order', {
                 //roomDetail.add(this.orderedlist);
             }
             var viewStore = Ext.getStore('OverViews');
-            viewStore.data.items[0].data.PosedTakeoutAmount=viewStore.data.items[0].data.PosedAmount-viewStore.data.items[0].data.PosedHallAmount-viewStore.data.items[0].data.PosedRoomAmount;
+            var posedbill ='';
+            Ext.each(viewStore.data.items[0].data.CurrentBill,function(curbill){
+                posedbill = posedbill + curbill.PayName +':'+curbill.Amount+';';
+            });
+            // viewStore.data.items[0].data.PosedAmount
+            me.getPosedBill().setValue(posedbill);
             this.overviewform.setValues(viewStore.data.items[0].data);
             frmMain.push(this.overviewform);
             //roomDetail.setActiveItem(this.orderedlist);
@@ -1464,10 +1498,14 @@ Ext.define('MyFirst.controller.Order', {
             var strrights = '经理查询';
             var templateid = 'J2Y3L14ThLGBnniv1DxDG-5X6DGYRbU8gsSsYEBt2OQ';
             var url = '';
+            var posedbill ='';
+            Ext.each(viewStore.data.items[0].data.CurrentBill,function(curbill){
+                posedbill = posedbill + curbill.PayName +':'+curbill.Amount+';';
+            });
             var Sysdate = new Date();  
             var Curdate = Ext.Date.format(Sysdate, 'Y-m-d H:i:s'); 
             var first = { value: '营业结束已完成', color: '#A68C00' },
-                tName = { value: viewStore.data.items[0].data.PosedAmount +'元, 累计开台:'+viewStore.data.items[0].data.HallPosed, color: '#A68C00' },
+                tName = { value: viewStore.data.items[0].data.PosedAmount +'元('+posedbill+'), 累计开台:'+viewStore.data.items[0].data.HallPosed, color: '#A68C00' },
                 storeName = { value: app.CurPlace, color: '#A68C00' },
                 gTime = { value: Curdate, color: '#A68C00' },
                 remark = { value: '星星点单消息推送', color: '#A68C00' };
@@ -1497,14 +1535,41 @@ Ext.define('MyFirst.controller.Order', {
             };
         }
     },
+    onGoodsChange: function (seg, btn, toggle) {
+        if (toggle) {
+            this.filterGoods(btn);
+        }
+        // var goodstypename = dataItemModel.data.GoodsTypeName;
+        // var goodsStore = Ext.getStore('Goods');
+        // goodsStore.clearFilter(true);
+        // goodsStore.filterBy(function (goods) {
+        //     if (goodstypename == '店长推荐'){
+        //         return goods.get('IsHot') == true;
+        //     }else{
+        //         return goods.get('GoodsTypeName') == goodstypename;
+        //     };
+        // });
+        // var frmMain = this.getRoomContainer();
+        // if (!this.goodslist) {
+        //     this.goodslist = Ext.widget('goodslist');
+        // }
+        // frmMain.push(this.goodslist);
+
+    },
+    onGoodsTap: function (dataView, index, dataItem, dataItemModel, e, eOpts) {
+        me=this;
+        dataItemModel.data.GoodsCount += 1;
+        var goodsview = this.getGoodslist();
+        goodsview.refresh();
+    },
     onGoodsTypeActivate: function (seg, btn, toggle) {
         if (app.CusRoomId >= 0){
             this.onCustomerButton_Clicked();
             app.CusRoomId = -1;
         };
-        if (app.CurRoom.RoomStateName=="开房" && app.CurRoom.RoomAreaName != "外卖"){
-            this.goGoodsType('一次用品');
-        };
+        // if (app.CurRoom.RoomStateName=="开房" && app.CurRoom.RoomAreaName != "外卖"){
+        //     this.goGoodsType('一次用品');
+        // };
     },
     onRoomActivate: function () {
         var frmMain = this.getRoomslist().parent;
@@ -1530,6 +1595,12 @@ Ext.define('MyFirst.controller.Order', {
         Ext.getStore('Rooms').clearFilter(true);
         Ext.getStore('Rooms').filter(function (record) {
             return record.get('RoomAreaName') == btn._text;
+        });
+    },
+    filterGoods: function (btn) {
+        Ext.getStore('Goods').clearFilter(true);
+        Ext.getStore('Goods').filter(function (record) {
+            return record.get('GoodsTypeName') == btn._text;
         });
     },
     hideCommandButton: function (view, item) {
@@ -1566,31 +1637,44 @@ Ext.define('MyFirst.controller.Order', {
                         this.showOrderButton();
                     else if (app.OrderType == "会员点单")
                         this.showOrderMemButton();
-                }
-                // this.hidePosButton();
-                // this.hideCloseButton();
-                break;
-            case "goodstypelist":
-            case "goodstypes":
-                if (app.CurRoom.RoomStateName == "开房"
-                || app.CurRoom.RoomStateName == "消费") {
+
                     if (app.CurRoom.RoomAreaName == "外卖"){
                         // this.showQrCodeButton();
                         this.showGetElemeButton();
                     }else{
                         this.showQrCodeButton();
                         this.showCustomerButton();
-                    };
+                    }
                     this.showOrderButton();
                     this.showPresentButton();
                     this.showOrderMemButton();
                     this.showQueryButton();
                     this.showHisQueryButton();
-                    
-                };
-                var frmMain = this.getRoomContainer();
-                frmMain.down('titlebar').setTitle(app.CurRoom.RoomName + app.OrderType);
+                }
+                // this.hidePosButton();
+                // this.hideCloseButton();
                 break;
+            // case "goodstypelist":
+            // case "goodstypes":
+            //     if (app.CurRoom.RoomStateName == "开房"
+            //     || app.CurRoom.RoomStateName == "消费") {
+            //         if (app.CurRoom.RoomAreaName == "外卖"){
+            //             // this.showQrCodeButton();
+            //             this.showGetElemeButton();
+            //         }else{
+            //             this.showQrCodeButton();
+            //             this.showCustomerButton();
+            //         };
+            //         this.showOrderButton();
+            //         this.showPresentButton();
+            //         this.showOrderMemButton();
+            //         this.showQueryButton();
+            //         this.showHisQueryButton();
+                    
+            //     };
+            //     var frmMain = this.getRoomContainer();
+            //     frmMain.down('titlebar').setTitle(app.CurRoom.RoomName + app.OrderType);
+            //     break;
             case "orderedslist":
             case "ordereds": //消费查询界面
                 if (app.CurRoom.RoomStateName == "开房"

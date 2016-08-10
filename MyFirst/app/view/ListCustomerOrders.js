@@ -35,7 +35,7 @@ Ext.define('MyFirst.view.ListCustomerOrders', {
         items: [
             {
                 xtype: 'textfield',
-                itemId: 'txtSubTotal',
+                itemId: 'txtSubTotal2',
                 readOnly: true,
                 docked: 'bottom',
                 label: '合计:'
