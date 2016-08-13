@@ -28,6 +28,12 @@ Ext.define('MyFirst.view.PosForm', {
                     },
                     {
                         xtype: 'textfield',
+                        itemId: 'txtDiscountRate',
+                        label: '折扣比例',
+                        readOnly: true
+                    },
+                    {
+                        xtype: 'textfield',
                         itemId: 'txtTruePayMoney',
                         label: '实收金额',
                         required: true

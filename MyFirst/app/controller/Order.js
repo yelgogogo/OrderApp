@@ -18,6 +18,7 @@ Ext.define('MyFirst.controller.Order', {
             pos: "pos",
             txtTotalMoney: '#txtTotalMoney',
             txtTruePayMoney: '#txtTruePayMoney',
+            txtDiscountRate: '#txtDiscountRate',
             txtPayMode: '#txtPayMode',
 
             txtSubTotal: '#txtSubTotal',
@@ -50,6 +51,7 @@ Ext.define('MyFirst.controller.Order', {
             qrCodeButton: '#qrCodeButton',
             customerButton: '#customerButton',
             exchangeButton: '#exchangeButton',
+            discountButton: '#discountButton',
             posOkButton: 'pos #posOkButton',
             closeButton2: 'pos #closeButton2'
         },
@@ -154,6 +156,9 @@ Ext.define('MyFirst.controller.Order', {
             cancelButton: {
                 tap: 'onCancel'
             },
+            discountButton: {
+                tap: 'onDiscount'
+            },
             mngButton: {
                 tap: 'onJinglichaxun'
             },
@@ -185,16 +190,71 @@ Ext.define('MyFirst.controller.Order', {
     },
     //全部加辣
     onmarkToggle: function (field, slider, thumb, newValue, oldValue) {
-        var goodsStore = Ext.getStore('Goods');
+        if (slider == 1)
+            app.RemarksAll=true;
+        else
+            app.RemarksAll=false;
+        // var goodsStore = Ext.getStore('Goods');
 
-        goodsStore.each(function (records) {
-            if (slider == 1)
-                records.data.Remarks = '加辣';
-            else
-                records.data.Remarks = '';
-        });
-        var goodsview = this.getOrderingslist();
-        goodsview.refresh();
+        // goodsStore.each(function (records) {
+        //     if (slider == 1)
+        //         records.data.Remarks = '加辣';
+        //     else
+        //         records.data.Remarks = '';
+        // });
+        // var goodsview = this.getOrderingslist();
+        // goodsview.refresh();
+    },
+    //打折
+    onDiscount:function(){
+        var me=this;
+        Ext.Msg.prompt("打折", "请输入两位数折扣", function (buttonId, text) {
+            if (buttonId == 'cancel'||isNaN(text)||!text){
+                Ext.Msg.alert("输入错误");
+                return;
+            }
+            if(parseInt(text)<0 || parseInt(text) > 100){
+                Ext.Msg.alert("折扣错误");
+                return;
+            }
+            var discountSum=0;
+            var maxdiscountSum=0;
+            var maxdiscountTxt="";
+            var nodiscountSum=0;
+            var nodiscountTxt="";
+            var rate = parseInt(text);
+            var orderStore = Ext.getStore('Orders');
+            // if(dataItemModel.data.RoomAreaName == "外卖"){
+            //     guestnum=1;
+            //     guestname=text;
+            // }else{
+            //     if(isNaN(text)||!text){return;}
+            //     guestnum=parseInt(text);
+            //     guestname=reservationno;
+            // }
+
+            orderStore.each(function (item, index, length) {
+                if (item.data.IsDazhe){
+                    if(rate>=item.data.MaxDazhe){
+                        discountSum += Number(item.data.SubTotal);
+                    }else{
+                        maxdiscountSum += Number(item.data.SubTotal) * item.data.MaxDazhe / 100;
+                        maxdiscountTxt += (item.data.GoodsName+'(¥'+item.data.SubTotal+'['+item.data.MaxDazhe.toString()+'%]);');
+                    }
+                }else{
+                    nodiscountSum += Number(item.data.SubTotal);
+                    nodiscountTxt += (item.data.GoodsName+'(¥'+item.data.SubTotal+');');
+                }
+            });
+            var sub=discountSum * rate / 100 + nodiscountSum + maxdiscountSum;
+            var discountmsg=text + '%;';
+            if(maxdiscountTxt)
+                discountmsg+=(" 折扣上限:" +maxdiscountTxt);
+            if(nodiscountTxt)
+                discountmsg+=(" 免折扣:"+nodiscountTxt);
+            me.getTxtDiscountRate().setValue(discountmsg);
+            me.getTxtTruePayMoney().setValue(sub.toFixed(2));
+        });    
     },
     //全部不辣
     onmarkToggle2: function (field, slider, thumb, newValue, oldValue) {
@@ -348,7 +408,7 @@ Ext.define('MyFirst.controller.Order', {
                 Ext.each(neworder,function(order){
                     roomstore.each(function(room){
                         if(room.data.RoomStateName == '空房' && room.data.RoomOpenTimes==''){
-                            app.util.Proxy.openRoom(room.data.ID,order, function () { 
+                            app.util.Proxy.openRoom(room.data.ID,'饿了么',1,order, function () { 
                                 
                                 dataView.refresh();
                             });
@@ -408,7 +468,7 @@ Ext.define('MyFirst.controller.Order', {
                 Ext.Msg.alert('没有发现订单');
                 return;
             }; 
-            me.checkElemeOrderId(eleme.data.order_ids.toString(),function (neworders) {
+            me.checkElemeOrderId(eleme.data.order_ids.sort().toString(),function (neworders) {
              
                 var neworder=neworders.split(',');
                 if (neworder.length > 0){
@@ -418,7 +478,7 @@ Ext.define('MyFirst.controller.Order', {
                         
                             roomstore.each(function(room){
                                 if(room.data.RoomStateName == '空房' && room.data.RoomOpenTimes==''){
-                                    app.util.Proxy.openRoom(room.data.ID,order, function () { 
+                                    app.util.Proxy.openRoom(room.data.ID,'饿了么',1,order, function () { 
                                         dataView.refresh();
                                     });
                                     room.data.RoomStateName = "开房";
@@ -504,14 +564,27 @@ Ext.define('MyFirst.controller.Order', {
         if (dataItemModel.data.RoomStateName == "空房"
         || dataItemModel.data.RoomStateName == "订房"
         || dataItemModel.data.RoomStateName == "带位") {
-            Ext.Msg.prompt("开台", "请输入客人数量", function (buttonId, text) {
-                if (buttonId == 'cancel' || isNaN(text)||!text)
+            var msgtxt ='';
+            if(dataItemModel.data.RoomAreaName == "外卖"){
+                msgtxt="请输入外卖名称";
+            }else{
+                msgtxt="请输入客人数量";
+            }
+            Ext.Msg.prompt("开台", msgtxt, function (buttonId, text) {
+                if (buttonId == 'cancel') 
                     return;
-            // Ext.Msg.confirm("开台", "请输入客人数量",
-            //     function (btn) {
-            //         if (btn == 'yes'){
-                dataItemModel.data.ConsumerNum=parseInt(text);
-                app.util.Proxy.openRoom(dataItemModel.data.ID, Ext.getStore('User').load().data.items[0].data.username, function () { 
+                var reservationno = Ext.getStore('User').load().data.items[0].data.username;
+                var guestnum = 0;
+                var guestname = '';
+                if(dataItemModel.data.RoomAreaName == "外卖"){
+                    guestnum=1;
+                    guestname=text;
+                }else{
+                    if(isNaN(text)||!text){return;}
+                    guestnum=parseInt(text);
+                    guestname=reservationno;
+                }
+                app.util.Proxy.openRoom(dataItemModel.data.ID, guestname,guestnum,reservationno, function () { 
                     dataView.refresh();
                     // app.util.Proxy.printQrCode(printstr);
                     if(app.CurRoom.RoomAreaName != "外卖"){
@@ -584,7 +657,22 @@ Ext.define('MyFirst.controller.Order', {
         }
     },
     onGoodsListActivate: function () {
-
+        var goodsStore = Ext.getStore('Goods');
+        goodsStore.clearFilter(true);
+        if (app.CurRoom.RoomStateName=="开房" && app.CurRoom.RoomAreaName != "外卖"){
+            
+            var goods = goodsStore.findRecord('GoodsName', "餐具", 0, false, false, true);
+            if(goods)
+                goods.data.GoodsCount = app.CurRoom.GuestCount;
+        };
+        goodsStore.each(function (item, index, length) {
+            if(item.data.GoodsCount != 0){
+                item.data.GoodsCountTxt = item.data.GoodsCount.toString() ;
+            }else{
+                item.data.GoodsCountTxt = '';
+            }
+            
+        });
         var goodsview = this.getGoodslist();
         goodsview.refresh();
         if (app.CusRoomId >= 0){
@@ -1108,6 +1196,7 @@ Ext.define('MyFirst.controller.Order', {
             if (!item.data.IsPresent && !item.data.IsCanceled && item.data.Status && item.data.Status != "收银")
                 sub += Number(item.data.SubTotal);
         });
+        this.getTxtDiscountRate().setValue('');
         this.getTxtTotalMoney().setValue(sub);
         this.getTxtTruePayMoney().setValue(sub);
     },
@@ -1441,6 +1530,20 @@ Ext.define('MyFirst.controller.Order', {
         }
         clearCusOrderButton.hide();
     },
+    showDiscountButton: function () {
+        var discountButton = this.getDiscountButton();
+        if (!discountButton || !discountButton.isHidden()) {
+            return;
+        }
+        discountButton.show();
+    },
+    hideDiscountButton: function () {
+        var discountButton = this.getDiscountButton();
+        if (!discountButton || discountButton.isHidden()) {
+            return;
+        }
+        discountButton.hide();
+    },
     showQrCodeButton: function () {
         var qrCodeButton = this.getQrCodeButton();
         if (!qrCodeButton || !qrCodeButton.isHidden()) {
@@ -1517,8 +1620,9 @@ Ext.define('MyFirst.controller.Order', {
                     gTime: gTime,
                     remark: remark
                 };
-            app.util.Proxy.sendMsg(strrights,templateid,url,weChatData,function () {});
+            
             app.util.Proxy.doBalance(function () { 
+                app.util.Proxy.sendMsg(strrights,templateid,url,weChatData,function () {});
                 me.onRefresh(); 
             });
         });
@@ -1559,6 +1663,7 @@ Ext.define('MyFirst.controller.Order', {
     onGoodsTap: function (dataView, index, dataItem, dataItemModel, e, eOpts) {
         me=this;
         dataItemModel.data.GoodsCount += 1;
+        dataItemModel.data.GoodsCountTxt = dataItemModel.data.GoodsCount.toString() ;
         var goodsview = this.getGoodslist();
         goodsview.refresh();
     },
@@ -1623,6 +1728,7 @@ Ext.define('MyFirst.controller.Order', {
         this.hidePullElemeButton();
         this.hidePullOrderButton();
         this.hideGetElemeButton();
+        this.hideDiscountButton();
     },
     setButtonVisiable: function (viewType) {
         this.hideCommandButton();
@@ -1707,6 +1813,10 @@ Ext.define('MyFirst.controller.Order', {
                 this.showRefreshButton();
                 this.showDoBalanceButton();
                 this.showMngButton();
+                break;
+            case "pos":
+            case "posform":
+                this.showDiscountButton();
                 break;
             default:
                 // this.hideCommandButton();

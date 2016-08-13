@@ -416,7 +416,6 @@ loadOrderGoods: function (roomID, callback) {
             var Json_Goods = Ext.decode(data);
             Ext.Array.each(Json_Goods, function (Good) {
                 goodsModels = Ext.create('MyFirst.model.Good', Good);
-                if (goodsModels.data.GoodsName =='餐具'){goodsModels.data.GoodsCount==app.CurRoom.GuestCount}
                 goodsStore.add(goodsModels);
 
                 if (goodsModels.data.GoodsTypeName) {
@@ -684,9 +683,9 @@ loadCustomerOrder: function (roomID, opCode, callback) {
 
     var goodsStore = Ext.getStore('Goods');
     goodsStore.clearFilter(true);
-    goodsStore.each(function (item, index, length) {
-            item.data.GoodsCount = 0;
-        });
+    // goodsStore.each(function (item, index, length) {
+    //         item.data.GoodsCount = 0;
+    //     });
 
     var successCallback = function (resp, ops) {
         var data = Ext.decode(resp.responseText).d;
@@ -761,7 +760,7 @@ loadOverView: function (callback) {
     failure: failureCallback
 });
 },
-openRoom: function (roomID, reservationNo, callback) {
+openRoom: function (roomID, guestName, guestNum, reservationNo, callback) {
 
     var successCallback = function (resp, ops) {
         var data = Ext.decode(resp.responseText).d;
@@ -786,6 +785,8 @@ openRoom: function (roomID, reservationNo, callback) {
         url: '../'+app.pgmid+'WebServiceEx.asmx/JSON_OpenRoom',
         jsonData: {
             roomID: roomID,
+            guestName: guestName,
+            guestNum: guestNum,
             userNo: Ext.getStore('User').load().data.items[0].data.userno,
             reservationNo: reservationNo
         },

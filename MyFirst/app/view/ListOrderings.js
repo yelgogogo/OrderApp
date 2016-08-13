@@ -24,7 +24,7 @@ Ext.define('MyFirst.view.ListOrderings', {
         //useSimpleItems: false,listTpl
         itemTpl: new Ext.XTemplate(
         '<div class="bh">',
-            '<div class="mydiv bone" fire="onGoodsClick"><div>{GoodsName}</div><div>¥{Price} / {Unit}</div></div>',
+            '<div class="mydiv bone" fire="onGoodsClick"><div>{GoodsName}(¥{Price})</div></div>',
             '<div class="bv">',
                 '<div class="mydiv x-button x-button-chili" fire="onMarkClick" value="-1">',
                 '<span class="x-button-icon x-shown chili"></span></div>',
@@ -33,14 +33,14 @@ Ext.define('MyFirst.view.ListOrderings', {
                 '{Remarks}',
             '</div>',
             '<div class="bv">',
-                '<div class="mydiv x-button" fire="onNumClick" value="-1">',
+                '<div class="mydiv x-button x-button-small" fire="onNumClick" value="-1">',
                 '<span class="x-button-icon x-shown lower"></span></div>',
             '</div>',
             '<div class="bv" style="width:40px;text-align:center">',
                 '{GoodsCount}',
             '</div>',
             '<div class="bv">',
-                '<div class="mydiv x-button"  fire="onNumClick" value="1">',
+                '<div class="mydiv x-button x-button-small"  fire="onNumClick" value="1">',
                 '<span class="x-button-icon x-shown add"></span></div>',
             '</div>',
          '</div>'
@@ -143,7 +143,7 @@ Ext.define('MyFirst.view.ListOrderings', {
                         // id : 'markToggle',
                         itemId: 'markToggle',
                          docked: 'right',
-                        label: '全加辣'
+                        label: '全调味'
                     },
                     {   
                         xtype: 'togglefield',
@@ -163,31 +163,101 @@ Ext.define('MyFirst.view.ListOrderings', {
         listeners: {
             onMarkClick: function (list, record, item, index, btn) {
                 btn.addCls('x-button-pressing');
-                // console.log("onMarkClickClick"); 
-                data = record.data;
-                // if (data.Remarks != '')
-                //     data.Remarks = '';
-                // elseif
-                //     data.Remarks = '加辣';
-                switch (data.Remarks)
-                {
-                case "":{
-                   data.Remarks = '加辣';
+                var data = record.data;
+                var remarks=data.Remarks;
+                var remarkchange=remarks;
+                var remarkchange2=remarks;
+                switch (remarks){
+                        case "":
+                            remarkchange = '不辣';
+                            break;
+                        case "不辣":
+                            remarkchange = '微辣';
+                            break;
+                        case "微辣":
+                            remarkchange = '加辣';
+                            break;
+                        case "加辣":
+                            remarkchange = '重辣';
+                            break;
+                        case "重辣":
+                            remarkchange = '';
+                            break;
+                        default:
+                            remarkchange = '不辣';
+                            break;
+                        };
+
+                switch (remarks){
+                        case "":
+                            remarkchange2 = '要冰';
+                            break;
+                        case "要冰":
+                            remarkchange2 = '不要冰';
+                            break;
+                        default:
+                            remarkchange2 = '要冰';
+                            break;
+                        };
+
+                if(app.RemarksAll){
+                    var goodsStore = Ext.getStore('Goods');
+                    goodsStore.each(function(gd) {
+                        switch (gd.data.GoodsTypeName){
+                            case "粥类":
+                            case "主食":
+                            case "烤鱼配菜":
+                            case "一次用品":
+                            case "店长推荐":
+                                break;
+                            case "饮料":
+                            case "酒类":
+                                gd.data.Remarks = remarkchange2;
+                                break;
+                            default:
+                                gd.data.Remarks = remarkchange;
+                                break;
+                        };
+                    });
+                    this.refresh();
+                }else{
+                    switch (data.GoodsTypeName){
+                        case "粥类":
+                        case "主食":
+                        case "烤鱼配菜":
+                        case "一次用品":
+                        case "店长推荐":
+                           break;
+                        case "饮料":
+                        case "酒类":
+                            data.Remarks = remarkchange2;
+                            break;
+                        default:
+                            data.Remarks = remarkchange;
+                            break;
                     };
-                   break;
-                case "不辣":{
-                   data.Remarks = '';
-                   };
-                   break;
-                case "加辣":{
-                   data.Remarks = '不辣';
-                   };
-                   break;
-                default:{
-                    data.Remarks = '微辣';
-                    };
-                    break; 
                 };
+                // console.log("onMarkClickClick"); 
+                // data = record.data;
+                // switch (data.Remarks)
+                // {
+                // case "":{
+                //    data.Remarks = '加辣';
+                //     };
+                //    break;
+                // case "不辣":{
+                //    data.Remarks = '';
+                //    };
+                //    break;
+                // case "加辣":{
+                //    data.Remarks = '不辣';
+                //    };
+                //    break;
+                // default:{
+                //     data.Remarks = '微辣';
+                //     };
+                //     break; 
+                // };
                 var task = Ext.create('Ext.util.DelayedTask', function() {
                         item.setData(data);
                     });

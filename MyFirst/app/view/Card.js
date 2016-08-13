@@ -87,6 +87,7 @@ Ext.define('MyFirst.view.Card', {
                break;
             case "收银":{
                me.CreateMyButton('hisqueryButton', '历史', 'right', true);
+               me.CreateMyButton('discountButton', '折扣', 'right', true);
                //me.CreateMyButton('orderButton', '落单', 'right', true);
                posadd = true;
 			         me.CreateMyButton('doBalanceButton', '营业结束', 'left', false);

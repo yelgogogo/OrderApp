@@ -14,6 +14,7 @@ Ext.define('MyFirst.model.Good', {
             { name: 'Unit', type: 'string' },
             { name: 'Price', type: 'number' },
             { name: 'GoodsCount', type: 'int', defaultValue: 0 },
+            { name: 'GoodsCountTxt', type: 'string', defaultValue: '' },
             { name: 'IsPack', type: 'boolean' },
             { name: 'GoodsDetails', type: 'AUTO' },
             { name: 'Remarks', type: 'string' },

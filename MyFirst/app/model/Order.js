@@ -33,6 +33,8 @@ Ext.define('MyFirst.model.Order', {
             { name: 'SendUser', type: 'string' },
             { name: 'Remarks', type: 'string' },
             { name: 'BackColor', type: 'string' },
+            { name: 'IsDazhe', type: 'boolean' },
+            { name: 'MaxDazhe', type: 'int' },
             { name: 'ForeColor', type: 'string' }
         ]
     }
