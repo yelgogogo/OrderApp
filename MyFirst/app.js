@@ -77,6 +77,7 @@ Ext.application({
             app.pgmid='';
         };
         app.numclickn=1;
+        app.RemarksAll=false;
         app.CusRoomId = -1;
         app.util.Proxy.getSysParm('txtPlaceAdress', function (sysparm) {
             app.CurPlacemsg = sysparm;

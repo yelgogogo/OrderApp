@@ -13,6 +13,17 @@
   background: url('../img/chili.png');
   background-size:cover;
   background-color:#ccc;
+  min-height: 0;
+    padding: 0;
+}
+.x-button-small {
+  min-height: 1.5em;
+      padding-top: 0px;
+    padding-bottom: 15px;
+    padding-left: 2px;
+  height: 1.5em;
+  width: 1.5em;
+  border-radius: 2em;
 }
 .x-button .x-button-icon.lower:before {
   position: absolute;
