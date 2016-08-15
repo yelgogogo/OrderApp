@@ -42,6 +42,7 @@ Ext.define('MyFirst.controller.Order', {
             orderButton: '#orderButton',
             confirmOkButton: '#confirmOkButton',
             cancelButton: '#cancelButton',
+            cancelAllButton: '#cancelAllButton',
             mngButton: '#mngButton',
             pullElemeButton: '#pullElemeButton',
             pullOrderButton: '#pullOrderButton',
@@ -155,6 +156,9 @@ Ext.define('MyFirst.controller.Order', {
             },
             cancelButton: {
                 tap: 'onCancel'
+            },
+            cancelAllButton: {
+                tap: 'onCancelAll'
             },
             discountButton: {
                 tap: 'onDiscount'
@@ -358,7 +362,7 @@ Ext.define('MyFirst.controller.Order', {
                     var orderextra = orderdetail.extra;
                     var goodsstore = Ext.getStore('Goods');
                     goodsstore.clearFilter(true);
-                    var printstr = '<CB>'+app.CurRoom.RoomName+'</CB><BR>日期: '+eleme.data.created_at+'<BR>客人: '+eleme.data.consignee+'('+eleme.data.phone_list +')<BR>地址: '+eleme.data.address+'<BR>送餐地址: '+eleme.data.delivery_poi_address+'<BR><L>送餐时间: '+(eleme.data.deliver_time||'')+'</L><BR><L>备注: '+eleme.data.description+'</L><BR><L>总价: '+eleme.data.original_price+'元</L>';
+                    var printstr = '<CB>'+app.CurRoom.RoomName+'-'+app.CurRoom.GuestName+'</CB><BR>日期: '+eleme.data.created_at+'<BR>客人: '+eleme.data.consignee+'('+eleme.data.phone_list +')<BR>地址: '+eleme.data.address+'<BR>送餐地址: '+eleme.data.delivery_poi_address+'<BR><L>送餐时间: '+(eleme.data.deliver_time||'')+'</L><BR><L>备注: '+eleme.data.description+'</L><BR><L>总价: '+eleme.data.original_price+'元</L>';
                     app.util.Proxy.printQrCode(printstr);
 
                     Ext.each(orderextra,function(ordextra){
@@ -505,7 +509,7 @@ Ext.define('MyFirst.controller.Order', {
         // });
         cancelStore.each(function (records) {
             delete records.data.id;
-            records.data.Remarks = '本单撤消';
+            // records.data.Remarks = '本单撤消';
             allData.push(records.data);
         });
         if (allData.length == 0) {
@@ -946,6 +950,50 @@ Ext.define('MyFirst.controller.Order', {
             this.selectOrders();
         }
     },
+    //全部撤单
+    onCancelAll: function () {
+        var cancelStore = Ext.getStore('CancelOrders');
+        var orderStore = Ext.getStore('Orders');
+        cancelStore.removeAll();
+        orderStore.each(function(item){
+            var cursor=item.copy();
+            cursor.data.GoodsCount = 0-cursor.data.GoodsCount;
+            cursor.data.Remarks = "整单撤销";
+            cancelStore.add(cursor);
+            item.data.GoodsCount = 0;
+        });
+        var dataView = this.getOrderedgoodslist();
+        dataView.refresh();
+        // var cancelrec = cancelstore.findRecord('OrderDetailID', data.OrderDetailID);
+        // if (record.data.GoodsCount < 1){
+        //     return;
+        // }
+        // if (cancelrec){
+        //     cancelrec.data.GoodsCount=Number(cancelrec.data.GoodsCount)+Number(value);
+        // }else{
+        //     var cursor=record.copy();
+        //     cursor.data.GoodsCount = -1;
+        //     cancelstore.add(cursor);
+            
+        // };
+
+
+        // var frmMain = this.getRoomContainer();
+        // frmMain.down('titlebar').setTitle(app.CurRoom.RoomName + ' 撤单');
+        // var curView = frmMain.getActiveItem();
+        
+        
+
+        // var frmMain = this.getRoomContainer();
+        // if (!this.orderedgoodslist) {
+        //     this.orderedgoodslist = Ext.widget('orderedgoodslist');
+        // }
+        // frmMain.push(this.orderedgoodslist);
+        // if (app.OrderType == "赠送")
+        //     this.getConfirmCancel().setText('确认赠送');
+        // else
+        //     this.getConfirmCancel().setText('确认撤单');
+    },
     //撤单
     onCancel: function () {
         var frmMain = this.getRoomContainer();
@@ -1346,6 +1394,27 @@ Ext.define('MyFirst.controller.Order', {
         }
         cancelButton.show();
     },
+    hideCancelButton: function () {
+        var cancelButton = this.getCancelButton();
+        if (!cancelButton || cancelButton.isHidden()) {
+            return;
+        }
+        cancelButton.hide();
+    },
+    showCancelAllButton: function () {
+        var cancelAllButton = this.getCancelAllButton();
+        if (!cancelAllButton || !cancelAllButton.isHidden()) {
+            return;
+        }
+        cancelAllButton.show();
+    },
+    hideCancelAllButton: function () {
+        var cancelAllButton = this.getCancelAllButton();
+        if (!cancelAllButton || cancelAllButton.isHidden()) {
+            return;
+        }
+        cancelAllButton.hide();
+    },
     showMngButton: function () {
         var mngButton = this.getMngButton();
         if (!mngButton || !mngButton.isHidden()) {
@@ -1359,13 +1428,6 @@ Ext.define('MyFirst.controller.Order', {
             return;
         }
         orderButton.hide();
-    },
-    hideCancelButton: function () {
-        var cancelButton = this.getCancelButton();
-        if (!cancelButton || cancelButton.isHidden()) {
-            return;
-        }
-        cancelButton.hide();
     },
     hideMngButton: function () {
         var mngButton = this.getMngButton();
@@ -1660,12 +1722,17 @@ Ext.define('MyFirst.controller.Order', {
         // frmMain.push(this.goodslist);
 
     },
-    onGoodsTap: function (dataView, index, dataItem, dataItemModel, e, eOpts) {
-        me=this;
+    onGoodsTap: function (dataView, index,dataItem, dataItemModel, e, eOpts) {
+        // var data = dataItemModel.data;
+        // data.GoodsCount += 1;
+        // data.GoodsCountTxt = data.GoodsCount.toString() ;
+        // dataItemModel.setData(data);
         dataItemModel.data.GoodsCount += 1;
         dataItemModel.data.GoodsCountTxt = dataItemModel.data.GoodsCount.toString() ;
-        var goodsview = this.getGoodslist();
-        goodsview.refresh();
+        dataItem.setHtml(dataItem.getHtml().replace(/color:red">[\s0-9]*<\/div>/,'color:red">'+dataItemModel.data.GoodsCountTxt+'</div>'));
+        // var goodsview = this.getGoodslist();
+
+        // goodsview.refresh();
     },
     onGoodsTypeActivate: function (seg, btn, toggle) {
         if (app.CusRoomId >= 0){
@@ -1722,6 +1789,7 @@ Ext.define('MyFirst.controller.Order', {
         this.hideQrCodeButton();
         this.hideCustomerButton();
         this.hideCancelButton();
+        this.hideCancelAllButton();
         this.hideClearCusOrderButton();
         this.hideExchangeButton();
         this.hideConfirmOkButton();
@@ -1793,6 +1861,10 @@ Ext.define('MyFirst.controller.Order', {
                 this.showPosButton();
                 this.showCancelButton();
                 this.showExchangeButton();
+                break;
+            case "orderedgoodslist":
+            case "orderedgoods": //消费查询界面
+                this.showCancelAllButton();
                 break;
             case "orderingslist":
             case "orderings": //落单界面

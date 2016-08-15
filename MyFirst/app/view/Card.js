@@ -83,6 +83,7 @@ Ext.define('MyFirst.view.Card', {
             case "经理查询":{
                me.CreateMyButton('mngButton', '经理查询', 'left', false);
                me.CreateMyButton('cancelButton', '撤单', 'right', true);
+               me.CreateMyButton('cancelAllButton', '整单撤销', 'right', true);
                };
                break;
             case "收银":{

@@ -4,7 +4,7 @@ Ext.define('MyFirst.store.Goods', {
     config: {
 
         model: 'MyFirst.model.Good',
-
+        // autoLoad: true,
         grouper: {
             sortProperty: 'GoodsTypeName',
             groupFn: function (record) {
@@ -15,7 +15,7 @@ Ext.define('MyFirst.store.Goods', {
         sorters: [        
             {
                 property: 'Price',
-                direction: 'DESC'
+                direction: 'ASC'
             },
             {
                 property: 'GoodsName',

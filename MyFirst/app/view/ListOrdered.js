@@ -72,13 +72,13 @@ Ext.define('MyFirst.view.ListOrdered', {
                 }
                 if (cancelrec){
                     cancelrec.data.GoodsCount=Number(cancelrec.data.GoodsCount)+Number(value);
-                }
-                else{
+                }else{
                     // data.GoodsCount=Number(GoodsCount)+Number(value);
                     var cursor=record.copy();
                     //Ext.create('app.mode;l.Order',data);
                     // var cursor= data;
                     cursor.data.GoodsCount = -1;
+                    cursor.data.Remarks = '本单撤消';
                     cancelstore.add(cursor);
                     
                 };
