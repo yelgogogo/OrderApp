@@ -105,6 +105,8 @@ Ext.define('MyFirst.controller.Order', {
             goodslist: {
                 onPackGoodsClicked: 'onPackGoodsClicked',
                 itemtap: 'onGoodsTap',
+                itemtaphold: 'onGoodsTapHold',
+                itemswipe: 'onGoodsSwipe',
                 activate: 'onGoodsListActivate'
             },
             goodstypelist: {
@@ -1722,14 +1724,58 @@ Ext.define('MyFirst.controller.Order', {
         // frmMain.push(this.goodslist);
 
     },
+    onGoodsSwipe: function (dataView, index,dataItem, dataItemModel, e, eOpts) {
+        switch(e.direction){
+            case "left":
+                Ext.Msg.prompt(dataItemModel.data.GoodsName, "请输入菜品数量", function (buttonId, text) {
+                    if (buttonId == 'cancel')
+                        return;
+                    if(isNaN(text)||!text){
+                        Ext.Msg.alert("输入错误");
+                        return;
+                    }
+                    dataItemModel.data.GoodsCount = parseInt(text);
+                    dataItemModel.data.GoodsCountTxt = dataItemModel.data.GoodsCount.toString() ;
+                    dataItem.setHtml(dataItem.getHtml().replace(/color:red">[\s0-9]*<\/div>/,'color:red">'+dataItemModel.data.GoodsCountTxt+'</div>'));
+                });
+                break;
+            case "right":
+                if(dataItemModel.data.GoodsCount >0){
+                    dataItemModel.data.GoodsCount -= 1
+                    dataItemModel.data.GoodsCountTxt = dataItemModel.data.GoodsCount.toString() ;
+                    dataItem.setHtml(dataItem.getHtml().replace(/color:red">[\s0-9]*<\/div>/,'color:red">'+dataItemModel.data.GoodsCountTxt+'</div>'));
+                }
+                break;
+            default:
+                break;
+        }
+    },
+    onGoodsTapHold: function (dataView, index,dataItem, dataItemModel, e, eOpts) {
+        dataView.isTapHold=true;
+        Ext.Msg.prompt(dataItemModel.data.GoodsName, "请输入菜品数量", function (buttonId, text) {
+            dataView.isTapHold=false;
+            if (buttonId == 'cancel')
+                return;
+            if(isNaN(text)||!text){
+                Ext.Msg.alert("输入错误");
+                return;
+            }
+            dataItemModel.data.GoodsCount = parseInt(text);
+            dataItemModel.data.GoodsCountTxt = dataItemModel.data.GoodsCount.toString() ;
+            dataItem.setHtml(dataItem.getHtml().replace(/color:red">[\s0-9]*<\/div>/,'color:red">'+dataItemModel.data.GoodsCountTxt+'</div>'));
+            delete dataView.isTapHold;
+        });
+    },
     onGoodsTap: function (dataView, index,dataItem, dataItemModel, e, eOpts) {
         // var data = dataItemModel.data;
         // data.GoodsCount += 1;
         // data.GoodsCountTxt = data.GoodsCount.toString() ;
         // dataItemModel.setData(data);
-        dataItemModel.data.GoodsCount += 1;
-        dataItemModel.data.GoodsCountTxt = dataItemModel.data.GoodsCount.toString() ;
-        dataItem.setHtml(dataItem.getHtml().replace(/color:red">[\s0-9]*<\/div>/,'color:red">'+dataItemModel.data.GoodsCountTxt+'</div>'));
+        if(!dataView.isTapHold){
+            dataItemModel.data.GoodsCount += 1;
+            dataItemModel.data.GoodsCountTxt = dataItemModel.data.GoodsCount.toString() ;
+            dataItem.setHtml(dataItem.getHtml().replace(/color:red">[\s0-9]*<\/div>/,'color:red">'+dataItemModel.data.GoodsCountTxt+'</div>'));
+        }
         // var goodsview = this.getGoodslist();
 
         // goodsview.refresh();

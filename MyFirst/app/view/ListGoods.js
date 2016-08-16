@@ -40,7 +40,7 @@ Ext.define('MyFirst.view.ListGoods', {
         variableHeights: true,
         useSimpleItems: true,
         itemTpl: [
-		'<div style ="background-color:#fff;width:5.7em;height:45px;margin:2px;text-align:center;font-size: medium;overflow: hidden;padding-top:3px;position: relative;">' +
+		'<div style ="background-color:#fff;width:7.75em;height:45px;margin:2px;text-align:center;font-size: medium;overflow: hidden;padding-top:3px;position: relative;">' +
         '<div style ="position: absolute;right:1px;bottom:1px;color:red">{GoodsCountTxt}</div>' +
         '<div style ="height:20px">{GoodsName}<BR>¥{Price}</div></div>'
 		]
