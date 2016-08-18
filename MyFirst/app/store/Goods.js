@@ -12,7 +12,11 @@ Ext.define('MyFirst.store.Goods', {
             }
         },
 
-        sorters: [        
+        sorters: [      
+            {
+                property: 'Sales',
+                direction: 'DESC'
+            },  
             {
                 property: 'Price',
                 direction: 'ASC'

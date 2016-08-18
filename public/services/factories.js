@@ -332,7 +332,7 @@ define(['angular'], function (angular) {
 	                            	// 	tempdata.pics=[elemeselect.image_url];
 		                            // }else{
 		                            	tempdata.rating=0;
-		                            	tempdata.sales=0;
+		                            	// tempdata.sales=0;
 		                            	tempdata.pics=['resources/img'+$rootScope.apppgmid+'/'+tempdata.ID+'.jpg'];
 		                            // };
 		                            // tempdata.pics=['resources/img'+$rootScope.apppgmid+'/'+tempdata.ID+'.jpg'];

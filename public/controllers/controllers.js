@@ -44,11 +44,11 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
                         });
                         if(elemeselect.length>0){
                             gdata.rating=elemeselect[0].rating;
-                            gdata.sales=elemeselect[0].sales;
+                            gdata.Sales+=elemeselect[0].sales;
                             gdata.pics=[elemeselect[0].image_url];
                         }else{
                             gdata.rating=0;
-                            gdata.sales=0;
+                            // gdata.sales=0;
                             gdata.pics=['resources/img'+$rootScope.apppgmid+'/'+gdata.ID+'.jpg'];
                         };
                     });
@@ -203,7 +203,7 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
                 if (!goods.Remarks){goods.Remarks='';};
                 msgtxt += goods.GoodsName + ' ' + goods.GoodsCount + goods.Unit + goods.Remarks +';'
                 delete goods.pics;
-                delete goods.sales;
+                // delete goods.sales;
                 delete goods.rating;
                 delete goods.$$hashKey;
 
@@ -361,7 +361,7 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
                 if (!goods.Remarks){goods.Remarks='';};
                 msgtxt += goods.GoodsName + ' ' + goods.GoodsCount + goods.Unit + goods.Remarks +';'
                 delete goods.pics;
-                delete goods.sales;
+                // delete goods.sales;
                 delete goods.rating;
                 delete goods.$$hashKey;
 

@@ -1,7 +1,7 @@
 <div class="list-group">
 	<div class="list-group-item" ng-show="goods.length <= 0">请选择右边菜品分类</div>
 	 
-    <div class="list-group-item good-item col-xs-12" ng-repeat="gd in goods | orderBy:['-sales','-Price']">
+    <div class="list-group-item good-item col-xs-12" ng-repeat="gd in goods | orderBy:['-Sales','-Price']">
     	<div class="col-xs-6 text-center good-img" ng-show="gd.pics.length > 0">
     		<img ng-src="{{gd.pics[0]}}" class="food-img" />
     	</div>
@@ -11,7 +11,7 @@
     	<div class="col-xs-6 font-large padding-5px">
     		<b> {{gd.GoodsName}}-{{gd.Unit}}</b>
             <br>
-            <span class="font-small" ng-show="gd.sales > 0">饿了么月销:{{gd.sales}}</span>
+            <span class="font-small" ng-show="gd.Sales > 0">月销:{{gd.Sales}}</span>
             <br>
     		<div class="good-action">
     			<span class="good-price">￥{{gd.Price}}</span>

@@ -18,6 +18,7 @@ Ext.define('MyFirst.model.Good', {
             { name: 'IsPack', type: 'boolean' },
             { name: 'GoodsDetails', type: 'AUTO' },
             { name: 'Remarks', type: 'string' },
+            { name: 'Sales', type: 'int'},
             { name: 'IsHot', type: 'boolean' }
 
 
