@@ -434,11 +434,12 @@ Ext.define('MyFirst.controller.Order', {
         for(var i=-10 ;i<20;i++){
             var k='';
             var j = parseInt(orderid.toString().substr(12,6))+i;
-            if(j>100000){
-                k=j.toString()
-            }else{
-                k='0'+j.toString()
-            }
+            // if(j>100000){
+            //     k=j.toString()
+            // }else{
+            //     k='0'+j.toString()
+            // }
+            k=this.pad(j.toString(),6);
             var chkorderid=orderid.toString().substr(0,12)+k;
             var eleurl="http://v2.openapi.ele.me/order/"+chkorderid+"/";
             var elearg=Ext.encode({"eleme_order_id":chkorderid,"tp_id":"0"});

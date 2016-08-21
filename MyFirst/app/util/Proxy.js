@@ -95,7 +95,7 @@ Ext.define('app.util.Proxy', {
         var successCallback = function (resp, ops) {
             var data = Ext.decode(resp.responseText).d;
             // var strvalue = Ext.decode(data);
-            Ext.Msg.alert("打印成功!");
+            // Ext.Msg.alert("打印成功!");
         };
         var failureCallback = function (result) {
             Ext.Msg.alert("打印失败!");
