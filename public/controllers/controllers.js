@@ -4,7 +4,7 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
 
     app.constant('APP_TITLE', 'BB Shop');
 
-    app.controller("rootCtrl", function ($scope,Rooms,Eleme,Types, $rootScope) {
+    app.controller("rootCtrl", function ($scope,Rooms,Eleme,Types,Cart,Locals,$rootScope) {
         var a=Rooms.getRoomID();
         var b=Rooms.getOpCode();
         var c=Rooms.getPlaceName();
@@ -21,8 +21,13 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
         var destroyRoomWatch = $scope.$watch('roomID', function (n, o) {
             // console.log(n + 'changed' + o);
             if(n){ 
-            var f=Types.getTypes(n);
-            destroyRoomWatch();}
+                var f=Types.getTypes(n);
+                var cartstore =[];
+                cartstore=Locals.getObject($rootScope.Key);
+                if(cartstore.length>0) 
+                    Cart.setProducts(cartstore);
+                destroyRoomWatch();
+            }
         });
 
         var destroyStageWatch = $scope.$watch('stage', function (n, o) {
@@ -34,7 +39,6 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
                         var breakeach=false;
                         var elemeselect =[];
                         $rootScope.elemeData.forEach(function(edata){
-
                                     if(!breakeach){
                                         elemeselect=edata.foods.filter(function(elmeid){return elmeid.name==gdata.GoodsName});
                                         if(elemeselect.length>0){
@@ -44,13 +48,16 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
                         });
                         if(elemeselect.length>0){
                             gdata.rating=elemeselect[0].rating;
-                            gdata.Sales+=elemeselect[0].sales;
                             gdata.pics=[elemeselect[0].image_url];
                         }else{
                             gdata.rating=0;
                             // gdata.sales=0;
-                            gdata.pics=['resources/img'+$rootScope.apppgmid+'/'+gdata.ID+'.jpg'];
+                            gdata.pics=['resources/img'+$rootScope.apppgmid+'/'+gdata.GoodsCode+'.jpg'];
                         };
+                        var cartselect =[];
+                        cartselect=Cart.getProducts().filter(function(cid){return cid.GoodsName==gdata.GoodsName});
+                        if(cartselect.length>0)
+                            gdata.GoodsCount=cartselect[0].GoodsCount;
                     });
                 });
                 destroyStageWatch();
@@ -69,6 +76,7 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
                     $scope.totalCount += goods.GoodsCount || 0;
                     $scope.totalPrice += (goods.GoodsCount || 0) * (goods.Price || 0);
                 });
+                Locals.setObject($rootScope.Key,$rootScope.cartData);
             }
 
         }, true);
@@ -198,7 +206,6 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
 
             submitMobile.SubmitOrders = angular.copy(o);
             submitMobile.SubmitOrders.forEach(function(goods){
-                goods.GoodsCount = goods.GoodsCount;
                 // goods.Remarks=goods.chili;
                 if (!goods.Remarks){goods.Remarks='';};
                 msgtxt += goods.GoodsName + ' ' + goods.GoodsCount + goods.Unit + goods.Remarks +';'
@@ -278,10 +285,12 @@ define(['angular', 'services','directives', 'data'], function(angular, services,
 
         $scope.countPlus = function(gd) {
             Cart.addProduct(gd);
+            Types.addProduct(gd);        
         };
 
         $scope.countMinus = function(gd) {
             Cart.decreaseProduct(gd);
+            Types.decreaseProduct(gd); 
         };
         $scope.remark = function(gd) {
             Cart.setRemarks(gd);

@@ -20,11 +20,15 @@ define(['angular'], function (angular) {
 					}					
 				});
 				if(!flag) {
-					goods.GoodsCount = goods.GoodsCount || 1;
+					// goods.GoodsCount = goods.GoodsCount || 1;
 					// goods.chili = true;
-					cartData.push(goods);
+					var goodscpy=angular.copy(goods);
+					// var dataadd = angular.fromJson();
+					cartData.push(goodscpy);
 				}
 				$rootScope.cartData = cartData;
+				// gd.GoodsCount = gd.GoodsCount + 1 * ($rootScope.tens || 1);
+				// if(gd.GoodsCount < 0) gd.GoodsCount = 0;
 			},
 			removeProduct: function (goods) {
 				// clear the goods
@@ -36,16 +40,16 @@ define(['angular'], function (angular) {
 				});
 				$rootScope.cartData = cartData;
 			},
-			decreaseProduct: function (gd) {
-				// decrease goods count
-				// cartData.forEach(function (gd, i) {
-					// if(gd._id === goods._id) {
+			decreaseProduct: function (goods) {
+				//decrease goods count
+				cartData.forEach(function (gd, i) {
+					if(gd.ID === goods.ID) {
 						gd.GoodsCount = gd.GoodsCount - 1 * ($rootScope.tens || 1);
 						if(gd.GoodsCount < 0) gd.GoodsCount = 0;
-						// return;
-					// }
-				// });
-				// $rootScope.cartData = cartData;
+						return;
+					}
+				});
+				$rootScope.cartData = cartData;
 			},
 			getProducts: function () {
 				return cartData;
@@ -251,6 +255,28 @@ define(['angular'], function (angular) {
 			}
 		};
 	});
+	 //本地存储数据===================================
+	app.factory('Locals',['$window',function($window){
+	      return{
+	        //存储单个属性
+	        set :function(key,value){
+	          $window.localStorage[key]=value;
+	        },
+	        //读取单个属性
+	        get:function(key,defaultValue){
+	          return  $window.localStorage[key] || defaultValue;
+	        },
+	        //存储对象，以JSON格式存储
+	        setObject:function(key,value){
+	          $window.localStorage[key]=angular.toJson(value);
+	        },
+	        //读取对象
+	        getObject: function (key) {
+	          return angular.fromJson($window.localStorage[key] || '[]');
+	        }
+
+	      }
+	  }]);
 
 	app.factory('Types', function ($rootScope, FoodService, Rooms) {
 		// var typeData = [];
@@ -311,34 +337,8 @@ define(['angular'], function (angular) {
 		                                    return orderid.DisplayOrder == data.DisplayOrder
 		                                });
 		                        goodtemp.forEach(function(tempdata){
-		                            // tempdata._id=tempdata.ID;
-		                            // tempdata.GoodsName=tempdata.GoodsName;
-		                            // tempdata.Price=tempdata.Price;
-		                            // tempdata.description==tempdata.Unit;
-		                            // var elemeselect={};
-		                            // var breakeach=false;
-		                            // var elemeMenu=[];
-		                            // elemeMenu.forEach(function(eleme){
-		                            // 	if(!breakeach){
-			                           //  	elemeselect=eleme.foods.find(function(elme){return elme.name==tempdata.GoodsName})
-			                           //  	if(elemeselect){
-			                           //  		breakeach = true;
-			                           //  	};
-		                            // 	};
-		                            // });
-		                            // if(elemeselect){
-		                            // 	tempdata.rating=elemeselect.rating;
-		                            // 	tempdata.sales=elemeselect.sales;
-	                            	// 	tempdata.pics=[elemeselect.image_url];
-		                            // }else{
 		                            	tempdata.rating=0;
-		                            	// tempdata.sales=0;
 		                            	tempdata.pics=['resources/img'+$rootScope.apppgmid+'/'+tempdata.ID+'.jpg'];
-		                            // };
-		                            // tempdata.pics=['resources/img'+$rootScope.apppgmid+'/'+tempdata.ID+'.jpg'];
-		                            // delete tempdata.DisplayOrder;
-		                            // delete tempdata.GoodsTypeName;
-		                        
 		                        });
 		                        goodsTypesArr[data.DisplayOrder-1] = {
 		                            _id: data.DisplayOrder,
@@ -366,25 +366,36 @@ define(['angular'], function (angular) {
 					})
 				});
 				// $rootScope.typeData=typeData;
-			}
-			// addProduct: function (goods) {
-			// 	typeData[goods.DisplayOrder-1].goods.forEach(function (gd, i) {
-			// 		if(gd.ID === goods.ID) {
-			// 			gd.GoodsCount = (gd.GoodsCount || 0) + 1 * ($rootScope.tens || 1);
-			// 			return;
-			// 		}					
-			// 	});
-
-			// },
-			// decreaseProduct: function (goods) {
-			// 	typeData[goods.DisplayOrder-1].goods.forEach(function (gd, i) {
-			// 		if(gd.ID === goods.ID) {
-			// 			gd.GoodsCount = gd.GoodsCount - 1 * ($rootScope.tens || 1);
-			// 			if(gd.GoodsCount < 0) gd.GoodsCount = 0;
-			// 			return;
-			// 		}					
-			// 	});
-			// }
+			},
+			addProduct: function (goods) {
+				var tselect=[];
+				var gselect=[];
+				tselect = $rootScope.typeData.filter(function(tid){
+					return tid._id == goods.DisplayOrder
+				});
+				if(tselect.length>0){
+                    gselect = tselect[0].goods.filter(function(gid){
+						return gid.GoodsName == goods.GoodsName
+					})
+					if(gselect.length>0){
+						gselect[0].GoodsCount = goods.GoodsCount;
+					}
+                }
+			},
+			decreaseProduct: function (goods) {
+				var tselect=[];
+				var gselect=[];
+				tselect = $rootScope.typeData.filter(function(tid){
+					return tid._id == goods.DisplayOrder
+				});
+				if(tselect.length>0){
+                    gselect = tselect[0].goods.filter(function(gid){
+						return gid.GoodsName == goods.GoodsName
+					})
+					if(gselect.length>0){
+						gselect[0].GoodsCount = goods.GoodsCount;
+					}
+                }			}
 		};
 	});
 

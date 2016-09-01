@@ -107,16 +107,20 @@ define(['angular'], function(angular) {
             restrict: "E",
             template: '<a class="btn-add"><i class="glyphicon glyphicon-plus-sign"></i></a>',
             link: function (scope, element, attrs) {
-                scope.GoodsCount = 0;
+                // scope.GoodsCount = scope.gd.GoodsCount;
                 scope.add = function (o) {
+                    ++scope.gd.GoodsCount;
                     Cart.addProduct(o);
                     // Types.addProduct(o);
-                    ++scope.GoodsCount;
+                    // ++scope.GoodsCount;
+                    
                 }
                 scope.decrease = function (o) {
+                    --scope.gd.GoodsCount;
                     Cart.decreaseProduct(o);
                     // Types.decreaseProduct(o);
-                    --scope.GoodsCount;
+                    // // --scope.GoodsCount;
+                    
                 }
             }
         };
